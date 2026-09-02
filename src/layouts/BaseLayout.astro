@@ -17,7 +17,11 @@ const { title, description = site.description, indexable = true } = Astro.props;
 // but guard anyway so a missing config degrades to relative URLs rather than crashing.
 const abs = (path: string) => (Astro.site ? new URL(path, Astro.site).href : path);
 
-const canonical = abs(Astro.url.pathname);
+// Normalise canonical so /about and /about/ don't produce duplicate tags.
+// Keep root as "/" and strip trailing slash elsewhere for SEO consistency.
+const rawPath = Astro.url.pathname;
+const normalisedPath = rawPath !== "/" && rawPath.endsWith("/") ? rawPath.slice(0, -1) : rawPath;
+const canonical = abs(normalisedPath);
 const ogImage = abs("/og-image.png");
 const pageTitle = title === site.name ? `${site.name} — ${site.tagline}` : `${title} | ${site.name}`;
 
@@ -57,15 +61,28 @@ const hasRealContactDetail = Boolean(
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en-IN" dir="ltr">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#0f2040" />
+    <meta name="author" content={site.name} />
+    <meta name="format-detection" content="telephone=no" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="author" href="/humans.txt" />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
     <link rel="canonical" href={canonical} />
-    {!indexable && <meta name="robots" content="noindex, follow" />}
+    {indexable ? (
+      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    ) : (
+      <meta name="robots" content="noindex, follow" />
+    )}
 
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
@@ -77,14 +94,17 @@ const hasRealContactDetail = Boolean(
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="en_IN" />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={`${site.name} — ${site.tagline}`} />
+    <meta property="og:image:type" content="image/png" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={`${site.name} — ${site.tagline}`} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

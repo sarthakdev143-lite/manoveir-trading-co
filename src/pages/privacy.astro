@@ -1,0 +1,137 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, isPlaceholder, displayValue } from "../config/site";
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description={`Privacy policy for ${site.name} — how we handle information when you visit our site or contact us.`}
+>
+  <section class="page-head">
+    <div class="container">
+      <span class="eyebrow">Legal</span>
+      <h1>Privacy Policy</h1>
+      <p class="lead">
+        We run a walk-in retail shop, not a data business. This site is intentionally simple and does not
+        collect or sell personal information.
+      </p>
+      <p class="lead" style="margin-top:.75rem; font-size:.92rem; color:var(--slate-600)">
+        Last updated: 2 September 2026 · If you have questions, use the details on our <a href="/contact">Contact page</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container prose-legal">
+      <h2>1. No tracking, no cookies</h2>
+      <p>
+        This website does not use analytics cookies, advertising trackers, or third-party scripts.
+        Your visit is not profiled. The only external resources loaded are Google Fonts (for typography)
+        and, if enabled, a Google Maps embed on the <a href="/contact">Contact page</a>.
+        Those services are subject to Google's own privacy policy.
+      </p>
+
+      <h2>2. Information you share when you contact us</h2>
+      <p>
+        The enquiry form on <a href="/contact">/contact</a> does not send data through this website or
+        store it on a server. Submitting it opens your own email application with a pre-filled message
+        addressed to us (<code>{displayValue(site.contact.email)}</code>
+        {isPlaceholder(site.contact.email) ? " — placeholder until a real inbox is set" : ""}). What you
+        choose to include — name, phone, message — is sent only via your email provider.
+      </p>
+      <p>
+        If you
+        {isPlaceholder(site.contact.phone) ? (
+          <span> call us</span>
+        ) : (
+          <a href={`tel:${site.contact.phone.replace(/[^+\d]/g, "")}`}>call us</a>
+        )}{" "}
+        or visit in person, information is handled the same way as any normal shop enquiry: to answer you,
+        not to build a marketing database.
+      </p>
+
+      <h2>3. What we do not do</h2>
+      <ul>
+        <li>We do not sell or share personal data.</li>
+        <li>We do not run a newsletter or automated marketing.</li>
+        <li>We do not store form submissions on this host (Vercel / Netlify / Cloudflare Pages).</li>
+        <li>We do not use fingerprinting, session replay, or cross-site tracking.</li>
+      </ul>
+
+      <h2>4. External links &amp; maps</h2>
+      <p>
+        Clicking “Open in Google Maps” or loading the embedded map sends a request to Google. That is
+        optional — the map only loads after you navigate to <a href="/contact">/contact</a> and, if a
+        map URL has been configured, your browser fetches tiles from <code>google.com</code> /
+        <code>maps.google.com</code>. See our Content Security Policy in <code>public/_headers</code> for
+        the exact allow-list.
+      </p>
+
+      <h2>5. Your rights</h2>
+      <p>
+        If you have shared information with us by email or phone and would like it deleted or corrected,
+        contact us via the details on <a href="/contact">/contact</a> and we will handle your request
+        promptly.
+      </p>
+
+      <h2>6. Changes to this policy</h2>
+      <p>
+        If we ever add analytics (for example, privacy-friendly, cookie-less visit counts) or a real
+        contact-form handler, this page will be updated to describe what is collected and why before that
+        code goes live.
+      </p>
+
+      <div class="legal-cta">
+        <a class="btn btn--primary" href="/contact">Contact Us</a>
+        <a class="btn btn--outline" href="/">Back to Home</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    background: linear-gradient(180deg, var(--cream-100), var(--cream-50));
+    padding-block: clamp(2.75rem, 6vw, 4.25rem);
+    border-bottom: var(--border);
+  }
+  .page-head .lead { max-width: 44rem; }
+  .prose-legal {
+    max-width: 46rem;
+  }
+  .prose-legal h2 {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--navy-900);
+    margin-top: 2rem;
+    margin-bottom: .6rem;
+  }
+  .prose-legal h2:first-child { margin-top: 0; }
+  .prose-legal p, .prose-legal li {
+    color: var(--slate-600);
+    font-size: .98rem;
+    line-height: 1.75;
+  }
+  .prose-legal ul {
+    padding-left: 1.2rem;
+    margin: .6rem 0 0;
+  }
+  .prose-legal li + li { margin-top: .35rem; }
+  .prose-legal a { font-weight: 500; }
+  .prose-legal code {
+    background: var(--cream-100);
+    padding: .1em .35em;
+    border-radius: 4px;
+    font-size: .92em;
+  }
+  .legal-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .85rem;
+    margin-top: 2.25rem;
+    padding-top: 1.5rem;
+    border-top: var(--border);
+  }
+</style>

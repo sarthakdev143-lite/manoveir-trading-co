@@ -15,13 +15,13 @@ const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWit
       </span>
     </a>
 
-    <input class="nav-toggle" type="checkbox" id="nav-toggle" aria-hidden="true" />
-    <label class="nav-toggle__label" for="nav-toggle">
+    <input class="nav-toggle" type="checkbox" id="nav-toggle" aria-label="Toggle navigation menu" />
+    <label class="nav-toggle__label" for="nav-toggle" aria-controls="site-nav">
       <span class="visually-hidden">Toggle navigation menu</span>
       <span class="nav-toggle__bars" aria-hidden="true"></span>
     </label>
 
-    <nav class="site-nav" aria-label="Main navigation">
+    <nav id="site-nav" class="site-nav" aria-label="Main navigation">
       <ul class="site-nav__list">
         {
           site.nav.map((item) => (
@@ -143,8 +143,20 @@ const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWit
     font-weight: 600;
   }
 
-  /* CSS-only mobile menu: hidden checkbox drives the panel, zero client JS. */
-  .nav-toggle,
+  /* CSS-only mobile menu: hidden checkbox drives the panel, zero client JS.
+     The checkbox is visually hidden but remains focusable for keyboard users. */
+  .nav-toggle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
   .nav-toggle__label {
     display: none;
   }
