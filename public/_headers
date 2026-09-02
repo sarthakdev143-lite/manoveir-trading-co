@@ -1,0 +1,22 @@
+# Static-host header rules. Read natively by Netlify and Cloudflare Pages.
+# Other hosts ignore this file — see README "Deploying" for nginx/Apache equivalents.
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  # The site ships no JS of its own; it needs Google Fonts CSS + font files, and
+  # a Google Maps iframe on /contact once mapEmbedUrl is set.
+  Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; frame-src https://www.google.com https://maps.google.com; script-src 'self'; base-uri 'self'; form-action 'self' mailto:; object-src 'none'; frame-ancestors 'self'
+
+# Fingerprinted assets are safe to cache forever.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/favicon.svg
+  Cache-Control: public, max-age=604800
+
+/og-image.png
+  Cache-Control: public, max-age=604800

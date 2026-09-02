@@ -1,0 +1,155 @@
+---
+import { site, isPlaceholder, displayValue } from "../config/site";
+
+const year = new Date().getFullYear();
+const { address, phone, phoneDisplay, email, hours } = site.contact;
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <span class="site-footer__name">{site.name}</span>
+      <p>{site.description}</p>
+    </div>
+
+    <nav class="site-footer__col" aria-label="Footer navigation">
+      <h2 class="site-footer__heading">Explore</h2>
+      <ul>
+        {site.nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="site-footer__col">
+      <h2 class="site-footer__heading">Categories</h2>
+      <ul>
+        {site.categories.slice(0, 4).map((c) => <li><a href="/products">{c.title}</a></li>)}
+        <li><a href="/products">All categories →</a></li>
+      </ul>
+    </div>
+
+    <div class="site-footer__col">
+      <h2 class="site-footer__heading">Visit Us</h2>
+      <ul class="site-footer__contact">
+        <li>
+          <span class="site-footer__label">Address</span>
+          <span class={isPlaceholder(address) ? "todo" : undefined}>{displayValue(address)}</span>
+        </li>
+        <li>
+          <span class="site-footer__label">Phone</span>
+          {
+            isPlaceholder(phone) ? (
+              <span class="todo">{displayValue(phoneDisplay)}</span>
+            ) : (
+              <a href={`tel:${phone.replace(/[^+\d]/g, "")}`}>{displayValue(phoneDisplay)}</a>
+            )
+          }
+        </li>
+        <li>
+          <span class="site-footer__label">Email</span>
+          {
+            isPlaceholder(email) ? (
+              <span class="todo">{displayValue(email)}</span>
+            ) : (
+              <a href={`mailto:${email}`}>{email}</a>
+            )
+          }
+        </li>
+        <li>
+          <span class="site-footer__label">Hours</span>
+          <span class={isPlaceholder(hours) ? "todo" : undefined}>{displayValue(hours)}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container site-footer__bar">
+    <p>&copy; {year} {site.name}. All rights reserved.</p>
+    <p class="site-footer__note">Walk-in retail shop — no online ordering.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--navy-900);
+    color: rgba(253, 251, 247, 0.78);
+    padding-top: clamp(2.75rem, 5vw, 4rem);
+    font-size: 0.93rem;
+  }
+
+  .site-footer__grid {
+    display: grid;
+    gap: 2.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    padding-bottom: 2.5rem;
+  }
+
+  .site-footer__brand {
+    max-width: 22rem;
+  }
+
+  .site-footer__name {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .site-footer__heading {
+    margin-bottom: 0.9rem;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--gold-400);
+  }
+
+  .site-footer ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .site-footer a {
+    color: rgba(253, 251, 247, 0.82);
+    text-decoration: none;
+  }
+
+  .site-footer a:hover {
+    color: var(--gold-400);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .site-footer__contact li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .site-footer__label {
+    font-size: 0.72rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: rgba(253, 251, 247, 0.5);
+  }
+
+  .site-footer__bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-block: 1.25rem;
+    border-top: 1px solid rgba(253, 251, 247, 0.14);
+    font-size: 0.85rem;
+    color: rgba(253, 251, 247, 0.6);
+  }
+
+  .site-footer__note {
+    color: rgba(253, 251, 247, 0.45);
+  }
+</style>

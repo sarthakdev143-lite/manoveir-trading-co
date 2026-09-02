@@ -1,0 +1,228 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import FeatureCard from "../components/FeatureCard.astro";
+import { site } from "../config/site";
+---
+
+<BaseLayout
+  title="About Us"
+  description={`Learn about ${site.name} — a local retail shop stocking everyday consumer goods for neighbourhood families.`}
+>
+  <!-- Page header -->
+  <section class="page-head">
+    <div class="container">
+      <span class="eyebrow">About Us</span>
+      <h1>A neighbourhood shop, run the old-fashioned way</h1>
+      <p class="lead">
+        {site.name} exists to make everyday shopping simple: a dependable shelf, an honest price and someone
+        behind the counter who knows what you came in for.
+      </p>
+    </div>
+  </section>
+
+  <!-- Our story -->
+  <section class="section">
+    <div class="container story">
+      <div class="story__copy prose">
+        <span class="eyebrow">Our Story</span>
+        <h2>Built around what our neighbours actually need</h2>
+        <p>
+          {site.name} is a retail business engaged in the purchase and sale of various consumer goods and
+          products. We buy carefully, stock deliberately and sell directly to the customers who walk through
+          our door — no middlemen, no online cart, no delivery slots to wait on.
+        </p>
+        <p>
+          Everything on our shelves is chosen the same way: by watching what local families come in asking for.
+          Kitchen staples that run out weekly. Cleaning supplies nobody wants to make a special trip for.
+          Stationery before the school term. Gifts and decorations when the festive season comes around. If
+          enough people ask for something, it earns a place on the shelf.
+        </p>
+        <p>
+          That is the whole idea — a single, reliable stop for the ordinary things, run by people you can
+          actually talk to.
+        </p>
+      </div>
+
+      <aside class="story__aside">
+        <h2 class="story__aside-title">At a glance</h2>
+        <dl>
+          <div>
+            <dt>Business type</dt>
+            <dd>Local shop-based retail — walk-in customers</dd>
+          </div>
+          <div>
+            <dt>What we do</dt>
+            <dd>Purchase and sale of consumer goods and products</dd>
+          </div>
+          <div>
+            <dt>Who we serve</dt>
+            <dd>Local households and neighbourhood families</dd>
+          </div>
+          <div>
+            <dt>Categories</dt>
+            <dd>{site.categories.length} broad ranges under one roof</dd>
+          </div>
+        </dl>
+        <a class="btn btn--outline" href="/products">Browse our categories</a>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="section section--cream">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow">Our Promise</span>
+        <h2>Three things we will not compromise on</h2>
+      </div>
+      <div class="grid grid--3">
+        {site.values.map((value) => <FeatureCard {...value} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="section section--navy">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow">By the Numbers</span>
+        <h2>The shape of our shop</h2>
+      </div>
+      <dl class="stats">
+        {
+          site.stats.map((stat) => (
+            <div class="stats__item">
+              <dt class="stats__value">{stat.value}</dt>
+              <dd class="stats__label">{stat.label}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container section-head section-head--center" style="margin-bottom:0">
+      <h2>Come in and have a look</h2>
+      <p class="lead">
+        The quickest way to know what we carry is to visit. We are happy to point you to what you need.
+      </p>
+      <div class="actions actions--center">
+        <a class="btn btn--primary" href="/contact">Get in Touch</a>
+        <a class="btn btn--outline" href="/products">See Products</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    background: linear-gradient(180deg, var(--cream-100), var(--cream-50));
+    padding-block: clamp(2.75rem, 6vw, 4.25rem);
+    border-bottom: var(--border);
+  }
+
+  .page-head .lead {
+    max-width: 44rem;
+  }
+
+  .story {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+    align-items: start;
+  }
+
+  @media (min-width: 58rem) {
+    .story {
+      grid-template-columns: 1.35fr 0.85fr;
+    }
+  }
+
+  .story__copy h2 {
+    margin-bottom: 1.1rem;
+  }
+
+  .story__copy p {
+    color: var(--slate-600);
+  }
+
+  .story__aside {
+    padding: 1.75rem;
+    background: var(--gold-100);
+    border: 1px solid rgba(196, 154, 60, 0.3);
+    border-radius: var(--radius);
+    position: sticky;
+    top: 6rem;
+  }
+
+  .story__aside-title {
+    font-family: var(--font-body);
+    font-size: 0.79rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--gold-500);
+    margin-bottom: 1.1rem;
+  }
+
+  .story__aside dl {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .story__aside dt {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--slate-600);
+    margin-bottom: 0.15rem;
+  }
+
+  .story__aside dd {
+    margin: 0;
+    color: var(--navy-900);
+    font-weight: 500;
+  }
+
+  .stats {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  }
+
+  .stats__item {
+    padding: 1.5rem 1.25rem;
+    background: rgba(253, 251, 247, 0.06);
+    border: 1px solid rgba(253, 251, 247, 0.16);
+    border-radius: var(--radius);
+    text-align: center;
+  }
+
+  .stats__value {
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--gold-400);
+    line-height: 1.1;
+  }
+
+  .stats__label {
+    margin: 0.35rem 0 0;
+    font-size: 0.88rem;
+    color: rgba(253, 251, 247, 0.78);
+  }
+
+  .actions--center {
+    justify-content: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .story__aside {
+      position: static;
+    }
+  }
+</style>

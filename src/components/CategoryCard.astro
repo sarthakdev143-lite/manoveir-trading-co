@@ -1,0 +1,52 @@
+---
+interface Props {
+  title: string;
+  desc: string;
+  icon: string;
+  examples?: string[];
+}
+
+const { title, desc, icon, examples = [] } = Astro.props;
+---
+
+<article class="card category">
+  <span class="card__icon" aria-hidden="true">{icon}</span>
+  <h3>{title}</h3>
+  <p>{desc}</p>
+  {
+    examples.length > 0 && (
+      <ul class="category__list">
+        {examples.map((item) => <li>{item}</li>)}
+      </ul>
+    )
+  }
+</article>
+
+<style>
+  .category__list {
+    margin-top: 0.35rem;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    color: var(--slate-600);
+  }
+
+  .category__list li {
+    position: relative;
+    padding-left: 1.1rem;
+  }
+
+  .category__list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold-500);
+  }
+</style>

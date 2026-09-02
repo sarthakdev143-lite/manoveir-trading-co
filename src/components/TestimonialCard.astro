@@ -1,0 +1,65 @@
+---
+import { isPlaceholder, displayValue } from "../config/site";
+
+interface Props {
+  quote: string;
+  name: string;
+  detail: string;
+}
+
+const { quote, name, detail } = Astro.props;
+---
+
+<figure class="card testimonial">
+  <span class="testimonial__mark" aria-hidden="true">&ldquo;</span>
+  <blockquote>{quote}</blockquote>
+  <figcaption>
+    <span class={`testimonial__name ${isPlaceholder(name) ? "todo" : ""}`.trim()}>
+      {displayValue(name)}
+    </span>
+    <span class={`testimonial__detail ${isPlaceholder(detail) ? "todo" : ""}`.trim()}>
+      {displayValue(detail)}
+    </span>
+  </figcaption>
+</figure>
+
+<style>
+  .testimonial {
+    gap: 0.9rem;
+  }
+
+  .testimonial__mark {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    line-height: 0.6;
+    color: var(--gold-500);
+  }
+
+  .testimonial blockquote {
+    margin: 0;
+    color: var(--slate-800);
+    font-size: 0.98rem;
+    line-height: 1.7;
+  }
+
+  .testimonial figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    margin-top: auto;
+    padding-top: 0.5rem;
+    border-top: var(--border);
+  }
+
+  .testimonial__name {
+    font-weight: 600;
+    color: var(--navy-900);
+    align-self: flex-start;
+  }
+
+  .testimonial__detail {
+    font-size: 0.85rem;
+    color: var(--slate-600);
+    align-self: flex-start;
+  }
+</style>

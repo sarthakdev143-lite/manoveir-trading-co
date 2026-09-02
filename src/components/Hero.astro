@@ -1,0 +1,107 @@
+---
+import { site } from "../config/site";
+---
+
+<section class="hero">
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <span class="eyebrow">Local Retail · Trusted Since Day One</span>
+      <h1>{site.name}</h1>
+      <p class="hero__tagline">{site.tagline}</p>
+      <p class="lead">{site.description}</p>
+      <div class="actions">
+        <a class="btn btn--primary" href="/products">Explore Products</a>
+        <a class="btn btn--outline" href="/contact">Find Us</a>
+      </div>
+    </div>
+
+    <!-- Image placeholder: drop a shopfront photo at /public/images/shopfront.jpg
+         and swap this block for an <img> tag. -->
+    <div class="hero__media" role="img" aria-label="Placeholder for a photograph of the Manoveir Trading CO shopfront">
+      <div class="hero__media-inner">
+        <span class="hero__media-icon" aria-hidden="true">🏪</span>
+        <p class="hero__media-text">Shopfront photo placeholder</p>
+        <p class="hero__media-hint">Add an image at <code>/public/images/shopfront.jpg</code></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    background:
+      radial-gradient(1000px 420px at 12% -10%, rgba(196, 154, 60, 0.16), transparent 62%),
+      linear-gradient(180deg, var(--cream-100), var(--cream-50));
+    padding-block: clamp(3rem, 7vw, 5.5rem);
+    overflow: hidden;
+  }
+
+  .hero__inner {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    grid-template-columns: 1fr;
+    align-items: center;
+  }
+
+  @media (min-width: 60rem) {
+    .hero__inner {
+      grid-template-columns: 1.05fr 0.95fr;
+    }
+  }
+
+  .hero__copy {
+    max-width: 34rem;
+  }
+
+  .hero h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  .hero__tagline {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+    color: var(--gold-500);
+    font-weight: 600;
+  }
+
+  .hero__media {
+    display: grid;
+    place-items: center;
+    min-height: clamp(15rem, 34vw, 21rem);
+    background: #fff;
+    border: 2px dashed rgba(196, 154, 60, 0.55);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+  }
+
+  .hero__media-inner {
+    text-align: center;
+  }
+
+  .hero__media-icon {
+    display: block;
+    font-size: 3.25rem;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero__media-text {
+    font-weight: 600;
+    color: var(--navy-700);
+  }
+
+  .hero__media-hint {
+    margin-top: 0.3rem;
+    font-size: 0.85rem;
+    color: var(--slate-600);
+  }
+
+  .hero__media-hint code {
+    background: var(--cream-100);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+    font-size: 0.95em;
+  }
+</style>

@@ -1,0 +1,83 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../config/site";
+---
+
+<BaseLayout
+  title="Page Not Found"
+  description="That page does not exist. Browse our product categories or get in touch instead."
+  indexable={false}
+>
+  <section class="notfound">
+    <div class="container notfound__inner">
+      <span class="notfound__code" aria-hidden="true">404</span>
+      <h1>We could not find that page</h1>
+      <p class="lead">
+        The link may be out of date, or the address might have a typo. Everything on the site is one
+        click away below.
+      </p>
+
+      <div class="actions">
+        <a class="btn btn--primary" href="/">Back to Home</a>
+        <a class="btn btn--outline" href="/contact">Contact Us</a>
+      </div>
+
+      <nav class="notfound__links" aria-label="All pages">
+        <h2 class="notfound__links-title">All pages</h2>
+        <ul>
+          {site.nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        </ul>
+      </nav>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    background: linear-gradient(180deg, var(--cream-100), var(--cream-50));
+    padding-block: clamp(3rem, 9vw, 6rem);
+  }
+
+  .notfound__inner {
+    max-width: 40rem;
+  }
+
+  .notfound__code {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 12vw, 6rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--gold-500);
+    margin-bottom: 0.5rem;
+  }
+
+  .notfound__links {
+    margin-top: 2.75rem;
+    padding-top: 1.5rem;
+    border-top: var(--border);
+  }
+
+  .notfound__links-title {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--gold-500);
+    margin-bottom: 0.85rem;
+  }
+
+  .notfound__links ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .notfound__links a {
+    font-weight: 500;
+    color: var(--navy-700);
+  }
+</style>

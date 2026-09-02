@@ -1,0 +1,186 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import CategoryCard from "../components/CategoryCard.astro";
+import FeatureCard from "../components/FeatureCard.astro";
+import TestimonialCard from "../components/TestimonialCard.astro";
+import { site, isPlaceholder, displayValue } from "../config/site";
+
+const featured = site.categories.slice(0, 4);
+const teasers = site.testimonials.slice(0, 3);
+const { address, hours, mapLink } = site.contact;
+const mapHref = isPlaceholder(mapLink) ? null : mapLink;
+---
+
+<BaseLayout title={site.name}>
+  <Hero />
+
+  <!-- Trust bar -->
+  <section class="trust" aria-label="What we stand for">
+    <div class="container trust__inner">
+      {site.trustBar.map((item) => <span class="trust__item">{item}</span>)}
+    </div>
+  </section>
+
+  <!-- Featured categories -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow">What We Stock</span>
+        <h2>Everyday essentials, all under one roof</h2>
+        <p class="lead">
+          From kitchen staples to festive gifting, we keep the goods local households reach for most —
+          restocked regularly and priced fairly.
+        </p>
+      </div>
+
+      <div class="grid grid--4">
+        {featured.map((category) => <CategoryCard {...category} examples={[]} />)}
+      </div>
+
+      <div class="actions actions--center">
+        <a class="btn btn--primary" href="/products">View All 6 Categories</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why choose us -->
+  <section class="section section--cream">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow">Why Choose Us</span>
+        <h2>A shop built on service, not scale</h2>
+        <p class="lead">
+          We are a neighbourhood retailer, and that shapes how we buy, price and stock everything on our shelves.
+        </p>
+      </div>
+
+      <div class="grid grid--4">
+        {site.whyChooseUs.map((feature) => <FeatureCard {...feature} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <span class="eyebrow">Testimonials</span>
+        <h2>What our customers say</h2>
+        <p class="lead">
+          Highlighted quotes are placeholders — replace them with real customer feedback in
+          <code>src/config/site.ts</code>.
+        </p>
+      </div>
+
+      <div class="grid grid--3">
+        {teasers.map((testimonial) => <TestimonialCard {...testimonial} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Visit us strip -->
+  <section class="section section--navy">
+    <div class="container visit">
+      <div>
+        <span class="eyebrow">Visit Our Shop</span>
+        <h2>Come see us in person</h2>
+        <p class="lead">
+          No online cart, no delivery windows — just walk in, pick what you need, and ask us anything.
+        </p>
+      </div>
+
+      <dl class="visit__facts">
+        <div>
+          <dt>Address</dt>
+          <dd class={isPlaceholder(address) ? "todo" : undefined}>{displayValue(address)}</dd>
+        </div>
+        <div>
+          <dt>Hours</dt>
+          <dd class={isPlaceholder(hours) ? "todo" : undefined}>{displayValue(hours)}</dd>
+        </div>
+      </dl>
+
+      <div class="actions">
+        <a class="btn btn--primary" href="/contact">Contact & Directions</a>
+        {
+          mapHref && (
+            <a class="btn btn--onDark" href={mapHref} target="_blank" rel="noopener noreferrer">
+              Open in Maps
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .trust {
+    background: var(--navy-900);
+    color: var(--cream-100);
+    padding-block: 0.95rem;
+  }
+
+  .trust__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+  }
+
+  .trust__item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .trust__item:not(:last-child)::after {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold-400);
+  }
+
+  .actions--center {
+    justify-content: center;
+  }
+
+  .visit {
+    max-width: 46rem;
+  }
+
+  .visit__facts {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    margin-top: 2rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid rgba(253, 251, 247, 0.18);
+  }
+
+  .visit__facts dt {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--gold-400);
+    margin-bottom: 0.35rem;
+  }
+
+  .visit__facts dd {
+    margin: 0;
+    color: var(--cream-100);
+  }
+
+  code {
+    background: var(--cream-100);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+    font-size: 0.92em;
+  }
+</style>

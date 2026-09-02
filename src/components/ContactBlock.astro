@@ -1,0 +1,129 @@
+---
+import { site, isPlaceholder, displayValue } from "../config/site";
+
+const { address, phone, phoneDisplay, email, hours, mapLink } = site.contact;
+
+const telHref = isPlaceholder(phone) ? null : `tel:${phone.replace(/[^+\d]/g, "")}`;
+const mailHref = isPlaceholder(email) ? null : `mailto:${email}`;
+const mapHref = isPlaceholder(mapLink) ? null : mapLink;
+---
+
+<ul class="details">
+  <li>
+    <span class="details__icon" aria-hidden="true">📍</span>
+    <div>
+      <h3>Shop Address</h3>
+      <p class={isPlaceholder(address) ? "todo" : undefined}>{displayValue(address)}</p>
+      {
+        mapHref ? (
+          <a class="details__link" href={mapHref} target="_blank" rel="noopener noreferrer">
+            Open in Google Maps →
+          </a>
+        ) : (
+          <p class="details__hint">Add <code>mapLink</code> in <code>src/config/site.ts</code> to enable directions.</p>
+        )
+      }
+    </div>
+  </li>
+
+  <li>
+    <span class="details__icon" aria-hidden="true">📞</span>
+    <div>
+      <h3>Phone</h3>
+      {
+        telHref ? (
+          <p><a class="details__link" href={telHref}>{displayValue(phoneDisplay)}</a></p>
+        ) : (
+          <p class="todo">{displayValue(phoneDisplay)}</p>
+        )
+      }
+      <p class="details__hint">Call us for stock enquiries or bulk orders.</p>
+    </div>
+  </li>
+
+  <li>
+    <span class="details__icon" aria-hidden="true">✉️</span>
+    <div>
+      <h3>Email</h3>
+      {
+        mailHref ? (
+          <p><a class="details__link" href={mailHref}>{email}</a></p>
+        ) : (
+          <p class="todo">{displayValue(email)}</p>
+        )
+      }
+    </div>
+  </li>
+
+  <li>
+    <span class="details__icon" aria-hidden="true">🕐</span>
+    <div>
+      <h3>Opening Hours</h3>
+      <p class={isPlaceholder(hours) ? "todo" : undefined}>{displayValue(hours)}</p>
+    </div>
+  </li>
+</ul>
+
+<style>
+  .details {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .details li {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .details__icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    background: var(--gold-100);
+    border: 1px solid rgba(196, 154, 60, 0.35);
+    border-radius: 12px;
+    font-size: 1.2rem;
+  }
+
+  .details h3 {
+    font-family: var(--font-body);
+    font-size: 0.79rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-500);
+    margin-bottom: 0.3rem;
+  }
+
+  .details p {
+    color: var(--slate-800);
+  }
+
+  .details__link {
+    font-weight: 600;
+    color: var(--navy-700);
+    text-decoration: none;
+    border-bottom: 2px solid var(--gold-500);
+  }
+
+  .details__link:hover {
+    color: var(--gold-500);
+  }
+
+  .details__hint {
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+    color: var(--slate-600);
+  }
+
+  .details__hint code {
+    background: var(--cream-100);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+  }
+</style>

@@ -1,0 +1,220 @@
+---
+import { site } from "../config/site";
+
+const path = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="/">
+      <span class="brand__mark" aria-hidden="true">M</span>
+      <span class="brand__text">
+        <span class="brand__name">{site.name}</span>
+        <span class="brand__tagline">{site.tagline}</span>
+      </span>
+    </a>
+
+    <input class="nav-toggle" type="checkbox" id="nav-toggle" aria-hidden="true" />
+    <label class="nav-toggle__label" for="nav-toggle">
+      <span class="visually-hidden">Toggle navigation menu</span>
+      <span class="nav-toggle__bars" aria-hidden="true"></span>
+    </label>
+
+    <nav class="site-nav" aria-label="Main navigation">
+      <ul class="site-nav__list">
+        {
+          site.nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="btn btn--primary site-nav__cta" href="/contact">Visit Our Shop</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(253, 251, 247, 0.94);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(15, 32, 64, 0.09);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 4.5rem;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .brand__mark {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    background: var(--navy-900);
+    color: var(--gold-400);
+    border-radius: 10px;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 700;
+  }
+
+  .brand__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+
+  .brand__name {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--navy-900);
+  }
+
+  .brand__tagline {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gold-500);
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .site-nav__list {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .site-nav__list a {
+    position: relative;
+    padding-block: 0.35rem;
+    color: var(--navy-700);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .site-nav__list a::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--gold-500);
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+  }
+
+  .site-nav__list a:hover::after,
+  .site-nav__list a[aria-current="page"]::after {
+    transform: scaleX(1);
+  }
+
+  .site-nav__list a[aria-current="page"] {
+    color: var(--navy-900);
+    font-weight: 600;
+  }
+
+  /* CSS-only mobile menu: hidden checkbox drives the panel, zero client JS. */
+  .nav-toggle,
+  .nav-toggle__label {
+    display: none;
+  }
+
+  @media (max-width: 52rem) {
+    .nav-toggle__label {
+      display: grid;
+      place-items: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      border: var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      background: #fff;
+    }
+
+    .nav-toggle__bars,
+    .nav-toggle__bars::before,
+    .nav-toggle__bars::after {
+      content: "";
+      display: block;
+      width: 1.15rem;
+      height: 2px;
+      background: var(--navy-900);
+      border-radius: 2px;
+    }
+
+    .nav-toggle__bars::before {
+      transform: translateY(-6px);
+    }
+
+    .nav-toggle__bars::after {
+      transform: translateY(4px);
+    }
+
+    .nav-toggle:focus-visible + .nav-toggle__label {
+      outline: 3px solid var(--gold-500);
+      outline-offset: 3px;
+    }
+
+    .site-nav {
+      display: none;
+      flex-basis: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
+      padding-bottom: 1.25rem;
+    }
+
+    .nav-toggle:checked ~ .site-nav {
+      display: flex;
+    }
+
+    .site-nav__list {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .site-nav__list li + li {
+      border-top: var(--border);
+    }
+
+    .site-nav__list a {
+      display: block;
+      padding: 0.85rem 0.25rem;
+    }
+
+    .site-nav__list a::after {
+      display: none;
+    }
+  }
+</style>

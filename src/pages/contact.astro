@@ -1,0 +1,275 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactBlock from "../components/ContactBlock.astro";
+import { site, isPlaceholder, displayValue } from "../config/site";
+
+const { email, phone, phoneDisplay, mapEmbedUrl } = site.contact;
+
+const hasEmail = !isPlaceholder(email);
+const hasPhone = !isPlaceholder(phone);
+const hasMapEmbed = !isPlaceholder(mapEmbedUrl);
+---
+
+<BaseLayout
+  title="Contact & Location"
+  description={`Visit ${site.name} in person — address, phone, email, opening hours and directions.`}
+>
+  <section class="page-head">
+    <div class="container">
+      <span class="eyebrow">Contact & Location</span>
+      <h1>Find us, call us, or just drop by</h1>
+      <p class="lead">
+        We are a walk-in shop, so the best way to reach us is in person or over the phone during opening hours.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container contact">
+      <div>
+        <div class="section-head" style="margin-bottom:1.75rem">
+          <h2>Shop details</h2>
+        </div>
+        <ContactBlock />
+      </div>
+
+      <div class="contact__map">
+        {
+          hasMapEmbed ? (
+            <iframe
+              src={mapEmbedUrl}
+              title={`Map showing the location of ${site.name}`}
+              width="100%"
+              height="100%"
+              style="border:0; min-height: 22rem;"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen
+            />
+          ) : (
+            <div class="map-placeholder">
+              <span class="map-placeholder__icon" aria-hidden="true">🗺️</span>
+              <p class="map-placeholder__title">Map placeholder</p>
+              <p class="map-placeholder__hint">
+                Replace <code>mapEmbedUrl</code> in <code>src/config/site.ts</code> with a Google Maps embed
+                URL and this box becomes a live map.
+              </p>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Enquiry form -->
+  <section class="section section--cream">
+    <div class="container form-wrap">
+      <div class="section-head" style="margin-bottom:1.5rem">
+        <span class="eyebrow">Send an Enquiry</span>
+        <h2>Ask us about stock, prices or bulk orders</h2>
+        <p class="lead">
+          This form opens your own email app with the message pre-filled — nothing is sent through this
+          website. If you would rather talk to someone,{" "}
+          {
+            hasPhone ? (
+              <a href={`tel:${phone.replace(/[^+\d]/g, "")}`}>call us on {displayValue(phoneDisplay)}</a>
+            ) : (
+              <span>call us on <span class="todo">{displayValue(phoneDisplay)}</span></span>
+            )
+          }.
+        </p>
+      </div>
+
+      {
+        !hasEmail && (
+          <p class="form-notice">
+            <strong>Form inactive:</strong> add a real address to <code>contact.email</code> in
+            <code>src/config/site.ts</code> to enable it.
+          </p>
+        )
+      }
+
+      <form
+        class="form"
+        action={hasEmail ? `mailto:${email}` : undefined}
+        method="post"
+        enctype="text/plain"
+      >
+        <div class="form__row">
+          <div class="field">
+            <label for="name">Your name</label>
+            <input id="name" name="Name" type="text" autocomplete="name" required disabled={!hasEmail} />
+          </div>
+          <div class="field">
+            <label for="phone">Phone number</label>
+            <input id="phone" name="Phone" type="tel" autocomplete="tel" required disabled={!hasEmail} />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="message">Your message</label>
+          <textarea id="message" name="Message" rows="5" required disabled={!hasEmail}
+            placeholder="Tell us what you are looking for — item, quantity, or a question about stock."
+          ></textarea>
+        </div>
+
+        <button class="btn btn--primary" type="submit" disabled={!hasEmail}>
+          Open Email & Send
+        </button>
+        <p class="form__note">Or call us directly during opening hours — we usually pick up right away.</p>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    background: linear-gradient(180deg, var(--cream-100), var(--cream-50));
+    padding-block: clamp(2.75rem, 6vw, 4.25rem);
+    border-bottom: var(--border);
+  }
+
+  .page-head .lead {
+    max-width: 44rem;
+  }
+
+  .contact {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+    align-items: start;
+  }
+
+  @media (min-width: 58rem) {
+    .contact {
+      grid-template-columns: 0.95fr 1.05fr;
+    }
+  }
+
+  .contact__map {
+    overflow: hidden;
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: var(--border);
+  }
+
+  .map-placeholder {
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    text-align: center;
+    min-height: 22rem;
+    padding: 2rem;
+    background: var(--cream-100);
+    border: 2px dashed rgba(15, 32, 64, 0.25);
+    border-radius: var(--radius);
+  }
+
+  .map-placeholder__icon {
+    font-size: 2.75rem;
+    line-height: 1;
+    margin-bottom: 0.6rem;
+  }
+
+  .map-placeholder__title {
+    font-weight: 700;
+    color: var(--navy-900);
+  }
+
+  .map-placeholder__hint {
+    max-width: 22rem;
+    margin-top: 0.4rem;
+    font-size: 0.88rem;
+    color: var(--slate-600);
+  }
+
+  .form-wrap {
+    max-width: 46rem;
+  }
+
+  .form-notice {
+    padding: 0.85rem 1.1rem;
+    margin-bottom: 1.5rem;
+    background: #fef3c7;
+    border: 1px dashed #d97706;
+    border-radius: 10px;
+    color: #92400e;
+    font-size: 0.92rem;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    background: #fff;
+    border: var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+
+  .form__row {
+    display: grid;
+    gap: 1.1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .field label {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--navy-900);
+  }
+
+  .field input,
+  .field textarea {
+    padding: 0.75rem 0.9rem;
+    background: var(--cream-50);
+    border: 1px solid rgba(15, 32, 64, 0.18);
+    border-radius: 10px;
+    font-size: 0.96rem;
+    resize: vertical;
+  }
+
+  .field input:focus,
+  .field textarea:focus {
+    outline: 2px solid var(--gold-500);
+    outline-offset: 1px;
+    background: #fff;
+  }
+
+  .field input:disabled,
+  .field textarea:disabled {
+    background: #f1f5f9;
+    color: var(--slate-600);
+    cursor: not-allowed;
+  }
+
+  .form button[type="submit"] {
+    align-self: flex-start;
+  }
+
+  .form button[type="submit"]:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .form__note {
+    font-size: 0.87rem;
+    color: var(--slate-600);
+  }
+
+  code {
+    background: var(--cream-100);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+    font-size: 0.92em;
+  }
+</style>
