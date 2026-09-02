@@ -2,9 +2,10 @@
 
 **Date:** 2026-09-02 (updated — site now built)  
 **Working directory:** `D:\Sarthak\Coding\Work\KWTC\ManoveirTradingCO`  
-**Status:** **Built and verified.** All 4 pages implemented, `npm run build` passes with 0 errors,
-visually checked at desktop (1440px) and mobile (390px). Remaining work is filling in real business
-details — see §11.  
+**Status:** **Production-ready.** 5 routes implemented, `npm run build` passes with 0 errors,
+visually checked at desktop (1440px) and mobile (390px). SEO/structured data/headers/deployment
+config all in place, and the work is committed to git. The ONLY remaining work is filling in real
+business details — see §11.  
 **Purpose:** Pass context to another AI to continue building the site without re-asking the user.
 
 ---
@@ -36,28 +37,38 @@ details — see §11.
 Astro project scaffolded and fully implemented. Actual tree:
 
 ```
-├── astro.config.mjs          # output: static, cssTarget pinned (see §12)
-├── package.json              # astro ^7.2.10, @astrojs/check, typescript
+├── astro.config.mjs          # static output, SITE_URL env, sitemap, cssTarget pin (§12)
+├── package.json              # astro ^7.2.10, @astrojs/check, @astrojs/sitemap, typescript
 ├── tsconfig.json             # extends astro/tsconfigs/strict
+├── netlify.toml              # build cmd, publish dir, NODE_VERSION pin, 404 redirect
+├── .nvmrc                    # 24
+├── .env.example              # documents SITE_URL
+├── .gitattributes            # eol=lf so Linux CI matches local Windows builds
 ├── .gitignore
-├── README.md                 # dev/build instructions + placeholder checklist
+├── README.md                 # dev/build/deploy instructions + pre-launch checklist
 ├── status.md                 # this file
+├── scripts/
+│   └── generate-og-image.mjs # `npm run og` → public/og-image.png via sharp
 ├── public/
 │   ├── favicon.svg           # navy tile, gold "M"
+│   ├── og-image.png          # 1200x630 branded share card (committed)
+│   ├── _headers              # CSP + security headers + cache rules
 │   └── images/README.md      # where to drop the shopfront photo
 ├── src/
 │   ├── config/site.ts        # SINGLE SOURCE OF TRUTH (all copy + placeholders)
-│   ├── layouts/BaseLayout.astro
+│   ├── layouts/BaseLayout.astro   # SEO, OG, canonical, Store JSON-LD
 │   ├── components/  Header, Footer, Hero, CategoryCard,
 │   │                FeatureCard, TestimonialCard, ContactBlock  (7 files)
-│   ├── pages/       index, about, products, contact  (4 files)
+│   ├── pages/       index, about, products, contact, 404, robots.txt.ts  (6 files)
 │   └── styles/global.css     # theme variables + utilities
 └── dist/                     # build output (gitignored)
 ```
 
-- Node v24.14.1, npm 11.12.1 — verified working.
-- Git repo: **still No.** Not initialised — commit/push was not requested.
-- `node_modules/` installed (269 packages).
+- Node v24.14.1, npm 11.12.1 — verified working. **Astro 7 requires Node >= 22.12.0**, pinned in
+  `engines`, `.nvmrc` and `netlify.toml` (hosts defaulting to Node 18/20 will otherwise fail the build).
+- Git repo: **yes.** Initialised on branch `main`, one commit (`0a62530`, 32 files), working tree clean.
+  Nothing has been pushed — no remote is configured.
+- `node_modules/` installed (275 packages).
 
 ---
 
@@ -217,7 +228,26 @@ Shared:
 7. [x] `npm run build` → **0 errors, 0 warnings, 0 hints**; 4 pages emitted; **0 occurrences of the
        literal `TODO` in built HTML** (markers live only in `site.ts` + one comment in `astro.config.mjs`)
 8. [x] Visual check done via headless Edge at 1440px and 390px — see §12 for the two bugs this caught
-9. [x] `README.md` written. **`git init` intentionally skipped** — not requested.
+9. [x] `README.md` written — now includes full per-host deployment instructions + pre-launch checklist
+
+Then, on request ("do it all to make it a prod. level website"):
+
+10. [x] **404 page** (`src/pages/404.astro`) — on-brand, `noindex`, links every route
+11. [x] **Open Graph image** — `public/og-image.png`, 1200x630, generated from `site.ts` by
+        `scripts/generate-og-image.mjs` (`npm run og`) using sharp, which Astro already depends on.
+        Wired up with `og:image`/`twitter:image` + dimensions + alt text
+12. [x] **`Store` JSON-LD structured data** in `BaseLayout` for local search. Built from `site.ts`;
+        omits any `TODO:` field and emits **nothing at all** until one real contact detail exists.
+        Verified both ways — see §13
+13. [x] **`robots.txt` + sitemap** — `@astrojs/sitemap` plus a `robots.txt.ts` route so the
+        `Sitemap:` line always tracks the real domain instead of going stale
+14. [x] **`SITE_URL` env var** drives canonical/OG/sitemap/robots, so going live needs no code edit
+15. [x] **Security + cache headers** (`public/_headers`): CSP allowing only Google Fonts and the
+        Maps iframe, plus `nosniff`, `X-Frame-Options`, `Referrer-Policy`, HSTS, and immutable
+        caching for fingerprinted `/_astro/` assets
+16. [x] **Deployment config** — `netlify.toml`, `.nvmrc`, `.env.example`, `engines`; README covers
+        Netlify, Cloudflare Pages, Vercel, GitHub Pages and plain nginx/Apache
+17. [x] **git init + initial commit** on `main`. No remote, nothing pushed.
 
 Do not re-ask user for color, stack, categories, or placeholders — all decided. Only ask if blocking (e.g., real logo file, actual map URL).
 
@@ -300,4 +330,47 @@ Things a future session should know, learned while building:
 
 ---
 
-*Handoff complete — the site is built. Next session: fill in §11, then deploy `dist/` to any static host.*
+## 13. Production Hardening — What Was Verified, Not Just Written
+
+Two things here are easy to add and never actually check, so both were tested by temporarily
+filling in real values, building, then reverting:
+
+- **JSON-LD appears and is correctly filtered.** With a test phone/street/locality/hours set, the
+  emitted `Store` block contained exactly those fields and correctly **omitted** `addressRegion`
+  and `postalCode`, which were still `TODO:`. With everything back to placeholders, no `ld+json`
+  block is emitted at all. Test values were reverted and the build confirmed clean of them.
+- **`SITE_URL` is honoured.** Building with `SITE_URL=https://manoveirtrading.in` produced that
+  domain in `<link rel="canonical">`, `og:image`, the sitemap `<loc>` entries and the `robots.txt`
+  `Sitemap:` line.
+
+Also confirmed on the final build: 5 pages, **zero `.js` files in `dist/`**, no literal `TODO`
+anywhere in the built HTML, 404 carries `noindex, follow`, and the sitemap lists the 4 real routes
+while excluding the 404.
+
+### Deployment status
+
+Config is committed and host-agnostic, but **nothing has been deployed and no remote is set** —
+that needs a hosting account and the real domain. `dist/` is ready to upload as-is. The one thing
+that will bite on a first deploy is the Node version: Astro 7 needs >= 22.12.0, so hosts defaulting
+to Node 18 or 20 fail unless `NODE_VERSION` is set (already handled for Netlify in `netlify.toml`).
+
+**GitHub Pages was deliberately not scaffolded:** if the site lives at
+`username.github.io/repo-name` rather than a custom domain, `base: '/repo-name'` must be set in
+`astro.config.mjs`, and guessing that would produce a subtly broken build. Ask first.
+
+---
+
+## 14. Preview Server Gotcha (cost time twice)
+
+`astro preview` daemonises and the npm script exits immediately. Worse: **if an old preview is
+still alive it keeps port 4321 and the new one silently moves to 4322**, so a screenshot or curl
+against 4321 quietly tests a *stale build*. This produced one bogus "the 404 page is broken"
+reading before it was caught by checking whether `/og-image.png` (new that build) resolved.
+
+Always confirm which port the current server is on (`npx astro preview status`) and stop strays
+with `npx astro preview stop`, or kill whatever holds 4321.
+
+---
+
+*Handoff complete — the site is built, hardened and committed. Next session: fill in §11 (needs the
+owner), then pick a host per README "Deploying".*
