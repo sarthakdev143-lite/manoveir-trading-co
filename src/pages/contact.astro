@@ -1,145 +1,102 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ContactBlock from "../components/ContactBlock.astro";
+import Icon from "../components/Icon.astro";
 import { site, isPlaceholder, displayValue } from "../config/site";
 
-const { email, phone, phoneDisplay, mapEmbedUrl } = site.contact;
+const { email, phone, phoneDisplay } = site.contact;
 
 const hasEmail = !isPlaceholder(email);
 const hasPhone = !isPlaceholder(phone);
-const hasMapEmbed = !isPlaceholder(mapEmbedUrl);
 ---
 
 <BaseLayout
-  title="Contact & Location"
-  description={`Visit ${site.name} in person — address, phone, email, opening hours and directions.`}
+  title="Contact"
+  description={`Get in touch with ${site.name} — phone, email and enquiries about stock, prices or bulk orders.`}
 >
   <section class="masthead">
     <div class="container masthead__inner">
       <div>
-        <span class="eyebrow">Contact &amp; location</span>
-        <h1>Find us, call us, or just drop by</h1>
+        <span class="eyebrow">Contact</span>
+        <h1>Call us, write to us, or drop by</h1>
         <p class="lead">
-          We are a walk-in shop, so the best way to reach us is in person or over the phone during opening
-          hours.
+          We are a walk-in shop, so the best way to reach us is in person or over the phone. For anything that
+          needs a written reply — bulk orders, stock checks — send an enquiry and we will come back to you.
         </p>
       </div>
-
-      <dl class="facts">
-        <div>
-          <dt>Best contact</dt>
-          <dd>In person</dd>
-        </div>
-        <div>
-          <dt>Then</dt>
-          <dd>By phone</dd>
-        </div>
-        <div>
-          <dt>Online orders</dt>
-          <dd>Not offered</dd>
-        </div>
-      </dl>
     </div>
   </section>
 
   <section class="section">
     <div class="container contact">
       <div class="panel contact__details">
-        <span class="eyebrow">Shop details</span>
-        <h2 class="contact__title">Where to find us</h2>
+        <span class="eyebrow">How to reach us</span>
+        <h2 class="contact__title">Get in touch</h2>
         <ContactBlock />
       </div>
 
-      <div class="contact__map">
-        {
-          hasMapEmbed ? (
-            <iframe
-              src={mapEmbedUrl}
-              title={`Map showing the location of ${site.name}`}
-              width="100%"
-              height="100%"
-              style="border:0; min-height: 24rem;"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-              allowfullscreen
-            />
-          ) : (
-            <div class="map-placeholder">
-              <span class="map-placeholder__icon" aria-hidden="true">🗺️</span>
-              <p class="map-placeholder__title">Map placeholder</p>
-              <p class="map-placeholder__hint">
-                Replace <code>mapEmbedUrl</code> in <code>src/config/site.ts</code> with a Google Maps embed
-                URL and this box becomes a live map.
-              </p>
-            </div>
-          )
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- Enquiry form -->
-  <section class="section section--alt">
-    <div class="container form-wrap">
-      <div class="section-head section-head--center">
+      <div class="panel contact__form-panel">
         <span class="eyebrow">Send an enquiry</span>
-        <h2>Ask us about stock, prices or bulk orders</h2>
-        <p class="lead">
-          This form opens your own email app with the message pre-filled — nothing is sent through this
-          website. If you would rather talk to someone,{" "}
+        <h2 class="contact__title">Ask about stock, prices or bulk orders</h2>
+        <p class="contact__intro">
+          This form opens your own email app with the message ready to send — nothing is submitted through
+          this website.
           {
-            hasPhone ? (
-              <a href={`tel:${phone.replace(/[^+\d]/g, "")}`}>call us on {displayValue(phoneDisplay)}</a>
-            ) : (
-              <span>call us on <span class="todo">{displayValue(phoneDisplay)}</span></span>
+            hasPhone && (
+              <>
+                {" "}Prefer to talk?{" "}
+                <a class="contact__tel" href={`tel:${phone.replace(/[^+\d]/g, "")}`}>
+                  Call {displayValue(phoneDisplay)}
+                </a>.
+              </>
             )
-          }.
+          }
         </p>
+
+        <form
+          class="form"
+          action={hasEmail ? `mailto:${email}` : undefined}
+          method="post"
+          enctype="text/plain"
+        >
+          <div class="form__row">
+            <div class="field">
+              <label for="name">Your name</label>
+              <input id="name" name="Name" type="text" autocomplete="name" required disabled={!hasEmail} />
+            </div>
+            <div class="field">
+              <label for="phone">Phone number</label>
+              <input id="phone" name="Phone" type="tel" autocomplete="tel" required disabled={!hasEmail} />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="message">Your message</label>
+            <textarea
+              id="message"
+              name="Message"
+              rows="5"
+              required
+              disabled={!hasEmail}
+              placeholder="Tell us what you are looking for — item, quantity, or a question about stock."
+            ></textarea>
+          </div>
+
+          <button class="btn btn--primary form__submit" type="submit" disabled={!hasEmail}>
+            Open email &amp; send
+            <Icon name="arrowRight" />
+          </button>
+
+          {
+            !hasEmail && (
+              <p class="form__note">
+                Our enquiry inbox is being set up. Until it is live, please visit the shop and we will help you
+                at the counter.
+              </p>
+            )
+          }
+        </form>
       </div>
-
-      {
-        !hasEmail && (
-          <p class="form-notice">
-            <strong>Form inactive:</strong> add a real address to <code>contact.email</code> in
-            <code>src/config/site.ts</code> to enable it.
-          </p>
-        )
-      }
-
-      <form
-        class="panel form"
-        action={hasEmail ? `mailto:${email}` : undefined}
-        method="post"
-        enctype="text/plain"
-      >
-        <div class="form__row">
-          <div class="field">
-            <label for="name">Your name</label>
-            <input id="name" name="Name" type="text" autocomplete="name" required disabled={!hasEmail} />
-          </div>
-          <div class="field">
-            <label for="phone">Phone number</label>
-            <input id="phone" name="Phone" type="tel" autocomplete="tel" required disabled={!hasEmail} />
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="message">Your message</label>
-          <textarea
-            id="message"
-            name="Message"
-            rows="5"
-            required
-            disabled={!hasEmail}
-            placeholder="Tell us what you are looking for — item, quantity, or a question about stock."
-          ></textarea>
-        </div>
-
-        <button class="btn btn--primary form__submit" type="submit" disabled={!hasEmail}>
-          Open email &amp; send
-        </button>
-        <p class="form__note">Or call us directly during opening hours — we usually pick up right away.</p>
-      </form>
     </div>
   </section>
 </BaseLayout>
@@ -151,85 +108,49 @@ const hasMapEmbed = !isPlaceholder(mapEmbedUrl);
     align-items: start;
   }
 
-  /* See the `min-width: 0` note in global.css — long words must not widen the column. */
-  .contact > *,
-  .form__row > * {
+  .contact > * {
     min-width: 0;
   }
 
-  @media (min-width: 58rem) {
+  @media (min-width: 62rem) {
     .contact {
-      grid-template-columns: 0.95fr 1.05fr;
+      grid-template-columns: 0.85fr 1.15fr;
     }
   }
 
   .contact__title {
+    margin-bottom: 1.25rem;
+    font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+  }
+
+  .contact__intro {
     margin-bottom: 1.5rem;
-    font-size: clamp(1.5rem, 2.6vw, 1.9rem);
+    color: var(--text-dim);
+    font-size: 0.96rem;
   }
 
-  .contact__map {
-    overflow: hidden;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), var(--shadow);
+  .contact__tel {
+    color: var(--amber);
   }
 
-  .map-placeholder {
-    display: grid;
-    place-content: center;
-    justify-items: center;
-    gap: 0.2rem;
-    min-height: 24rem;
-    padding: 2rem;
-    text-align: center;
-    background: var(--grad-soft);
-  }
-
-  .map-placeholder__icon {
-    font-size: 2.5rem;
-    line-height: 1;
-    margin-bottom: 0.5rem;
-  }
-
-  .map-placeholder__title {
-    color: var(--text);
-    font-family: var(--font-display);
-    font-size: 1.05rem;
-    font-weight: 600;
-  }
-
-  .map-placeholder__hint {
-    max-width: 22rem;
-    color: var(--text-faint);
-    font-size: 0.87rem;
-  }
-
-  .form-wrap {
-    max-width: 48rem;
-  }
-
-  .form-notice {
-    padding: 0.9rem 1.15rem;
-    margin-bottom: 1.5rem;
-    color: #ffd08a;
-    background: rgba(255, 176, 46, 0.1);
-    border: 1px dashed rgba(255, 176, 46, 0.45);
-    border-radius: var(--radius-sm);
-    font-size: 0.92rem;
+  .contact__tel:hover {
+    color: var(--amber-light);
   }
 
   .form {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1.15rem;
   }
 
   .form__row {
     display: grid;
-    gap: 1.25rem;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: 1.15rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  }
+
+  .form__row > * {
+    min-width: 0;
   }
 
   .form__submit {
@@ -237,17 +158,14 @@ const hasMapEmbed = !isPlaceholder(mapEmbedUrl);
   }
 
   .form__submit:disabled {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--surface-2);
     border-color: var(--line);
     color: var(--text-faint);
-    box-shadow: none;
-    transform: none;
-    filter: none;
     cursor: not-allowed;
   }
 
   .form__note {
     color: var(--text-faint);
-    font-size: 0.87rem;
+    font-size: 0.88rem;
   }
 </style>

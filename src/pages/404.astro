@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
 import { site } from "../config/site";
 ---
 
@@ -8,24 +9,36 @@ import { site } from "../config/site";
   description="That page does not exist. Browse our product categories or get in touch instead."
   indexable={false}
 >
-  <section class="notfound">
+  <section class="section notfound">
     <div class="container notfound__inner">
-      <span class="notfound__code grad-text" aria-hidden="true">404</span>
+      <span class="notfound__code" aria-hidden="true">404</span>
       <h1>We could not find that page</h1>
       <p class="lead">
         The link may be out of date, or the address might have a typo. Everything on the site is one click
         away below.
       </p>
 
-      <div class="actions actions--center">
-        <a class="btn btn--primary" href="/">Back to home</a>
-        <a class="btn btn--glass" href="/contact">Contact us</a>
+      <div class="actions">
+        <a class="btn btn--primary" href="/">
+          Back to home
+          <Icon name="arrowRight" />
+        </a>
+        <a class="btn btn--outline" href="/contact">Contact us</a>
       </div>
 
       <nav class="notfound__links" aria-label="All pages">
         <h2 class="notfound__links-title">All pages</h2>
         <ul>
-          {site.nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+          {
+            site.nav.map((item) => (
+              <li>
+                <a href={item.href}>
+                  <Icon name="arrowRight" />
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
         </ul>
       </nav>
     </div>
@@ -34,58 +47,35 @@ import { site } from "../config/site";
 
 <style>
   .notfound {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    padding-block: clamp(3rem, 9vw, 6.5rem);
-  }
-
-  .notfound::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    top: -18rem;
-    left: 50%;
-    translate: -50% 0;
-    width: 44rem;
-    height: 44rem;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(124, 92, 255, 0.26), transparent 62%);
-    pointer-events: none;
+    padding-block: clamp(3rem, 8vw, 6rem);
   }
 
   .notfound__inner {
-    max-width: 40rem;
-    margin-inline: auto;
-    text-align: center;
+    max-width: 38rem;
   }
 
   .notfound__code {
     display: block;
+    margin-bottom: 0.5rem;
+    color: var(--amber);
     font-family: var(--font-display);
-    font-size: clamp(4.5rem, 14vw, 8rem);
-    font-weight: 700;
+    font-size: clamp(3.5rem, 10vw, 5.5rem);
+    font-weight: 600;
     line-height: 1;
-    letter-spacing: -0.05em;
-    margin-bottom: 0.75rem;
-  }
-
-  .notfound .lead {
-    margin-inline: auto;
+    letter-spacing: -0.03em;
   }
 
   .notfound__links {
-    margin-top: 3rem;
-    padding-top: 1.75rem;
+    margin-top: 2.75rem;
+    padding-top: 1.6rem;
     border-top: 1px solid var(--line);
   }
 
   .notfound__links-title {
-    margin-bottom: 1rem;
-    font-family: var(--font-body);
-    font-size: 0.8rem;
+    margin-bottom: 0.9rem;
+    font-size: 0.78rem;
     font-weight: 500;
-    letter-spacing: 0.09em;
+    letter-spacing: 0.11em;
     text-transform: uppercase;
     color: var(--text-faint);
   }
@@ -93,26 +83,26 @@ import { site } from "../config/site";
   .notfound__links ul {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.6rem;
+    gap: 0.6rem 1.75rem;
     list-style: none;
     padding: 0;
   }
 
   .notfound__links a {
-    display: inline-block;
-    padding: 0.5rem 1.1rem;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     color: var(--text-dim);
-    font-size: 0.92rem;
-    transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    font-size: 0.95rem;
   }
 
   .notfound__links a:hover {
-    background: var(--surface-hover);
-    border-color: var(--line-strong);
-    color: var(--text);
+    color: var(--amber);
+  }
+
+  .notfound__links :global(.icon) {
+    width: 0.95rem;
+    height: 0.95rem;
+    color: var(--amber);
   }
 </style>

@@ -3,13 +3,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
 import CategoryCard from "../components/CategoryCard.astro";
 import FeatureCard from "../components/FeatureCard.astro";
-import TestimonialCard from "../components/TestimonialCard.astro";
-import { site, isPlaceholder, displayValue } from "../config/site";
+import Icon from "../components/Icon.astro";
+import ShelfRack from "../components/illustrations/ShelfRack.astro";
+import { site } from "../config/site";
 
 const featured = site.categories.slice(0, 4);
-const teasers = site.testimonials.slice(0, 3);
-const { address, hours, mapLink } = site.contact;
-const mapHref = isPlaceholder(mapLink) ? null : mapLink;
 ---
 
 <BaseLayout title={site.name}>
@@ -18,7 +16,7 @@ const mapHref = isPlaceholder(mapLink) ? null : mapLink;
   <!-- Featured categories -->
   <section class="section section--alt">
     <div class="container">
-      <div class="section-head section-head--center">
+      <div class="section-head">
         <span class="eyebrow">What we stock</span>
         <h2>Everyday essentials, all under one roof</h2>
         <p class="lead">
@@ -31,18 +29,19 @@ const mapHref = isPlaceholder(mapLink) ? null : mapLink;
         {featured.map((category) => <CategoryCard {...category} examples={[]} />)}
       </div>
 
-      <div class="actions actions--center">
-        <a class="btn btn--glass" href="/products">
-          View all {site.categories.length} categories →
+      <div class="actions">
+        <a class="btn btn--outline" href="/products">
+          View all {site.categories.length} categories
+          <Icon name="arrowRight" />
         </a>
       </div>
     </div>
   </section>
 
   <!-- Why choose us -->
-  <section class="section section--glow">
+  <section class="section">
     <div class="container">
-      <div class="section-head section-head--center">
+      <div class="section-head">
         <span class="eyebrow">Why choose us</span>
         <h2>A shop built on service, not scale</h2>
         <p class="lead">
@@ -57,62 +56,29 @@ const mapHref = isPlaceholder(mapLink) ? null : mapLink;
     </div>
   </section>
 
-  <!-- Testimonials -->
-  <section class="section section--alt">
-    <div class="container">
-      <div class="section-head section-head--center">
-        <span class="eyebrow">Testimonials</span>
-        <h2>What our customers say</h2>
-        <p class="lead">
-          Highlighted quotes are placeholders — replace them with real customer feedback in
-          <code>src/config/site.ts</code>.
-        </p>
-      </div>
-
-      <div class="grid grid--3">
-        {teasers.map((testimonial) => <TestimonialCard {...testimonial} />)}
-      </div>
-    </div>
-  </section>
-
   <!-- Visit us -->
-  <section class="section">
-    <div class="container">
-      <div class="panel panel--accent visit">
-        <div class="visit__copy">
-          <span class="eyebrow">Visit our shop</span>
-          <h2>Come see us in person</h2>
-          <p class="lead">
-            No online cart, no delivery windows — just walk in, pick what you need, and ask us anything.
-          </p>
+  <section class="section section--alt">
+    <div class="container visit">
+      <div class="visit__copy">
+        <span class="eyebrow">Visit our shop</span>
+        <h2>Come see us in person</h2>
+        <p class="lead">
+          No online cart and no delivery windows — walk in, pick what you need, and ask us anything. If
+          something is not on the shelf, tell us and we will try to bring it in on the next stock run.
+        </p>
 
-          <div class="actions">
-            <a class="btn btn--primary" href="/contact">Contact &amp; directions</a>
-            {
-              mapHref && (
-                <a class="btn btn--glass" href={mapHref} target="_blank" rel="noopener noreferrer">
-                  Open in maps
-                </a>
-              )
-            }
-          </div>
+        <div class="actions">
+          <a class="btn btn--primary" href="/contact">
+            Get in touch
+            <Icon name="arrowRight" />
+          </a>
+          <a class="btn btn--outline" href="/about">About our shop</a>
         </div>
-
-        <dl class="facts facts--stacked visit__facts">
-          <div>
-            <dt>Address</dt>
-            <dd class={isPlaceholder(address) ? "todo" : undefined}>{displayValue(address)}</dd>
-          </div>
-          <div>
-            <dt>Hours</dt>
-            <dd class={isPlaceholder(hours) ? "todo" : undefined}>{displayValue(hours)}</dd>
-          </div>
-          <div>
-            <dt>Ordering</dt>
-            <dd>Walk-in counter service only</dd>
-          </div>
-        </dl>
       </div>
+
+      <figure class="visit__figure">
+        <ShelfRack />
+      </figure>
     </div>
   </section>
 </BaseLayout>
@@ -124,7 +90,6 @@ const mapHref = isPlaceholder(mapLink) ? null : mapLink;
     align-items: center;
   }
 
-  /* See the `min-width: 0` note in global.css — long words must not widen the column. */
   .visit > * {
     min-width: 0;
   }
@@ -135,14 +100,16 @@ const mapHref = isPlaceholder(mapLink) ? null : mapLink;
     }
   }
 
-  .visit__copy .lead {
-    max-width: 32rem;
+  .visit__figure {
+    margin: 0;
+    padding: clamp(0.75rem, 1.5vw, 1.15rem);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
   }
 
-  .visit__facts {
-    padding: clamp(1.1rem, 2vw, 1.5rem);
-    background: rgba(8, 11, 17, 0.45);
-    border: 1px solid var(--line);
+  .visit__figure :global(.shelfrack) {
     border-radius: var(--radius);
+    background: var(--bg);
   }
 </style>

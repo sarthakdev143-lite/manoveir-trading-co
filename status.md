@@ -24,10 +24,10 @@ business details — see §11.
 | Question | Answer |
 |---|---|
 | **Tech stack** | **Astro** (static site generator, `output: static`). User explicitly rejected plain HTML and Tailwind CDN. Requires Node.js + npm. |
-| **Pages / Sections** | **ALL selected:** Home/Hero, About Us, Products/Categories, Why Choose Us, Contact + Location, Testimonials |
+| **Pages / Sections** | Home/Hero, About Us, Products/Categories, Why Choose Us, Contact. **Testimonials were dropped** — every quote was a placeholder, and the user asked to keep only the phone and email as provisional data. |
 | **Site structure** | **Multi-page** (not single-page anchors). Separate routes, shared layout/nav/footer. |
 | **Contact details** | **Use clearly-marked placeholders** in a single central config file. Do not invent fake addresses. Use `TODO:` markers. |
-| **Color theme** | **Modern dark premium** (see §5) — deep slate ground, violet→cyan gradient accent, glass surfaces, soft glows, large radii. Two earlier themes were rejected: the original *navy + gold on cream*, then an editorial *ink + chartreuse* one. Do not re-pitch either. |
+| **Color theme** | **Warm dark shopfront** (see §5) — near-black walnut grounds, amber as the only accent, drawn SVG illustrations, no gradients or glass. Three earlier themes were rejected: *navy + gold on cream*, an editorial *ink + chartreuse* one, and a *violet→cyan gradient glass* one the user called "ai slop vibecoded". Do not re-pitch any of them. |
 | **Product categories** | **All 6 selected:** Groceries & Staples, Household Essentials, Personal Care, Beverages & Snacks, Stationery & Sundries, Seasonal & Festive Goods |
 
 ---
@@ -50,15 +50,16 @@ Astro project scaffolded and fully implemented. Actual tree:
 ├── scripts/
 │   └── generate-og-image.mjs # `npm run og` → public/og-image.png via sharp
 ├── public/
-│   ├── favicon.svg           # gradient tile, white "M" (PNG set: npm run icons)
+│   ├── favicon.svg           # dark tile, amber storefront glyph (PNG set: npm run icons)
 │   ├── og-image.png          # 1200x630 branded share card (committed)
 │   ├── _headers              # CSP + security headers + cache rules
 │   └── images/README.md      # where to drop the shopfront photo
 ├── src/
 │   ├── config/site.ts        # SINGLE SOURCE OF TRUTH (all copy + placeholders)
 │   ├── layouts/BaseLayout.astro   # SEO, OG, canonical, Store JSON-LD
-│   ├── components/  Header, Footer, Hero, CategoryCard,
-│   │                FeatureCard, TestimonialCard, ContactBlock  (7 files)
+│   ├── components/  Header, Footer, Hero, Icon, CategoryCard,
+│   │                FeatureCard, ContactBlock  (7 files)
+│   │                illustrations/ Shopfront, ShelfRack, Counter  (3 files)
 │   ├── pages/       index, about, products, contact, 404, robots.txt.ts  (6 files)
 │   └── styles/global.css     # theme variables + utilities
 └── dist/                     # build output (gitignored)
@@ -101,10 +102,10 @@ npm run dev   # verify at http://localhost:4321
 │   │   ├── Hero.astro
 │   │   ├── CategoryCard.astro
 │   │   ├── FeatureCard.astro
-│   │   ├── TestimonialCard.astro
+│   │   ├── Icon.astro
 │   │   └── ContactBlock.astro
 │   ├── pages/
-│   │   ├── index.astro       # Home / Hero + highlights + Why Choose Us teaser + Testimonials teaser
+│   │   ├── index.astro       # Home / Hero + featured categories + Why Choose Us + visit strip
 │   │   ├── about.astro       # About Us (story, values, commitment)
 │   │   ├── products.astro    # All 6 categories grid + what we stock
 │   │   └── contact.astro     # Address, phone, email, hours, map embed placeholder, contact form (mailto / no backend)
@@ -120,13 +121,11 @@ export const site = {
   tagline: "Your Trusted Local Retail Partner",
   description: "A retail business engaged in the purchase and sale of various consumer goods and products, serving local customers through direct shop-based sales.",
   contact: {
-    address: "TODO: Shop No., Street, Area, City, State - PIN",
+    // Only these two are provisional. Address, hours and map URLs were removed
+    // outright — see §7.
     phone: "TODO: +91-XXXXXXXXXX",
     phoneDisplay: "TODO: +91 9XXXX XXXXX",
     email: "TODO: contact@manoveirtrading.example",
-    hours: "TODO: Mon–Sat 9:00 AM – 9:00 PM, Sun 10:00 AM – 6:00 PM",
-    mapEmbedUrl: "TODO: Google Maps embed URL",
-    mapLink: "TODO: Google Maps share link",
   },
   nav: [
     { label: "Home", href: "/" },
@@ -147,63 +146,68 @@ export const site = {
 
 ---
 
-## 5. Design System — modern dark premium
+## 5. Design System — warm dark shopfront
 
-Third and current theme. The original navy/gold/cream was replaced by an editorial ink +
-chartreuse "Market Index" theme, which the user rejected outright ("this ui is bad"); they then
-chose **modern dark premium** from a set of previewed options. Live tokens are at the top of
-`src/styles/global.css`:
+Fourth and current theme. History matters here, because three directions have been rejected:
+navy/gold/cream → editorial ink + chartreuse ("this ui is bad") → violet/cyan gradient glass
+("it looks even bad. ai slop vibecoded"). The user's fix-list for that last one was concrete: cut
+the placeholder data down to the phone and email, and use **icons, mockups and images**. Live
+tokens are at the top of `src/styles/global.css`:
 
 ```css
 :root {
   color-scheme: dark;
-  --bg: #080b11;       /* page ground */
-  --bg-2: #0b1017;     /* .section--alt band */
-  --bg-3: #0e141d;     /* footer / raised band */
-  --surface: rgba(255,255,255,.045); /* glass cards and panels */
-  --line: rgba(255,255,255,.09);
-  --text: #e9edf4;
-  --text-dim: #a2aebf;
-  --text-faint: #6f7c8f;
-  --violet: #7c5cff;   /* fills, gradients, glows */
-  --cyan: #22d3ee;
-  --violet-text: #bcaaff; /* accent as small text — clears WCAG AA on dark */
-  --cyan-text: #7fe3f5;
-  --grad: linear-gradient(135deg, #7c5cff 0%, #4f8cff 48%, #22d3ee 100%);
-  --radius: 20px;      /* --radius-sm 14px, --radius-lg 28px */
-  --glow: 0 24px 70px -28px rgba(124,92,255,.65);
+  --bg: #100e0c;        /* warm near-black, not blue-black */
+  --bg-2: #15120e;      /* .section--alt / masthead / footer */
+  --surface: #1a1713;   /* cards, panels (solid, not translucent) */
+  --surface-2: #211c17; /* card hover */
+  --line: #2b2520;
+  --line-strong: #3d352c;
+  --text: #f3efe7;
+  --text-dim: #b5aca0;
+  --text-faint: #8a8075;
+  --amber: #e8a33d;     /* the only accent */
+  --amber-soft: rgba(232,163,61,.11);  /* icon-tile fill */
+  --amber-edge: rgba(232,163,61,.28);  /* icon-tile border */
+  --radius-sm: 8px; --radius: 12px; --radius-lg: 18px;
 }
 ```
 
-- Typography: `Sora` (400/600/700) for headings, `Inter` (400/500/600) for body, both from Google
-  Fonts. **Sentence case** — the previous all-caps treatment was part of what the user rejected.
-- Shape: large radii everywhere (pills for buttons), no square corners.
-- Surfaces: translucent white over the dark ground plus a 1px border and an `inset 0 1px 0`
-  top-edge highlight — that highlight is what reads as glass. `backdrop-filter` is reserved for
-  the sticky header, mobile nav panel and hero badge; cards omit it deliberately (no visible
-  difference at these opacities, meaningful paint cost).
-- Accent discipline: one gradient (`--grad`) for buttons, logo tile, bullet dots, stat values and
-  `.grad-text` headline text. Accent *text* uses the `-text` tints.
-- Depth: `.section--glow` paints a soft radial accent glow; cards lift 4px with a violet-tinted
-  shadow on hover. All lifts are disabled under `prefers-reduced-motion`.
-- Layout: max-width 1200px, `--gutter` clamp(1.1rem, 4vw, 2rem), centred section heads.
-- Header: sticky blurred bar; gradient rounded logo tile; nav pills in a glass track with the
-  active item gradient-tinted. Mobile menu stays a CSS-only checkbox toggle.
-- Footer: `--bg-3` ground under a gradient hairline, gradient logo tile, stacked fact rows.
-- Brand marks: `public/favicon.svg` (gradient tile, white "M"), PNG icon set via `npm run icons`,
-  share image via `npm run og`.
+- **Explicitly banned vocabulary:** gradients, glows, blur/`backdrop-filter`, glassmorphism,
+  gradient text, full-pill buttons and emoji. All of those were in the rejected version.
+- Typography: `Fraunces` (600/700) for h1/h2 only, `Inter` (400/500/600) for h3 down and all body
+  copy. Sentence case throughout.
+- **Icons** live in `src/components/Icon.astro` — hand-drawn on a 24×24 grid, 1.6 stroke, round
+  caps, `currentColor`. `site.ts` references them by name (`grain`, `spray`, `care`, `cup`,
+  `pencil`, `gift`, `basket`, `verified`, `tag`, `people`, `star`, `scales`, `neighbourhood`,
+  `phone`, `mail`, `check`, `arrowRight`, `storefront`). They render inside `.icon-tile` squares
+  at 2.9rem; below that the finer glyphs turn to mud.
+- **Illustrations** live in `src/components/illustrations/` — `Shopfront` (home hero),
+  `ShelfRack` (products header + home visit strip), `Counter` (about header). Flat vector, drawn
+  in the site palette plus sage `#7fa88a` and clay `#c96f4a`, no gradients. These replace the
+  dashed "photo goes here" boxes entirely.
+- Surfaces: solid `--surface` with a flat 1px border. Hover changes colour, never elevation, so
+  reduced-motion users get the same affordance.
+- Layout: max-width 1160px, `--gutter` clamp(1.15rem, 4vw, 2.25rem), left-aligned section heads.
+- Header: sticky solid bar; amber-tinted storefront glyph as the brand mark; underline-on-active
+  nav. Mobile menu stays a CSS-only checkbox toggle.
+- **Grid/flex children need `min-width: 0`** — without it one long word (the placeholder email)
+  widens the column past the viewport. `overflow-wrap` does not fix this on its own because it
+  does not reduce min-content width. Every page is verified to have zero overflow at a 300px
+  viewport.
+- Brand marks: `public/favicon.svg` (dark tile, amber storefront glyph), PNG icon set via
+  `npm run icons`, share image via `npm run og` (dark card with the shopfront drawing).
 
 ---
 
 ## 6. Content Plan Per Page
 
 ### `index.astro` — Home
-- Hero: large heading "Manoveir Trading CO", subheading from tagline, 2 CTAs (Explore Products → /products, Find Us → /contact), hero image placeholder (shopfront/goods).
-- Trust bar: "Serving local customers • Quality goods • Fair prices"
-- Featured categories: 3–4 cards teaser → link to /products
-- Why Choose Us: 3–4 pillars (Wide Selection, Quality Assured, Fair & Transparent Pricing, Friendly Local Service)
-- Testimonials teaser: 2–3 quotes → link to testimonials section on same page or dedicated block
-- Visit Us strip: hours + address placeholder + map link
+- Hero: name in Fraunces, amber tagline, 2 CTAs (Explore products → /products, Get in touch → /contact), `<Shopfront />` illustration in a framed figure with a caption.
+- Trust row: "Serving local customers / Quality goods / Fair prices" as ticked items under the CTAs.
+- Featured categories: 4 cards teaser → link to all 6 on /products
+- Why Choose Us: 4 pillars (Wide Selection, Quality Assured, Fair & Transparent Pricing, Friendly Local Service)
+- Visit Us strip: copy + CTAs alongside the `<ShelfRack />` illustration. **No testimonials, no address/hours** — see §7.
 
 ### `about.astro`
 - Our Story: 2 paragraphs (local retail, customer-first, curating daily essentials)
@@ -216,9 +220,10 @@ chose **modern dark premium** from a set of previewed options. Live tokens are a
 - CTA footer: "Looking for something specific? Visit us or get in touch."
 
 ### `contact.astro`
-- Two-column: contact details (address/phone/email/hours from `site.contact`) + map placeholder (iframe with `site.contact.mapEmbedUrl` or dashed box saying "Map placeholder — replace embed URL in site.ts")
-- Simple contact form: name, phone, message → `mailto:` (no backend, static-safe) + note "or call us directly"
-- No real form handler needed.
+- Two panels: phone + email rows (from `site.contact`, with icon tiles) and the enquiry form.
+- Simple contact form: name, phone, message → `mailto:` (no backend, static-safe). Disabled with a
+  short user-facing note while `contact.email` is a placeholder.
+- **No map and no address section** — see §7. No real form handler needed.
 
 Shared:
 - `Header.astro` / `Footer.astro` use `site.nav` and `site.contact`
@@ -228,9 +233,17 @@ Shared:
 
 ## 7. Placeholder Strategy
 
-- Every real-world value that is unknown must be `TODO:` prefixed and sourced from `src/config/site.ts`.
-- Do not invent a fake street address. Use the exact strings shown in §4.3.
-- Map: use a grey dashed placeholder div with instructions if `mapEmbedUrl` still contains `TODO`.
+Revised after the user's feedback that visible placeholder scaffolding made the site look
+unfinished ("don't keep much placeholder data, keep only the number and email").
+
+- **Only `contact.phone` and `contact.email` are placeholders.** The user will supply both.
+- **Address, opening hours, map embed/link, `postalAddress`, `openingHoursSpec` and all
+  testimonials were deleted from the model, not stubbed.** Absent beats invented or dashed-box
+  provisional. README has a section on reintroducing them once the real values exist.
+- Never invent a street address, opening hours or a customer name.
+- Placeholders render as quiet dotted-underline text plus a short **user-facing** note ("Our
+  published number is being finalised…"). No amber badges, and no developer instructions such as
+  "replace this in site.ts" anywhere in the rendered output.
 
 ---
 
@@ -239,7 +252,7 @@ Shared:
 1. [x] Astro project created + deps installed (scaffolded manually rather than via the interactive
        `npm create astro` wizard, which cannot run unattended — same result, no template cruft)
 2. [x] `src/config/site.ts` — content from §4.3, plus `whyChooseUs`, `values`, `stats`,
-       `testimonials`, `trustBar`, category `examples[]`, and `isPlaceholder()` / `displayValue()` helpers
+       `trustBar`, category `examples[]`, and `isPlaceholder()` / `displayValue()` helpers
 3. [x] `src/styles/global.css` — variables from §5 verbatim, plus reset, typography, buttons, cards, utilities
 4. [x] `src/layouts/BaseLayout.astro` — head, SEO/OG tags, canonical, Google Fonts, skip link, nav, footer
 5. [x] All 7 components built
@@ -305,23 +318,20 @@ Last verified: build clean, 4 routes emitted, **zero JS files in `dist/`**, page
 
 ## 11. Remaining Work — Real Business Details
 
-The site is structurally complete; what is left is data only. Every item below is a string in
-`src/config/site.ts`. Placeholders render inside an **amber dashed badge** so they are impossible to
-miss on the page, and `displayValue()` strips the literal `TODO:` prefix so the built HTML stays clean.
+The site is structurally complete; what is left is two strings. Both live in
+`src/config/site.ts`, render as quiet dotted-underline text with a short user-facing note, and
+`displayValue()` strips the literal `TODO:` prefix so the built HTML stays clean.
 
 | Field | Effect while unfilled |
 |---|---|
-| `contact.address` | Amber badge on `/contact`, home visit-strip, footer |
-| `contact.phone` / `phoneDisplay` | Rendered as plain text instead of a `tel:` link |
-| `contact.email` | **Enquiry form on `/contact` is disabled** with a visible "Form inactive" notice (it submits via `mailto:`, so it cannot work without a real address) |
-| `contact.hours` | Amber badge in footer, home strip, `/contact` |
-| `contact.mapEmbedUrl` | `/contact` shows a dashed "Map placeholder" box; set it and a live `<iframe>` map renders instead |
-| `contact.mapLink` | "Open in Maps" / directions links are hidden entirely |
-| `testimonials[].name` / `.detail` | Quote bodies are generic-but-plausible drafts; **names/details are placeholders.** Either replace with real attributed feedback or delete the entries — do not publish invented names as real customers |
-| `site` in `astro.config.mjs` | Canonical + Open Graph URLs point at `example.com`. Set before deploy |
-| `public/images/shopfront.jpg` | Hero shows a dashed photo placeholder |
+| `contact.phone` / `phoneDisplay` | Shown as plain text instead of a `tel:` link, with the note "Our published number is being finalised — please drop by the shop in the meantime." Also omitted from the JSON-LD |
+| `contact.email` | **Enquiry form on `/contact` is disabled** (it submits via `mailto:`, so it cannot work without a real inbox), with the note "Our enquiry inbox is being set up." Also omitted from the JSON-LD |
+| `site` in `astro.config.mjs` / `SITE_URL` | Canonical + Open Graph URLs fall back to the Vercel host. Already set for Production on Vercel; update if a custom domain is added |
+| A real shopfront photograph *(optional)* | The hero ships the `<Shopfront />` illustration, which is finished artwork — not a placeholder. Swap it for an `<img>` only if a photo is wanted |
+| An address, hours or a map *(optional)* | Deliberately absent, not stubbed. See README "Adding your address, hours or a map" |
 
-**These are the only things worth asking the user about.** Everything else is decided (§2).
+**The phone number and email are the only things worth asking the user about.** Everything else is
+decided (§2).
 
 ---
 

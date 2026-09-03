@@ -1,11 +1,12 @@
 /**
- * Generates the favicon / app-icon PNG set in public/ from the same gradient
- * "M" mark used by public/favicon.svg.
+ * Generates the favicon / app-icon PNG set in public/ from the same storefront
+ * mark used by public/favicon.svg and the site header.
  *
  * Run with:  npm run icons
  *
  * The PNGs are committed to the repo, so this only needs re-running when the
- * brand mark or its colours change.
+ * brand mark or its colours change. The mark is drawn as strokes rather than
+ * text, so it does not depend on any font being installed.
  */
 
 import { mkdirSync } from "node:fs";
@@ -17,42 +18,43 @@ const here = dirname(fileURLToPath(import.meta.url));
 const publicDir = resolve(here, "../public");
 
 // Brand tokens — keep in sync with src/styles/global.css.
-const BG = "#080b11";
-const STOPS = ["#7c5cff", "#4f8cff", "#22d3ee"];
-const DISPLAY = "'Segoe UI Semibold', 'Segoe UI', 'Sora', Arial, Helvetica, sans-serif";
+const BG = "#100e0c";
+const AMBER = "#e8a33d";
 
 /**
- * Gradient tile with a white "M".
- * `pad` insets the tile inside a solid ground — used for the Apple icon, which
- * is composited onto a rounded square and should not bleed to the edge.
+ * Storefront glyph on the dark ground, drawn on a 64-unit grid and scaled.
+ * `pad` insets the tile inside the ground for the Apple icon, which gets
+ * composited onto a rounded square by the OS.
  */
-const mark = (size, { pad = 0, radiusRatio = 0.234 } = {}) => {
+const mark = (size, { pad = 0, radiusRatio = 0.22, keyline = size >= 64 } = {}) => {
   const box = size - pad * 2;
   const radius = Math.round(box * radiusRatio);
-  const fontSize = Math.round(box * 0.6);
-  // Nudge the baseline so the cap-height sits optically centred.
-  const baseline = Math.round(pad + box / 2 + fontSize * 0.35);
+  // The glyph is authored at 64x64; scale and centre it inside the tile.
+  const glyph = (box / 64) * 0.78;
+  const offset = pad + (box - 64 * glyph) / 2;
+  const stroke = Math.max(1.4, 3.4 * glyph);
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="${STOPS[0]}"/>
-      <stop offset="48%" stop-color="${STOPS[1]}"/>
-      <stop offset="100%" stop-color="${STOPS[2]}"/>
-    </linearGradient>
-  </defs>
-  ${pad ? `<rect width="${size}" height="${size}" fill="${BG}"/>` : ""}
-  <rect x="${pad}" y="${pad}" width="${box}" height="${box}" rx="${radius}" fill="url(#g)"/>
-  <text x="${size / 2}" y="${baseline}" text-anchor="middle" fill="#ffffff"
-        font-family="${DISPLAY}" font-size="${fontSize}" font-weight="700">M</text>
+  <rect x="${pad}" y="${pad}" width="${box}" height="${box}" rx="${radius}" fill="${BG}"/>
+  ${
+    keyline
+      ? `<rect x="${pad + stroke / 2}" y="${pad + stroke / 2}" width="${box - stroke}" height="${box - stroke}" rx="${Math.max(0, radius - stroke / 2)}" fill="none" stroke="${AMBER}" stroke-opacity="0.35" stroke-width="${stroke * 0.6}"/>`
+      : ""
+  }
+  <g transform="translate(${offset} ${offset}) scale(${glyph})" fill="none" stroke="${AMBER}"
+     stroke-width="${(stroke / glyph).toFixed(2)}" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 27h34v22a4 4 0 0 1-4 4H19a4 4 0 0 1-4-4Z"/>
+    <path d="M12 27l6-14h28l6 14"/>
+    <path d="M28 53v-12h8v12"/>
+  </g>
 </svg>`;
 };
 
 const targets = [
-  // Tiny sizes read better as a full-bleed square than a rounded tile.
-  { file: "favicon-16x16.png", size: 16, opts: { radiusRatio: 0.12 } },
-  { file: "favicon-32x32.png", size: 32, opts: { radiusRatio: 0.16 } },
-  { file: "apple-touch-icon.png", size: 180, opts: { pad: 12 } },
+  // At 16-32px the keyline and the doorway detail turn to mud, so drop them.
+  { file: "favicon-16x16.png", size: 16, opts: { radiusRatio: 0.14, keyline: false } },
+  { file: "favicon-32x32.png", size: 32, opts: { radiusRatio: 0.16, keyline: false } },
+  { file: "apple-touch-icon.png", size: 180, opts: { pad: 10 } },
   { file: "android-chrome-192x192.png", size: 192, opts: {} },
   { file: "android-chrome-512x512.png", size: 512, opts: {} },
 ];

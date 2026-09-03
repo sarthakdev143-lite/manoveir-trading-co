@@ -1,0 +1,162 @@
+---
+/**
+ * Hand-built flat-vector shopfront scene used as the hero image.
+ *
+ * Drawn rather than photographed so the site ships real artwork instead of a
+ * "photo goes here" box. When a genuine photograph of the shop exists, drop it
+ * at /public/images/shopfront.jpg and swap this component for an <img>.
+ *
+ * The palette is the site's own: warm near-black walls, amber awning and
+ * lamplight, cream signage, sage and terracotta goods on the shelves.
+ */
+
+interface Props {
+  /** Shown on the sign board. Kept short — long names do not fit the fascia. */
+  signText?: string;
+  class?: string;
+}
+
+const { signText = "MANOVEIR", class: className } = Astro.props;
+
+const WALL = "#2e271e";
+const WALL_DARK = "#221c15";
+const FRAME = "#4c4133";
+const GLASS = "#3b2f20";
+const GLASS_LIT = "#57432c";
+const AMBER = "#e8a33d";
+const AMBER_DEEP = "#c8842a";
+const CREAM = "#f3efe7";
+const SAGE = "#7fa88a";
+const CLAY = "#c96f4a";
+const GROUND = "#17130f";
+
+// Cream stripes on the awning, clipped to the scalloped awning shape.
+const stripeXs = [52, 116, 180, 244, 308, 372, 436];
+// Thirteen 32px scallops close the awning's bottom edge from x=468 back to x=52.
+const scallops = Array.from({ length: 13 }, () => "a16 16 0 0 1 -32 0").join(" ");
+---
+
+<svg
+  class:list={["shopfront", className]}
+  viewBox="0 44 520 336"
+  role="img"
+  aria-label={`Illustration of the ${signText} shopfront: a striped awning over a lit shop window stocked with goods, an open door, and crates of produce on the pavement`}
+>
+  <defs>
+    <clipPath id="sf-awning">
+      <path d={`M52 112 H468 V140 ${scallops} Z`} />
+    </clipPath>
+    <clipPath id="sf-window">
+      <rect x="82" y="172" width="171" height="126" rx="3" />
+    </clipPath>
+  </defs>
+
+  <!-- pavement -->
+  <rect x="0" y="340" width="520" height="60" fill={GROUND} />
+  <path d="M0 340H520" stroke={FRAME} stroke-width="2" />
+
+  <!-- light spilling from the window onto the pavement -->
+  <path d="M84 298h167l16 42H68Z" fill={AMBER} opacity="0.07" />
+
+  <!-- facade -->
+  <rect x="60" y="70" width="400" height="270" fill={WALL} />
+  <rect x="60" y="70" width="400" height="42" fill={WALL_DARK} />
+
+  <!-- sign board -->
+  <rect x="128" y="76" width="264" height="30" rx="4" fill={WALL_DARK} stroke={FRAME} stroke-width="1.5" />
+  <text
+    x="260"
+    y="97"
+    text-anchor="middle"
+    fill={CREAM}
+    font-family="system-ui, sans-serif"
+    font-size="17"
+    font-weight="600"
+    letter-spacing="4.5">{signText}</text>
+
+  <!-- awning: amber ground, cream stripes, scalloped edge -->
+  <path d={`M52 112 H468 V140 ${scallops} Z`} fill={AMBER} />
+  <g clip-path="url(#sf-awning)">
+    {stripeXs.map((x) => <rect x={x} y="112" width="32" height="46" fill={CREAM} />)}
+  </g>
+  <path d={`M52 112 H468 V140 ${scallops} Z`} fill="none" stroke={AMBER_DEEP} stroke-width="1.5" />
+  <rect x="52" y="108" width="416" height="6" rx="3" fill={AMBER_DEEP} />
+
+  <!-- shop window -->
+  <rect x="80" y="170" width="175" height="130" rx="4" fill={GLASS} stroke={FRAME} stroke-width="4" />
+  <g clip-path="url(#sf-window)">
+    <rect x="82" y="172" width="171" height="60" fill={GLASS_LIT} opacity="0.5" />
+
+    <!-- shelf one: jars and bottles -->
+    <rect x="94" y="186" width="18" height="26" rx="2" fill={AMBER} />
+    <rect x="118" y="192" width="14" height="20" rx="2" fill={CREAM} />
+    <rect x="138" y="182" width="16" height="30" rx="3" fill={SAGE} />
+    <rect x="160" y="190" width="20" height="22" rx="2" fill={CLAY} />
+    <rect x="186" y="184" width="14" height="28" rx="2" fill={CREAM} opacity="0.8" />
+    <rect x="206" y="192" width="18" height="20" rx="2" fill={AMBER} opacity="0.75" />
+    <rect x="88" y="212" width="160" height="4" fill={FRAME} />
+
+    <!-- shelf two: boxes and packets -->
+    <rect x="96" y="226" width="26" height="22" rx="2" fill={CREAM} opacity="0.85" />
+    <rect x="128" y="222" width="20" height="26" rx="2" fill={CLAY} opacity="0.85" />
+    <rect x="154" y="230" width="24" height="18" rx="2" fill={SAGE} opacity="0.85" />
+    <rect x="184" y="224" width="18" height="24" rx="2" fill={AMBER} opacity="0.8" />
+    <rect x="208" y="230" width="22" height="18" rx="2" fill={CREAM} opacity="0.7" />
+    <rect x="88" y="248" width="160" height="4" fill={FRAME} />
+
+    <!-- shelf three: sacks -->
+    <path d="M98 288c0-12 4-18 12-18s12 6 12 18Z" fill={AMBER} opacity="0.8" />
+    <path d="M128 288c0-11 4-16 11-16s11 5 11 16Z" fill={SAGE} opacity="0.7" />
+    <path d="M156 288c0-12 4-18 12-18s12 6 12 18Z" fill={CLAY} opacity="0.7" />
+    <path d="M186 288c0-11 4-16 11-16s11 5 11 16Z" fill={CREAM} opacity="0.55" />
+  </g>
+  <path d="M167.5 170v130" stroke={FRAME} stroke-width="3" />
+
+  <!-- door -->
+  <rect x="276" y="176" width="76" height="164" rx="3" fill={WALL_DARK} stroke={FRAME} stroke-width="3" />
+  <rect x="288" y="188" width="52" height="66" rx="2" fill={GLASS} />
+  <rect x="296" y="202" width="36" height="18" rx="2" fill={AMBER} />
+  <text
+    x="314"
+    y="215"
+    text-anchor="middle"
+    fill={WALL_DARK}
+    font-family="system-ui, sans-serif"
+    font-size="10"
+    font-weight="700"
+    letter-spacing="1">OPEN</text>
+  <rect x="288" y="266" width="52" height="60" rx="2" fill={WALL} />
+  <rect x="334" y="252" width="6" height="20" rx="3" fill={AMBER} />
+  <rect x="268" y="336" width="92" height="8" rx="2" fill={FRAME} />
+
+  <!-- hanging lamp over the door -->
+  <path d="M314 112v18" stroke={FRAME} stroke-width="2" />
+  <path d="M304 144c0-7 4.5-12 10-12s10 5 10 12Z" fill={AMBER_DEEP} />
+  <ellipse cx="314" cy="146" rx="9" ry="2.5" fill={AMBER} />
+
+  <!-- crates of produce on the pavement -->
+  <g>
+    <rect x="370" y="296" width="60" height="44" rx="3" fill={WALL_DARK} stroke={FRAME} stroke-width="2" />
+    <path d="M370 312h60M370 326h60" stroke={FRAME} stroke-width="1.5" />
+    <circle cx="384" cy="290" r="9" fill={CLAY} />
+    <circle cx="402" cy="288" r="10" fill={AMBER} />
+    <circle cx="419" cy="291" r="8" fill={CLAY} opacity="0.85" />
+
+    <rect x="432" y="308" width="52" height="32" rx="3" fill={WALL_DARK} stroke={FRAME} stroke-width="2" />
+    <path d="M432 322h52" stroke={FRAME} stroke-width="1.5" />
+    <path d="M440 306c4-8 10-10 16-8-2 6-8 9-16 8Z" fill={SAGE} />
+    <path d="M458 306c4-7 10-9 16-7-2 6-8 8-16 7Z" fill={SAGE} opacity="0.8" />
+  </g>
+
+  <!-- broom leaning by the window -->
+  <path d="M70 300v-84" stroke={FRAME} stroke-width="3" stroke-linecap="round" />
+  <path d="M64 300h12l-2 22H66Z" fill={AMBER_DEEP} opacity="0.9" />
+</svg>
+
+<style>
+  .shopfront {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>

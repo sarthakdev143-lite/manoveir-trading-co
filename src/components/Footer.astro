@@ -1,15 +1,18 @@
 ---
+import Icon from "./Icon.astro";
 import { site, isPlaceholder, displayValue } from "../config/site";
 
 const year = new Date().getFullYear();
-const { address, phone, phoneDisplay, email, hours } = site.contact;
+const { phone, phoneDisplay, email } = site.contact;
 ---
 
 <footer class="site-footer">
   <div class="container site-footer__grid">
     <div class="site-footer__brand">
       <a class="site-footer__logo" href="/">
-        <span class="site-footer__mark" aria-hidden="true">M</span>
+        <span class="site-footer__mark" aria-hidden="true">
+          <Icon name="storefront" />
+        </span>
         <span class="site-footer__name">{site.name}</span>
       </a>
       <p>{site.description}</p>
@@ -27,81 +30,55 @@ const { address, phone, phoneDisplay, email, hours } = site.contact;
       <h2 class="site-footer__heading">Categories</h2>
       <ul>
         {site.categories.slice(0, 4).map((c) => <li><a href="/products">{c.title}</a></li>)}
-        <li><a href="/products">All categories →</a></li>
+        <li><a href="/products">All categories</a></li>
       </ul>
     </div>
 
     <div class="site-footer__col">
-      <h2 class="site-footer__heading">Visit us</h2>
-      <dl class="facts facts--stacked site-footer__contact">
-        <div>
-          <dt>Address</dt>
-          <dd class={isPlaceholder(address) ? "todo" : undefined}>{displayValue(address)}</dd>
-        </div>
-        <div>
-          <dt>Phone</dt>
-          <dd>
-            {
-              isPlaceholder(phone) ? (
-                <span class="todo">{displayValue(phoneDisplay)}</span>
-              ) : (
-                <a href={`tel:${phone.replace(/[^+\d]/g, "")}`}>{displayValue(phoneDisplay)}</a>
-              )
-            }
-          </dd>
-        </div>
-        <div>
-          <dt>Email</dt>
-          <dd>
-            {
-              isPlaceholder(email) ? (
-                <span class="todo">{displayValue(email)}</span>
-              ) : (
-                <a href={`mailto:${email}`}>{email}</a>
-              )
-            }
-          </dd>
-        </div>
-        <div>
-          <dt>Hours</dt>
-          <dd class={isPlaceholder(hours) ? "todo" : undefined}>{displayValue(hours)}</dd>
-        </div>
-      </dl>
+      <h2 class="site-footer__heading">Get in touch</h2>
+      <ul class="site-footer__contact">
+        <li>
+          <Icon name="phone" />
+          {
+            isPlaceholder(phone) ? (
+              <span class="todo">{displayValue(phoneDisplay)}</span>
+            ) : (
+              <a href={`tel:${phone.replace(/[^+\d]/g, "")}`}>{displayValue(phoneDisplay)}</a>
+            )
+          }
+        </li>
+        <li>
+          <Icon name="mail" />
+          {
+            isPlaceholder(email) ? (
+              <span class="todo">{displayValue(email)}</span>
+            ) : (
+              <a href={`mailto:${email}`}>{email}</a>
+            )
+          }
+        </li>
+        <li>
+          <Icon name="storefront" />
+          <span>Walk-in counter service</span>
+        </li>
+      </ul>
     </div>
   </div>
 
   <div class="container site-footer__bar">
     <p>&copy; {year} {site.name}. All rights reserved.</p>
     <p class="site-footer__note">
-      Walk-in retail shop — no online ordering. · <a href="/privacy">Privacy</a> ·
-      <a href="/sitemap-index.xml">Sitemap</a>
+      <a href="/privacy">Privacy</a> · <a href="/sitemap-index.xml">Sitemap</a>
     </p>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    position: relative;
-    background: var(--bg-3);
+    background: var(--bg-2);
     border-top: 1px solid var(--line);
-    padding-top: clamp(2.75rem, 5vw, 4rem);
+    padding-top: clamp(2.5rem, 5vw, 3.5rem);
     font-size: 0.94rem;
-  }
-
-  /* Gradient hairline along the very top edge. */
-  .site-footer::before {
-    content: "";
-    position: absolute;
-    inset-inline: 0;
-    top: -1px;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(124, 92, 255, 0.55) 30%,
-      rgba(34, 211, 238, 0.45) 70%,
-      transparent
-    );
   }
 
   .site-footer__grid {
@@ -111,45 +88,55 @@ const { address, phone, phoneDisplay, email, hours } = site.contact;
     padding-bottom: 2.5rem;
   }
 
+  .site-footer__grid > * {
+    min-width: 0;
+  }
+
   .site-footer__brand {
     max-width: 22rem;
+  }
+
+  .site-footer__brand p {
+    color: var(--text-dim);
+    font-size: 0.9rem;
   }
 
   .site-footer__logo {
     display: inline-flex;
     align-items: center;
-    gap: 0.7rem;
-    margin-bottom: 0.9rem;
+    gap: 0.65rem;
+    margin-bottom: 0.85rem;
   }
 
   .site-footer__mark {
     display: grid;
     place-items: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    background: var(--grad);
-    border-radius: 12px;
-    color: #fff;
-    font-family: var(--font-display);
-    font-size: 1.15rem;
-    font-weight: 700;
-    line-height: 1;
+    width: 2.15rem;
+    height: 2.15rem;
+    color: var(--amber);
+    background: var(--amber-soft);
+    border: 1px solid var(--amber-edge);
+    border-radius: var(--radius-sm);
+  }
+
+  .site-footer__mark :global(.icon) {
+    width: 1.2rem;
+    height: 1.2rem;
   }
 
   .site-footer__name {
     font-family: var(--font-display);
-    font-size: 1.08rem;
+    font-size: 1.05rem;
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.015em;
     color: var(--text);
   }
 
   .site-footer__heading {
-    margin-bottom: 1rem;
-    font-family: var(--font-body);
-    font-size: 0.8rem;
+    margin-bottom: 0.9rem;
+    font-size: 0.78rem;
     font-weight: 500;
-    letter-spacing: 0.09em;
+    letter-spacing: 0.11em;
     text-transform: uppercase;
     color: var(--text-faint);
   }
@@ -167,16 +154,22 @@ const { address, phone, phoneDisplay, email, hours } = site.contact;
   }
 
   .site-footer a:hover {
-    color: var(--violet-text);
+    color: var(--amber);
   }
 
-  .site-footer__contact dt {
-    font-size: 0.74rem;
-  }
-
-  .site-footer__contact dd {
+  .site-footer__contact li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
     color: var(--text-dim);
-    font-size: 0.9rem;
+    font-size: 0.88rem;
+  }
+
+  .site-footer__contact :global(.icon) {
+    width: 1.05rem;
+    height: 1.05rem;
+    color: var(--amber);
   }
 
   .site-footer__bar {
@@ -184,13 +177,9 @@ const { address, phone, phoneDisplay, email, hours } = site.contact;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 0.5rem 1.5rem;
-    padding-block: 1.35rem;
+    padding-block: 1.25rem;
     border-top: 1px solid var(--line);
     color: var(--text-faint);
     font-size: 0.85rem;
-  }
-
-  .site-footer__note {
-    color: var(--text-faint);
   }
 </style>

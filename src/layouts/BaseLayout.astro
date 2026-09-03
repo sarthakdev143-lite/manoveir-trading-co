@@ -25,14 +25,12 @@ const canonical = abs(normalisedPath);
 const ogImage = abs("/og-image.png");
 const pageTitle = title === site.name ? `${site.name} — ${site.tagline}` : `${title} | ${site.name}`;
 
-const { phone, email, mapLink } = site.contact;
-const { postalAddress, openingHoursSpec } = site;
+const { phone, email } = site.contact;
 
-// Structured data for local search (Google's map/hours panel). Every field is
-// omitted unless it holds a real value — publishing placeholder contact details
-// as machine-readable facts would be worse than publishing nothing.
-const addressEntries = Object.entries(postalAddress).filter(([, v]) => !isPlaceholder(v));
-
+// Structured data for local search. The shop publishes no address or opening
+// hours yet, so this describes the business and its contact points only —
+// placeholder values are omitted rather than published as machine-readable
+// facts, and the whole block is dropped until at least one is real.
 const businessSchema: Record<string, unknown> = {
   "@context": "https://schema.org",
   "@type": "Store",
@@ -44,20 +42,10 @@ const businessSchema: Record<string, unknown> = {
   priceRange: "$$",
 };
 
-// `addressCountry` alone is not an address, so require at least a street or locality.
-if (addressEntries.some(([k]) => k === "streetAddress" || k === "addressLocality")) {
-  businessSchema.address = { "@type": "PostalAddress", ...Object.fromEntries(addressEntries) };
-}
 if (!isPlaceholder(phone)) businessSchema.telephone = phone;
 if (!isPlaceholder(email)) businessSchema.email = email;
-if (!isPlaceholder(mapLink)) businessSchema.hasMap = mapLink;
-if (openingHoursSpec.length > 0) businessSchema.openingHours = openingHoursSpec;
 
-// Only advertise the business to search engines once it has a real, contactable
-// detail — otherwise the markup describes a shop nobody can reach.
-const hasRealContactDetail = Boolean(
-  businessSchema.address || businessSchema.telephone || businessSchema.email,
-);
+const hasRealContactDetail = Boolean(businessSchema.telephone || businessSchema.email);
 ---
 
 <!doctype html>
@@ -67,7 +55,7 @@ const hasRealContactDetail = Boolean(
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="dark" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#080b11" />
+    <meta name="theme-color" content="#100e0c" />
     <meta name="author" content={site.name} />
     <meta name="format-detection" content="telephone=no" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -110,7 +98,7 @@ const hasRealContactDetail = Boolean(
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"
     />
 
     {

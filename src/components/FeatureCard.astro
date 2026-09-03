@@ -1,7 +1,10 @@
 ---
+import Icon from "./Icon.astro";
+
 interface Props {
   title: string;
   desc: string;
+  /** Icon name from src/components/Icon.astro. */
   icon: string;
 }
 
@@ -9,7 +12,9 @@ const { title, desc, icon } = Astro.props;
 ---
 
 <article class="card">
-  <span class="card__icon" aria-hidden="true">{icon}</span>
+  <span class="icon-tile">
+    <Icon name={icon as any} />
+  </span>
   <h3>{title}</h3>
   <p>{desc}</p>
 </article>

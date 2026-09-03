@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { site, isPlaceholder, displayValue } from "../config/site";
+import { site, isPlaceholder } from "../config/site";
+
+const { email } = site.contact;
+const hasEmail = !isPlaceholder(email);
 ---
 
 <BaseLayout
@@ -13,92 +16,69 @@ import { site, isPlaceholder, displayValue } from "../config/site";
         <span class="eyebrow">Legal</span>
         <h1>Privacy Policy</h1>
         <p class="lead">
-          We run a walk-in retail shop, not a data business. This site is intentionally simple and does not
-          collect or sell personal information.
+          We run a walk-in retail shop, not a data business. This site is intentionally simple: it does not
+          collect, profile or sell personal information.
         </p>
+        <p class="masthead__meta">Last updated: 3 September 2026</p>
       </div>
-
-      <dl class="facts">
-        <div>
-          <dt>Last updated</dt>
-          <dd>2 Sep 2026</dd>
-        </div>
-        <div>
-          <dt>Trackers</dt>
-          <dd>None</dd>
-        </div>
-        <div>
-          <dt>Cookies</dt>
-          <dd>None</dd>
-        </div>
-      </dl>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="panel prose-legal">
+      <div class="prose-legal">
         <h2>1. No tracking, no cookies</h2>
         <p>
-          This website does not use analytics cookies, advertising trackers, or third-party scripts. Your
-          visit is not profiled. The only external resources loaded are Google Fonts (for typography) and, if
-          enabled, a Google Maps embed on the <a href="/contact">Contact page</a>. Those services are subject
-          to Google's own privacy policy.
+          This website sets no cookies. It uses no analytics, no advertising trackers and no third-party
+          scripts, and it stores nothing in your browser. Your visit is not profiled, and we cannot tell who
+          you are from browsing these pages.
         </p>
 
         <h2>2. Information you share when you contact us</h2>
         <p>
-          The enquiry form on <a href="/contact">/contact</a> does not send data through this website or store
-          it on a server. Submitting it opens your own email application with a pre-filled message addressed
-          to us (<code>{displayValue(site.contact.email)}</code>
-          {isPlaceholder(site.contact.email) ? " — placeholder until a real inbox is set" : ""}). What you
-          choose to include — name, phone, message — is sent only via your email provider.
+          The enquiry form on our <a href="/contact">contact page</a> does not send anything through this
+          website, and there is no server here to store it. Submitting it opens your own email application
+          with the message ready to send{
+            hasEmail ? " to us" : ", once our inbox is live"
+          }. Whatever you choose to include — your name, phone number and message — travels through your own
+          email provider, and we use it only to answer you.
         </p>
         <p>
-          If you
-          {isPlaceholder(site.contact.phone) ? (
-            <span> call us</span>
-          ) : (
-            <a href={`tel:${site.contact.phone.replace(/[^+\d]/g, "")}`}>call us</a>
-          )}{" "}
-          or visit in person, information is handled the same way as any normal shop enquiry: to answer you,
-          not to build a marketing database.
+          If you call us or visit in person, your details are handled the same way as any ordinary shop
+          enquiry: to help you with what you asked about, not to build a marketing list.
         </p>
 
         <h2>3. What we do not do</h2>
         <ul>
-          <li>We do not sell or share personal data.</li>
-          <li>We do not run a newsletter or automated marketing.</li>
-          <li>We do not store form submissions on this host (Vercel / Netlify / Cloudflare Pages).</li>
-          <li>We do not use fingerprinting, session replay, or cross-site tracking.</li>
+          <li>We do not sell, rent or share personal data.</li>
+          <li>We do not run a newsletter or send automated marketing.</li>
+          <li>We do not store enquiries on any server behind this website.</li>
+          <li>We do not use fingerprinting, session replay or cross-site tracking.</li>
         </ul>
 
-        <h2>4. External links &amp; maps</h2>
+        <h2>4. The one external request</h2>
         <p>
-          Clicking “Open in Google Maps” or loading the embedded map sends a request to Google. That is
-          optional — the map only loads after you navigate to <a href="/contact">/contact</a> and, if a map
-          URL has been configured, your browser fetches tiles from <code>google.com</code> /
-          <code>maps.google.com</code>. See our Content Security Policy in <code>public/_headers</code> for
-          the exact allow-list.
+          The site loads its two typefaces from Google Fonts, which means your browser fetches those font
+          files from Google's servers and Google sees the request. Nothing else on these pages is loaded from
+          a third party — the illustrations, icons and styles are all served from this site.
         </p>
 
         <h2>5. Your rights</h2>
         <p>
-          If you have shared information with us by email or phone and would like it deleted or corrected,
-          contact us via the details on <a href="/contact">/contact</a> and we will handle your request
-          promptly.
+          If you have shared information with us by email or phone and want it corrected or deleted, ask us
+          via our <a href="/contact">contact page</a> and we will handle it promptly.
         </p>
 
         <h2>6. Changes to this policy</h2>
         <p>
-          If we ever add analytics (for example, privacy-friendly, cookie-less visit counts) or a real
-          contact-form handler, this page will be updated to describe what is collected and why before that
-          code goes live.
+          If we ever add analytics — even privacy-friendly, cookie-less visit counts — or start handling
+          enquiries on a server, we will update this page to say what is collected and why before that goes
+          live.
         </p>
 
         <div class="legal-cta">
           <a class="btn btn--primary" href="/contact">Contact us</a>
-          <a class="btn btn--glass" href="/">Back to home</a>
+          <a class="btn btn--outline" href="/">Back to home</a>
         </div>
       </div>
     </div>
@@ -106,16 +86,24 @@ import { site, isPlaceholder, displayValue } from "../config/site";
 </BaseLayout>
 
 <style>
+  .masthead__meta {
+    margin-top: 1rem;
+    color: var(--text-faint);
+    font-size: 0.88rem;
+  }
+
   .prose-legal {
-    max-width: 48rem;
-    margin-inline: auto;
+    max-width: 44rem;
   }
 
   .prose-legal h2 {
     margin-top: 2.25rem;
-    margin-bottom: 0.7rem;
-    font-size: clamp(1.1rem, 1.8vw, 1.28rem);
-    letter-spacing: -0.02em;
+    margin-bottom: 0.65rem;
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
   }
 
   .prose-legal h2:first-child {
@@ -144,25 +132,25 @@ import { site, isPlaceholder, displayValue } from "../config/site";
 
   .prose-legal li {
     position: relative;
-    padding-left: 1.3rem;
+    padding-left: 1.15rem;
   }
 
   .prose-legal li::before {
     content: "";
     position: absolute;
     left: 0;
-    top: 0.7em;
-    width: 6px;
-    height: 6px;
+    top: 0.78em;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
-    background: var(--grad);
+    background: var(--amber);
   }
 
   .legal-cta {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.85rem 1rem;
-    margin-top: 2.5rem;
+    gap: 0.75rem 1rem;
+    margin-top: 2.25rem;
     padding-top: 1.75rem;
     border-top: 1px solid var(--line);
   }

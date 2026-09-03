@@ -1,35 +1,19 @@
 ---
+import Icon from "./Icon.astro";
 import { site, isPlaceholder, displayValue } from "../config/site";
 
-const { address, phone, phoneDisplay, email, hours, mapLink } = site.contact;
+const { phone, phoneDisplay, email } = site.contact;
 
-const telHref = isPlaceholder(phone) ? null : `tel:${phone.replace(/[^+\d]/g, "")}`;
-const mailHref = isPlaceholder(email) ? null : `mailto:${email}`;
-const mapHref = isPlaceholder(mapLink) ? null : mapLink;
+const hasPhone = !isPlaceholder(phone);
+const hasEmail = !isPlaceholder(email);
+const telHref = hasPhone ? `tel:${phone.replace(/[^+\d]/g, "")}` : null;
 ---
 
 <ul class="details">
   <li>
-    <span class="details__icon" aria-hidden="true">📍</span>
-    <div class="details__body">
-      <h3>Shop address</h3>
-      <p class={isPlaceholder(address) ? "todo" : undefined}>{displayValue(address)}</p>
-      {
-        mapHref ? (
-          <a class="details__link" href={mapHref} target="_blank" rel="noopener noreferrer">
-            Open in Google Maps →
-          </a>
-        ) : (
-          <p class="details__hint">
-            Add <code>mapLink</code> in <code>src/config/site.ts</code> to enable directions.
-          </p>
-        )
-      }
-    </div>
-  </li>
-
-  <li>
-    <span class="details__icon" aria-hidden="true">📞</span>
+    <span class="icon-tile icon-tile--lg">
+      <Icon name="phone" />
+    </span>
     <div class="details__body">
       <h3>Phone</h3>
       {
@@ -39,29 +23,32 @@ const mapHref = isPlaceholder(mapLink) ? null : mapLink;
           <p class="todo">{displayValue(phoneDisplay)}</p>
         )
       }
-      <p class="details__hint">Call us for stock enquiries or bulk orders.</p>
+      <p class="details__note">
+        {hasPhone
+          ? "Call us for stock enquiries or bulk orders."
+          : "Our published number is being finalised — please drop by the shop in the meantime."}
+      </p>
     </div>
   </li>
 
   <li>
-    <span class="details__icon" aria-hidden="true">✉️</span>
+    <span class="icon-tile icon-tile--lg">
+      <Icon name="mail" />
+    </span>
     <div class="details__body">
       <h3>Email</h3>
       {
-        mailHref ? (
-          <p><a class="details__link" href={mailHref}>{email}</a></p>
+        hasEmail ? (
+          <p><a class="details__link" href={`mailto:${email}`}>{email}</a></p>
         ) : (
           <p class="todo">{displayValue(email)}</p>
         )
       }
-    </div>
-  </li>
-
-  <li>
-    <span class="details__icon" aria-hidden="true">🕐</span>
-    <div class="details__body">
-      <h3>Opening hours</h3>
-      <p class={isPlaceholder(hours) ? "todo" : undefined}>{displayValue(hours)}</p>
+      <p class="details__note">
+        {hasEmail
+          ? "Written enquiries are usually answered the same day."
+          : "Our enquiry inbox is being set up."}
+      </p>
     </div>
   </li>
 </ul>
@@ -72,7 +59,6 @@ const mapHref = isPlaceholder(mapLink) ? null : mapLink;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0;
   }
 
   .details li {
@@ -88,56 +74,44 @@ const mapHref = isPlaceholder(mapLink) ? null : mapLink;
 
   .details li:last-child {
     border-bottom: 0;
+    padding-bottom: 0;
   }
 
-  /* Flex item: must be allowed to shrink below the placeholder email's width. */
+  .details .icon-tile {
+    margin-bottom: 0;
+  }
+
   .details__body {
     min-width: 0;
   }
 
-  .details__icon {
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    width: 2.75rem;
-    height: 2.75rem;
-    background: var(--grad-soft);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    font-size: 1.2rem;
-    line-height: 1;
-  }
-
   .details h3 {
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.25rem;
     color: var(--text-faint);
-    font-family: var(--font-body);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 500;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
   }
 
   .details__body > p {
     color: var(--text);
-    font-size: 1.02rem;
+    font-size: 1.05rem;
     font-weight: 500;
-    /* Email addresses have no break opportunities. */
     overflow-wrap: anywhere;
   }
 
   .details__link {
-    color: var(--violet-text);
-    font-weight: 500;
+    color: var(--text);
   }
 
   .details__link:hover {
-    color: var(--cyan-text);
+    color: var(--amber);
   }
 
-  /* Outweighs `.details__body > p` above, which carries the emphasised value. */
-  .details__body > .details__hint {
-    margin-top: 0.35rem;
+  /* Outweighs `.details__body > p`, which carries the emphasised value. */
+  .details__body > .details__note {
+    margin-top: 0.3rem;
     color: var(--text-faint);
     font-size: 0.86rem;
     font-weight: 400;

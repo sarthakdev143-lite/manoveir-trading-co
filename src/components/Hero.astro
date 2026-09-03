@@ -1,4 +1,6 @@
 ---
+import Icon from "./Icon.astro";
+import Shopfront from "./illustrations/Shopfront.astro";
 import { site } from "../config/site";
 ---
 
@@ -8,193 +10,107 @@ import { site } from "../config/site";
       <span class="eyebrow">Local retail · Walk-in shop</span>
 
       <h1>{site.name}</h1>
-      <p class="hero__tagline grad-text">{site.tagline}</p>
+      <p class="hero__tagline">{site.tagline}</p>
       <p class="lead">{site.description}</p>
 
       <div class="actions">
-        <a class="btn btn--primary" href="/products">Explore products</a>
-        <a class="btn btn--glass" href="/contact">Find us</a>
+        <a class="btn btn--primary" href="/products">
+          Explore products
+          <Icon name="arrowRight" />
+        </a>
+        <a class="btn btn--outline" href="/contact">Get in touch</a>
       </div>
 
       <ul class="trust hero__trust">
-        {site.trustBar.map((item) => <li>{item}</li>)}
+        {
+          site.trustBar.map((item) => (
+            <li>
+              <Icon name="check" />
+              {item}
+            </li>
+          ))
+        }
       </ul>
     </div>
 
-    <div class="hero__media">
-      <!-- Image placeholder: drop a shopfront photo at /public/images/shopfront.jpg
-           and swap this block for an <img> tag. -->
-      <div
-        class="hero__frame"
-        role="img"
-        aria-label="Placeholder for a photograph of the Manoveir Trading CO shopfront"
-      >
-        <span class="hero__frame-icon" aria-hidden="true">🏪</span>
-        <p class="hero__frame-title">Shopfront photo</p>
-        <p class="hero__frame-hint">Add an image at <code>/public/images/shopfront.jpg</code></p>
-      </div>
-
-      <div class="hero__badge">
-        <span class="hero__badge-value">{site.categories.length}</span>
-        <span class="hero__badge-label">Product<br />categories</span>
-      </div>
-    </div>
+    <figure class="hero__figure">
+      <Shopfront />
+      <figcaption>
+        <Icon name="storefront" />
+        Six categories of everyday essentials, over one counter
+      </figcaption>
+    </figure>
   </div>
 </section>
 
 <style>
   .hero {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    padding-top: clamp(2.75rem, 6vw, 5rem);
-    padding-bottom: clamp(3rem, 6vw, 5.5rem);
-  }
-
-  /* Two soft accent glows, offset so the ground never looks flat. */
-  .hero::before,
-  .hero::after {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    border-radius: 50%;
-    pointer-events: none;
-  }
-
-  .hero::before {
-    top: -22rem;
-    left: -10rem;
-    width: 46rem;
-    height: 46rem;
-    background: radial-gradient(circle, rgba(124, 92, 255, 0.3), transparent 62%);
-  }
-
-  .hero::after {
-    top: -14rem;
-    right: -14rem;
-    width: 40rem;
-    height: 40rem;
-    background: radial-gradient(circle, rgba(34, 211, 238, 0.16), transparent 62%);
+    padding-top: clamp(2.25rem, 5vw, 4rem);
+    padding-bottom: clamp(2.75rem, 5.5vw, 4.5rem);
   }
 
   .hero__grid {
     display: grid;
-    gap: clamp(2.25rem, 4vw, 3.5rem);
+    gap: clamp(2rem, 4vw, 3.25rem);
     align-items: center;
   }
 
-  /* See the `min-width: 0` note in global.css — long words must not widen the column. */
   .hero__grid > * {
     min-width: 0;
   }
 
   @media (min-width: 62rem) {
     .hero__grid {
-      grid-template-columns: 1.08fr 0.92fr;
+      grid-template-columns: 1fr 1.05fr;
     }
   }
 
   .hero__copy {
-    max-width: 36rem;
+    max-width: 34rem;
   }
 
   .hero__tagline {
-    margin-top: 0.75rem;
+    margin-top: 0.7rem;
+    color: var(--amber);
     font-family: var(--font-display);
-    font-size: clamp(1.4rem, 3.2vw, 2.1rem);
+    font-size: clamp(1.2rem, 2.4vw, 1.6rem);
     font-weight: 600;
-    line-height: 1.15;
-    letter-spacing: -0.03em;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
   }
 
   .hero__trust {
-    justify-content: flex-start;
-    margin-top: 2rem;
+    margin-top: 1.85rem;
   }
 
-  /* --- Media side --- */
-
-  .hero__media {
-    position: relative;
-    padding: clamp(0.6rem, 1.2vw, 0.9rem);
+  .hero__figure {
+    margin: 0;
+    padding: clamp(0.75rem, 1.5vw, 1.25rem);
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), var(--shadow-lg);
+    box-shadow: var(--shadow);
   }
 
-  .hero__frame {
-    display: grid;
-    place-content: center;
-    justify-items: center;
-    gap: 0.15rem;
-    min-height: clamp(15rem, 32vw, 21rem);
-    padding: 1.75rem;
-    text-align: center;
-    background: var(--grad-soft);
-    border: 1px dashed rgba(255, 255, 255, 0.16);
-    border-radius: calc(var(--radius-lg) - 8px);
+  .hero__figure :global(.shopfront) {
+    border-radius: var(--radius);
+    background: var(--bg-2);
   }
 
-  .hero__frame-icon {
-    font-size: 2.6rem;
-    line-height: 1;
-    margin-bottom: 0.6rem;
-  }
-
-  .hero__frame-title {
-    color: var(--text);
-    font-family: var(--font-display);
-    font-size: 1.05rem;
-    font-weight: 600;
-  }
-
-  .hero__frame-hint {
-    max-width: 20rem;
+  .hero__figure figcaption {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.9rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--line);
     color: var(--text-faint);
     font-size: 0.85rem;
   }
 
-  /* Floating glass chip overlapping the frame — the depth cue of the layout. */
-  .hero__badge {
-    position: absolute;
-    right: clamp(-0.5rem, -1vw, -1.25rem);
-    bottom: clamp(-1rem, -2vw, -1.5rem);
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    padding: 0.85rem 1.1rem;
-    background: rgba(14, 20, 29, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-  }
-
-  .hero__badge-value {
-    font-family: var(--font-display);
-    font-size: 1.9rem;
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -0.04em;
-    background: var(--grad);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
-
-  .hero__badge-label {
-    color: var(--text-dim);
-    font-size: 0.76rem;
-    line-height: 1.25;
-  }
-
-  @media (max-width: 30rem) {
-    .hero__badge {
-      right: 0.5rem;
-      bottom: -0.75rem;
-    }
+  .hero__figure figcaption :global(.icon) {
+    width: 1.05rem;
+    height: 1.05rem;
+    color: var(--amber);
   }
 </style>

@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import FeatureCard from "../components/FeatureCard.astro";
+import Icon from "../components/Icon.astro";
+import Counter from "../components/illustrations/Counter.astro";
 import { site } from "../config/site";
 ---
 
@@ -10,7 +12,7 @@ import { site } from "../config/site";
 >
   <!-- Page header -->
   <section class="masthead">
-    <div class="container masthead__inner">
+    <div class="container masthead__inner masthead__inner--split">
       <div>
         <span class="eyebrow">About us</span>
         <h1>A neighbourhood shop, run the old-fashioned way</h1>
@@ -20,20 +22,9 @@ import { site } from "../config/site";
         </p>
       </div>
 
-      <dl class="facts">
-        <div>
-          <dt>Format</dt>
-          <dd>Walk-in retail</dd>
-        </div>
-        <div>
-          <dt>Categories</dt>
-          <dd>{site.categories.length}</dd>
-        </div>
-        <div>
-          <dt>Serving</dt>
-          <dd>Local households</dd>
-        </div>
-      </dl>
+      <figure class="masthead__figure">
+        <Counter />
+      </figure>
     </div>
   </section>
 
@@ -80,7 +71,10 @@ import { site } from "../config/site";
             <dd>{site.categories.length} broad ranges under one roof</dd>
           </div>
         </dl>
-        <a class="btn btn--glass story__aside-cta" href="/products">Browse our categories</a>
+        <a class="btn btn--outline story__aside-cta" href="/products">
+          Browse our categories
+          <Icon name="arrowRight" />
+        </a>
       </aside>
     </div>
   </section>
@@ -88,7 +82,7 @@ import { site } from "../config/site";
   <!-- Values -->
   <section class="section section--alt">
     <div class="container">
-      <div class="section-head section-head--center">
+      <div class="section-head">
         <span class="eyebrow">Our promise</span>
         <h2>Three things we will not compromise on</h2>
         <p class="lead">
@@ -103,18 +97,18 @@ import { site } from "../config/site";
   </section>
 
   <!-- Stats -->
-  <section class="section section--glow">
+  <section class="section">
     <div class="container">
-      <div class="section-head section-head--center">
-        <span class="eyebrow">By the numbers</span>
-        <h2>The shape of our shop</h2>
+      <div class="section-head">
+        <span class="eyebrow">The shape of our shop</span>
+        <h2>How we work, in short</h2>
       </div>
 
       <dl class="grid grid--4">
         {
           site.stats.map((stat) => (
             <div class="stat">
-              <dt class="stat__value grad-text">{stat.value}</dt>
+              <dt class="stat__value">{stat.value}</dt>
               <dd class="stat__label">{stat.label}</dd>
             </div>
           ))
@@ -125,27 +119,42 @@ import { site } from "../config/site";
 
   <!-- CTA -->
   <section class="section section--alt">
-    <div class="container section-head section-head--center" style="margin-bottom:0">
+    <div class="container section-head" style="margin-bottom:0">
       <h2>Come in and have a look</h2>
       <p class="lead">
         The quickest way to know what we carry is to visit. We are happy to point you to what you need.
       </p>
-      <div class="actions actions--center">
-        <a class="btn btn--primary" href="/contact">Get in touch</a>
-        <a class="btn btn--glass" href="/products">See products</a>
+      <div class="actions">
+        <a class="btn btn--primary" href="/contact">
+          Get in touch
+          <Icon name="arrowRight" />
+        </a>
+        <a class="btn btn--outline" href="/products">See products</a>
       </div>
     </div>
   </section>
 </BaseLayout>
 
 <style>
+  .masthead__figure {
+    margin: 0;
+    padding: clamp(0.65rem, 1.2vw, 1rem);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+  }
+
+  .masthead__figure :global(.counter) {
+    border-radius: var(--radius);
+    background: var(--bg);
+  }
+
   .story {
     display: grid;
     gap: clamp(2rem, 4vw, 3rem);
     align-items: start;
   }
 
-  /* See the `min-width: 0` note in global.css — long words must not widen the column. */
   .story > * {
     min-width: 0;
   }
@@ -157,7 +166,7 @@ import { site } from "../config/site";
   }
 
   .story__copy h2 {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.15rem;
   }
 
   .story__aside {
@@ -166,17 +175,16 @@ import { site } from "../config/site";
   }
 
   .story__aside-title {
-    margin-bottom: 1.1rem;
-    font-family: var(--font-body);
-    font-size: 0.8rem;
+    margin-bottom: 1rem;
+    font-size: 0.78rem;
     font-weight: 500;
-    letter-spacing: 0.09em;
+    letter-spacing: 0.11em;
     text-transform: uppercase;
     color: var(--text-faint);
   }
 
   .story__aside-cta {
     width: 100%;
-    margin-top: 1.5rem;
+    margin-top: 1.35rem;
   }
 </style>

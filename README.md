@@ -31,10 +31,10 @@ npm run og       # regenerate public/og-image.png (only after a name/tagline/bra
 
 | Route       | File                       | Contents                                                        |
 |-------------|----------------------------|-----------------------------------------------------------------|
-| `/`         | `src/pages/index.astro`    | Hero, trust bar, featured categories, why choose us, testimonials, visit strip |
+| `/`         | `src/pages/index.astro`    | Hero + shopfront illustration, featured categories, why choose us, visit strip |
 | `/about`    | `src/pages/about.astro`    | Our story, at-a-glance facts, values, stats                     |
 | `/products` | `src/pages/products.astro` | All 6 category cards with examples, stock notes                 |
-| `/contact`  | `src/pages/contact.astro`  | Address/phone/email/hours, map, `mailto:` enquiry form           |
+| `/contact`  | `src/pages/contact.astro`  | Phone, email and the `mailto:` enquiry form                      |
 | `/404`      | `src/pages/404.astro`      | Not-found page (`noindex`), links to every route                |
 | `/robots.txt` | `src/pages/robots.txt.ts` | Generated so the `Sitemap:` line always matches the real domain |
 
@@ -44,32 +44,49 @@ These are real separate routes with a shared `BaseLayout`, not anchors on one pa
 ## Editing content — start here
 
 **[`src/config/site.ts`](src/config/site.ts) is the single source of truth.** Business name,
-tagline, contact details, navigation, all six product categories, values, stats and testimonials
-live there. No page hardcodes an address, phone number, email or map URL.
+tagline, contact details, navigation, all six product categories, values and stats live there. No
+page hardcodes a phone number or email address.
 
-### Placeholders still to fill in
+Category and feature `icon` values are **names in [`src/components/Icon.astro`](src/components/Icon.astro)**,
+not emoji — add the glyph there first if you introduce a new category.
 
-Every unknown real-world value is prefixed with `TODO:` in `site.ts`. On the rendered site these
-show up in an **amber dashed box** so they cannot be missed, and the literal `TODO:` text is
-stripped from the output (see `displayValue()` in `site.ts`).
+### The only two placeholders
 
-Replace these before going live:
+Just two values are still provisional, both prefixed with `TODO:` in `site.ts`:
 
-- `contact.address` — the real shop address
 - `contact.phone` / `contact.phoneDisplay` — dialable number + the formatted version shown to visitors
 - `contact.email` — a real inbox. **The enquiry form on `/contact` stays disabled until this is set**, since it submits via `mailto:`.
-- `contact.hours` — actual opening hours
-- `contact.mapEmbedUrl` — a Google Maps *embed* URL. Until set, `/contact` shows a dashed map placeholder; once set, it renders a live map.
-- `contact.mapLink` — a Google Maps *share* link, used for the "Open in Maps" / directions links
-- `postalAddress.*` — the same address split into components, **for search engines only**
-- `openingHoursSpec` — hours in schema.org form, e.g. `["Mo-Sa 09:00-21:00", "Su 10:00-18:00"]`
-- `testimonials[].name` / `.detail` — real customer names, or delete the entries you cannot source
+
+Until they are filled in, each renders as quiet dotted-underline text with a short user-facing note
+("Our published number is being finalised…"), and the literal `TODO:` prefix is stripped from the
+output (see `displayValue()` in `site.ts`). Deliberately quiet: an earlier version shouted them in
+amber dashed boxes, which made the whole site read as unfinished.
+
+### Adding your address, hours or a map
+
+The site models **no street address, opening hours, map or customer testimonials** — publishing
+invented or placeholder versions of those is what made it look unfinished, so they are absent
+rather than faked. To reintroduce any of them:
+
+1. Add the real value to `site.ts` (e.g. `contact.address`, `contact.hours`).
+2. Render it where it belongs — `ContactBlock.astro` for the contact rows, `Footer.astro` for the
+   footer column.
+3. For local SEO, also add a component `postalAddress` (`streetAddress`, `addressLocality`,
+   `addressRegion`, `postalCode`, `addressCountry`) plus `openingHoursSpec` in schema.org form
+   (`["Mo-Sa 09:00-21:00"]`) and feed them into `businessSchema` in `BaseLayout.astro`. Google
+   ranks a component address far better than one free-text line.
+4. For a map, add a Google Maps *embed* URL and render an `<iframe>` on `/contact`; the CSP in
+   `public/_headers` and `vercel.json` already allows `google.com` / `maps.google.com` frames.
 
 ### Images
 
-Only real image needed is a shopfront photo. Drop it at `public/images/shopfront.jpg` and replace
-the placeholder block in [`src/components/Hero.astro`](src/components/Hero.astro) with an `<img>`.
-See `public/images/README.md`.
+The artwork is **hand-built SVG** in [`src/components/illustrations/`](src/components/illustrations/) —
+`Shopfront.astro` (home hero), `ShelfRack.astro` (products header, home visit strip) and
+`Counter.astro` (about header). They ship as real drawings rather than "photo goes here" boxes,
+scale to any width and cost nothing to load.
+
+If you get a genuine photograph of the shop, drop it at `public/images/shopfront.jpg` and swap the
+`<Shopfront />` in [`src/components/Hero.astro`](src/components/Hero.astro) for an `<img>`.
 
 ## SEO & sharing
 
@@ -79,39 +96,42 @@ See `public/images/README.md`.
   `site.ts`. Committed to the repo — rerun `npm run og` only if branding changes.
 - **`Store` structured data** (schema.org JSON-LD) in `BaseLayout`, which is what feeds Google's
   local results panel. It is built from `site.ts` and **omits any field still holding a `TODO:`
-  placeholder**; if no real address, phone or email exists yet, the block is left out entirely
-  rather than describing a shop nobody can reach. Fill in `postalAddress` and `openingHoursSpec`
-  to get the most out of it, then validate at
+  placeholder**; while both the phone and email are placeholders the block is left out entirely,
+  rather than describing a shop nobody can reach. Adding an address and hours (see above) is what
+  will get the most out of it — then validate at
   [search.google.com/test/rich-results](https://search.google.com/test/rich-results).
 
 ## Design system
 
-Theme is **modern dark premium** — a deep slate ground, a violet→cyan gradient accent,
-translucent "glass" surfaces, soft glows and large rounded radii. All colours, radii and shadows
-are CSS custom properties at the top of [`src/styles/global.css`](src/styles/global.css) — change
-them there and the whole site follows. Typography is Sora (headings) + Inter (body) from Google
-Fonts, set in sentence case.
+Theme is a **warm dark shopfront**: near-black walnut grounds, amber lamplight as the single
+accent, cream text, with sage and terracotta appearing only inside the illustrations. All colours,
+radii and shadows are CSS custom properties at the top of
+[`src/styles/global.css`](src/styles/global.css) — change them there and the whole site follows.
+Typography is Fraunces (h1/h2) + Inter (everything else) from Google Fonts, set in sentence case.
 
 The visual language is deliberate and worth keeping consistent:
 
-- **One gradient.** `--grad` (violet → blue → cyan) is the single accent: buttons, the logo tile,
-  bullet dots, stat values and gradient headline text via `.grad-text`. Resist adding a second.
-- **Surfaces are translucent white over the dark ground** (`--surface`), with a 1px `--line`
-  border and an `inset 0 1px 0` highlight along the top edge — that highlight is what reads as
-  glass. `backdrop-filter` is used only on the sticky header, the mobile nav panel and the hero
-  badge, which genuinely sit over scrolling content; cards skip it because at these opacities it
-  costs paint time for no visible difference.
-- **Depth comes from glow, not hard edges.** Sections can carry a soft radial accent glow
-  (`.section--glow`), and cards lift 4px on hover with a violet-tinted shadow. Every lift is
-  disabled under `prefers-reduced-motion`.
-- **Accent text uses the lighter tints.** `--violet` / `--cyan` are for fills, gradients and
-  glows; whenever the accent carries words, use `--violet-text` / `--cyan-text`, which clear
-  WCAG AA on the dark ground.
-- **Grounds alternate** between `--bg`, `--bg-2` (`.section--alt`) and `--bg-3` (footer) so long
-  pages keep a rhythm without any hard dividers.
+- **No gradients, no glows, no blur, no glassmorphism.** Surfaces are solid (`--surface`) with a
+  flat 1px `--line` border. An earlier version leaned on a violet→cyan gradient, translucent cards
+  and radial glows; it read as generic and was scrapped, so please don't reintroduce that vocabulary.
+- **One accent, used sparingly.** Amber carries eyebrow labels, links, icons and the primary
+  button, and nothing else. It is the same amber as the awning and lamplight in the illustrations,
+  which is what ties interface and artwork together.
+- **Icons are drawn, not emoji.** Every glyph lives in
+  [`src/components/Icon.astro`](src/components/Icon.astro) on a 24×24 grid with a 1.6 stroke and
+  round caps, inheriting `currentColor`. Keep new glyphs on that grid or they will sit at a
+  different optical weight. Icons appear in `.icon-tile` squares at 2.9rem — smaller than that and
+  the finer glyphs turn to mud.
+- **Restrained radii.** `--radius-sm` 8px for buttons and tiles, `--radius` 12px for cards,
+  `--radius-lg` 18px for panels and figures. Nothing is a full pill.
+- **Hover states change colour, not elevation** — cards shift from `--surface` to `--surface-2`
+  and brighten their border. Nothing lifts, so reduced-motion users see the same affordance.
+- **Grid and flex children carry `min-width: 0`.** Without it a single long word (an email address)
+  refuses to shrink and widens the column past the viewport — `overflow-wrap` alone does not fix
+  this, because it does not reduce an element's min-content width.
 
-Global utility classes (`.container`, `.section`, `.masthead`, `.grid--3`, `.card`, `.btn`,
-`.panel`, `.facts`, `.trust`, `.stat`, `.field`, `.eyebrow`, `.grad-text`, `.todo`) live in
+Global utility classes (`.container`, `.section`, `.masthead`, `.grid--3`, `.card`, `.icon-tile`,
+`.btn`, `.panel`, `.facts`, `.trust`, `.stat`, `.field`, `.eyebrow`, `.todo`) live in
 `global.css`; anything component-specific goes in that component's scoped `<style>` block.
 
 ## Notes
@@ -183,15 +203,15 @@ location /_astro/ {
 **only by Netlify and Cloudflare Pages** — every other host ignores it, so apply the equivalent
 yourself.
 
-The CSP allows Google Fonts and a Google Maps iframe. If you add any third-party embed, widen it or
+The CSP allows Google Fonts, and a Google Maps iframe if you add one. If you add any third-party embed, widen it or
 the browser will silently block the resource.
 
 ### Pre-launch checklist
 
 - [ ] `SITE_URL` set on the host to the real domain
-- [ ] All `TODO:` values in `src/config/site.ts` replaced (or testimonials deleted)
-- [ ] `npm run build` passes with 0 errors, and no amber placeholder boxes remain on the site
-- [ ] Shopfront photo added, replacing the hero placeholder
+- [ ] `contact.phone` and `contact.email` replaced in `src/config/site.ts`
+- [ ] `npm run build` passes with 0 errors, and no dotted placeholder text remains on the site
+- [ ] Enquiry form on `/contact` confirmed working (it stays disabled until `contact.email` is real)
 - [ ] Structured data validated at [search.google.com/test/rich-results](https://search.google.com/test/rich-results)
 - [ ] `404` page confirmed working on the host
 - [ ] Submit `sitemap-index.xml` in Google Search Console

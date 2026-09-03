@@ -9,11 +9,11 @@
   Name: Manoveir Trading CO
   Description: Local shop-based retail — walk-in customers
   Standards: HTML5, CSS3, Astro (static)
-  Components: Sora + Inter (Google Fonts)
+  Components: Fraunces + Inter (Google Fonts)
   Language: en-IN
   Doctype: HTML5
   IDE: VS Code
 
 /* THANKS */
-  Images: placeholder — replace public/images/shopfront.jpg with real photo
+  Illustrations: hand-built SVG (src/components/illustrations/)
   OG Image: scripts/generate-og-image.mjs (sharp)
