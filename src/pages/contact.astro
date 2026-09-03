@@ -25,7 +25,7 @@ const hasMapEmbed = !isPlaceholder(mapEmbedUrl);
         </p>
       </div>
 
-      <dl class="meta">
+      <dl class="facts">
         <div>
           <dt>Best contact</dt>
           <dd>In person</dd>
@@ -44,14 +44,13 @@ const hasMapEmbed = !isPlaceholder(mapEmbedUrl);
 
   <section class="section">
     <div class="container contact">
-      <div>
-        <span class="eyebrow">01 / Shop details</span>
+      <div class="panel contact__details">
+        <span class="eyebrow">Shop details</span>
         <h2 class="contact__title">Where to find us</h2>
         <ContactBlock />
       </div>
 
       <div class="contact__map">
-        <span class="contact__map-tag">Fig. 02 — Location</span>
         {
           hasMapEmbed ? (
             <iframe
@@ -66,14 +65,12 @@ const hasMapEmbed = !isPlaceholder(mapEmbedUrl);
             />
           ) : (
             <div class="map-placeholder">
-              <div class="map-placeholder__plate">
-                <span class="map-placeholder__icon" aria-hidden="true">🗺️</span>
-                <p class="map-placeholder__title">Map placeholder</p>
-                <p class="map-placeholder__hint">
-                  Replace <code>mapEmbedUrl</code> in <code>src/config/site.ts</code> with a Google Maps embed
-                  URL and this box becomes a live map.
-                </p>
-              </div>
+              <span class="map-placeholder__icon" aria-hidden="true">🗺️</span>
+              <p class="map-placeholder__title">Map placeholder</p>
+              <p class="map-placeholder__hint">
+                Replace <code>mapEmbedUrl</code> in <code>src/config/site.ts</code> with a Google Maps embed
+                URL and this box becomes a live map.
+              </p>
             </div>
           )
         }
@@ -82,67 +79,67 @@ const hasMapEmbed = !isPlaceholder(mapEmbedUrl);
   </section>
 
   <!-- Enquiry form -->
-  <section class="section section--paper2">
-    <div class="container">
-      <div class="form-wrap">
-        <div class="section-head">
-          <span class="eyebrow">02 / Send an enquiry</span>
-          <h2>Ask us about stock, prices or bulk orders</h2>
-          <p class="lead">
-            This form opens your own email app with the message pre-filled — nothing is sent through this
-            website. If you would rather talk to someone,{" "}
-            {
-              hasPhone ? (
-                <a href={`tel:${phone.replace(/[^+\d]/g, "")}`}>call us on {displayValue(phoneDisplay)}</a>
-              ) : (
-                <span>call us on <span class="todo">{displayValue(phoneDisplay)}</span></span>
-              )
-            }.
+  <section class="section section--alt">
+    <div class="container form-wrap">
+      <div class="section-head section-head--center">
+        <span class="eyebrow">Send an enquiry</span>
+        <h2>Ask us about stock, prices or bulk orders</h2>
+        <p class="lead">
+          This form opens your own email app with the message pre-filled — nothing is sent through this
+          website. If you would rather talk to someone,{" "}
+          {
+            hasPhone ? (
+              <a href={`tel:${phone.replace(/[^+\d]/g, "")}`}>call us on {displayValue(phoneDisplay)}</a>
+            ) : (
+              <span>call us on <span class="todo">{displayValue(phoneDisplay)}</span></span>
+            )
+          }.
+        </p>
+      </div>
+
+      {
+        !hasEmail && (
+          <p class="form-notice">
+            <strong>Form inactive:</strong> add a real address to <code>contact.email</code> in
+            <code>src/config/site.ts</code> to enable it.
           </p>
+        )
+      }
+
+      <form
+        class="panel form"
+        action={hasEmail ? `mailto:${email}` : undefined}
+        method="post"
+        enctype="text/plain"
+      >
+        <div class="form__row">
+          <div class="field">
+            <label for="name">Your name</label>
+            <input id="name" name="Name" type="text" autocomplete="name" required disabled={!hasEmail} />
+          </div>
+          <div class="field">
+            <label for="phone">Phone number</label>
+            <input id="phone" name="Phone" type="tel" autocomplete="tel" required disabled={!hasEmail} />
+          </div>
         </div>
 
-        {
-          !hasEmail && (
-            <p class="form-notice">
-              <strong>Form inactive:</strong> add a real address to <code>contact.email</code> in
-              <code>src/config/site.ts</code> to enable it.
-            </p>
-          )
-        }
+        <div class="field">
+          <label for="message">Your message</label>
+          <textarea
+            id="message"
+            name="Message"
+            rows="5"
+            required
+            disabled={!hasEmail}
+            placeholder="Tell us what you are looking for — item, quantity, or a question about stock."
+          ></textarea>
+        </div>
 
-        <form
-          class="form panel"
-          action={hasEmail ? `mailto:${email}` : undefined}
-          method="post"
-          enctype="text/plain"
-        >
-          <div class="form__row">
-            <div class="field">
-              <label for="name">Your name</label>
-              <input id="name" name="Name" type="text" autocomplete="name" required disabled={!hasEmail} />
-            </div>
-            <div class="field">
-              <label for="phone">Phone number</label>
-              <input id="phone" name="Phone" type="tel" autocomplete="tel" required disabled={!hasEmail} />
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="message">Your message</label>
-            <textarea
-              id="message"
-              name="Message"
-              rows="5"
-              required
-              disabled={!hasEmail}
-              placeholder="Tell us what you are looking for — item, quantity, or a question about stock."
-            ></textarea>
-          </div>
-
-          <button class="btn btn--primary" type="submit" disabled={!hasEmail}>Open email &amp; send</button>
-          <p class="form__note">Or call us directly during opening hours — we usually pick up right away.</p>
-        </form>
-      </div>
+        <button class="btn btn--primary form__submit" type="submit" disabled={!hasEmail}>
+          Open email &amp; send
+        </button>
+        <p class="form__note">Or call us directly during opening hours — we usually pick up right away.</p>
+      </form>
     </div>
   </section>
 </BaseLayout>
@@ -150,8 +147,14 @@ const hasMapEmbed = !isPlaceholder(mapEmbedUrl);
 <style>
   .contact {
     display: grid;
-    gap: clamp(2rem, 4vw, 3.5rem);
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
     align-items: start;
+  }
+
+  /* See the `min-width: 0` note in global.css — long words must not widen the column. */
+  .contact > *,
+  .form__row > * {
+    min-width: 0;
   }
 
   @media (min-width: 58rem) {
@@ -161,73 +164,46 @@ const hasMapEmbed = !isPlaceholder(mapEmbedUrl);
   }
 
   .contact__title {
-    margin-bottom: 1.75rem;
+    margin-bottom: 1.5rem;
+    font-size: clamp(1.5rem, 2.6vw, 1.9rem);
   }
 
   .contact__map {
-    position: relative;
-    padding-top: 2rem;
+    overflow: hidden;
     background: var(--surface);
-    border: var(--line);
-    box-shadow: var(--hard);
-  }
-
-  .contact__map-tag {
-    position: absolute;
-    top: -1px;
-    left: -1px;
-    padding: 0.3rem 0.6rem;
-    background: var(--ink);
-    color: var(--lime);
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), var(--shadow);
   }
 
   .map-placeholder {
     display: grid;
-    place-items: center;
-    min-height: 22rem;
-    padding: 1.5rem;
-    background: repeating-linear-gradient(
-        45deg,
-        rgba(19, 21, 20, 0.07) 0 2px,
-        transparent 2px 9px
-      ),
-      var(--surface);
-  }
-
-  .map-placeholder__plate {
-    max-width: 24rem;
-    padding: 1.4rem 1.6rem;
-    background: var(--surface);
-    border: var(--line);
+    place-content: center;
+    justify-items: center;
+    gap: 0.2rem;
+    min-height: 24rem;
+    padding: 2rem;
     text-align: center;
+    background: var(--grad-soft);
   }
 
   .map-placeholder__icon {
-    display: block;
-    font-size: 2.25rem;
+    font-size: 2.5rem;
     line-height: 1;
     margin-bottom: 0.5rem;
   }
 
   .map-placeholder__title {
+    color: var(--text);
     font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    color: var(--ink);
+    font-size: 1.05rem;
+    font-weight: 600;
   }
 
   .map-placeholder__hint {
-    margin-top: 0.45rem;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    line-height: 1.6;
-    color: var(--muted);
+    max-width: 22rem;
+    color: var(--text-faint);
+    font-size: 0.87rem;
   }
 
   .form-wrap {
@@ -235,14 +211,13 @@ const hasMapEmbed = !isPlaceholder(mapEmbedUrl);
   }
 
   .form-notice {
-    padding: 0.9rem 1.1rem;
+    padding: 0.9rem 1.15rem;
     margin-bottom: 1.5rem;
-    background: rgba(226, 78, 27, 0.1);
-    border: 1px dashed var(--clay);
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    line-height: 1.7;
-    color: var(--clay-ink);
+    color: #ffd08a;
+    background: rgba(255, 176, 46, 0.1);
+    border: 1px dashed rgba(255, 176, 46, 0.45);
+    border-radius: var(--radius-sm);
+    font-size: 0.92rem;
   }
 
   .form {
@@ -257,63 +232,22 @@ const hasMapEmbed = !isPlaceholder(mapEmbedUrl);
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
   }
 
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.45rem;
-  }
-
-  .field label {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .field input,
-  .field textarea {
-    padding: 0.8rem 0.9rem;
-    background: var(--paper);
-    border: 2px solid var(--ink);
-    border-radius: 0;
-    font-size: 0.98rem;
-    resize: vertical;
-  }
-
-  .field input:focus,
-  .field textarea:focus {
-    background: var(--surface);
-    outline: 3px solid var(--clay);
-    outline-offset: 0;
-  }
-
-  .field input:disabled,
-  .field textarea:disabled {
-    background: var(--paper-2);
-    border-color: rgba(19, 21, 20, 0.3);
-    color: var(--muted);
-    cursor: not-allowed;
-  }
-
-  .form button[type="submit"] {
+  .form__submit {
     align-self: flex-start;
   }
 
-  .form button[type="submit"]:disabled {
-    background: var(--paper-2);
-    border-color: rgba(19, 21, 20, 0.3);
-    color: var(--muted);
+  .form__submit:disabled {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--line);
+    color: var(--text-faint);
     box-shadow: none;
     transform: none;
+    filter: none;
     cursor: not-allowed;
   }
 
   .form__note {
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    line-height: 1.7;
-    color: var(--muted);
+    color: var(--text-faint);
+    font-size: 0.87rem;
   }
 </style>

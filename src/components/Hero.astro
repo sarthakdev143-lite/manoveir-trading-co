@@ -1,236 +1,200 @@
 ---
 import { site } from "../config/site";
-
-const kickers = ["Local retail", "Walk-in shop", `${site.categories.length} categories`];
 ---
 
 <section class="hero">
   <div class="container hero__grid">
     <div class="hero__copy">
-      <p class="hero__kicker">
-        {kickers.map((k) => <span>{k}</span>)}
-      </p>
+      <span class="eyebrow">Local retail · Walk-in shop</span>
 
-      <h1 class="hero__title">{site.name}</h1>
-
-      <p class="hero__tagline"><span>{site.tagline}</span></p>
-
+      <h1>{site.name}</h1>
+      <p class="hero__tagline grad-text">{site.tagline}</p>
       <p class="lead">{site.description}</p>
 
       <div class="actions">
-        <a class="btn btn--primary" href="/products">Explore Products</a>
-        <a class="btn btn--outline" href="/contact">Find Us</a>
+        <a class="btn btn--primary" href="/products">Explore products</a>
+        <a class="btn btn--glass" href="/contact">Find us</a>
       </div>
+
+      <ul class="trust hero__trust">
+        {site.trustBar.map((item) => <li>{item}</li>)}
+      </ul>
     </div>
 
-    <!-- Image placeholder: drop a shopfront photo at /public/images/shopfront.jpg
-         and swap this block for an <img> tag. -->
-    <div
-      class="hero__media"
-      role="img"
-      aria-label="Placeholder for a photograph of the Manoveir Trading CO shopfront"
-    >
-      <span class="hero__media-tag">Fig. 01</span>
-      <div class="hero__media-plate">
-        <span class="hero__media-icon" aria-hidden="true">🏪</span>
-        <p class="hero__media-text">Shopfront photo</p>
-        <p class="hero__media-hint">Add an image at <code>/public/images/shopfront.jpg</code></p>
+    <div class="hero__media">
+      <!-- Image placeholder: drop a shopfront photo at /public/images/shopfront.jpg
+           and swap this block for an <img> tag. -->
+      <div
+        class="hero__frame"
+        role="img"
+        aria-label="Placeholder for a photograph of the Manoveir Trading CO shopfront"
+      >
+        <span class="hero__frame-icon" aria-hidden="true">🏪</span>
+        <p class="hero__frame-title">Shopfront photo</p>
+        <p class="hero__frame-hint">Add an image at <code>/public/images/shopfront.jpg</code></p>
+      </div>
+
+      <div class="hero__badge">
+        <span class="hero__badge-value">{site.categories.length}</span>
+        <span class="hero__badge-label">Product<br />categories</span>
       </div>
     </div>
-  </div>
-
-  <div class="container">
-    <dl class="hero__facts">
-      <div>
-        <dt>Format</dt>
-        <dd>Shop-based retail</dd>
-      </div>
-      <div>
-        <dt>Ordering</dt>
-        <dd>Walk-in only</dd>
-      </div>
-      <div>
-        <dt>Range</dt>
-        <dd>{site.categories.length} categories</dd>
-      </div>
-      <div>
-        <dt>Served</dt>
-        <dd>Local households</dd>
-      </div>
-    </dl>
   </div>
 </section>
 
 <style>
   .hero {
     position: relative;
-    padding-top: clamp(2.5rem, 6vw, 5rem);
-    padding-bottom: clamp(2rem, 4vw, 3rem);
-    /* The faint vertical stripes expose the 12-column grid the layout sits on. */
-    background:
-      repeating-linear-gradient(
-        90deg,
-        transparent 0 calc(100% / 12 - 1px),
-        rgba(19, 21, 20, 0.07) calc(100% / 12 - 1px) calc(100% / 12)
-      ),
-      var(--paper);
+    isolation: isolate;
     overflow: hidden;
+    padding-top: clamp(2.75rem, 6vw, 5rem);
+    padding-bottom: clamp(3rem, 6vw, 5.5rem);
+  }
+
+  /* Two soft accent glows, offset so the ground never looks flat. */
+  .hero::before,
+  .hero::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .hero::before {
+    top: -22rem;
+    left: -10rem;
+    width: 46rem;
+    height: 46rem;
+    background: radial-gradient(circle, rgba(124, 92, 255, 0.3), transparent 62%);
+  }
+
+  .hero::after {
+    top: -14rem;
+    right: -14rem;
+    width: 40rem;
+    height: 40rem;
+    background: radial-gradient(circle, rgba(34, 211, 238, 0.16), transparent 62%);
   }
 
   .hero__grid {
     display: grid;
-    gap: clamp(2rem, 4vw, 3.5rem);
-    align-items: start;
+    gap: clamp(2.25rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+
+  /* See the `min-width: 0` note in global.css — long words must not widen the column. */
+  .hero__grid > * {
+    min-width: 0;
   }
 
   @media (min-width: 62rem) {
     .hero__grid {
-      grid-template-columns: 1.15fr 0.85fr;
+      grid-template-columns: 1.08fr 0.92fr;
     }
   }
 
-  .hero__kicker {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem 1.1rem;
-    margin-bottom: 1.5rem;
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink);
-  }
-
-  .hero__kicker span {
-    display: flex;
-    align-items: center;
-    gap: 1.1rem;
-  }
-
-  .hero__kicker span:not(:last-child)::after {
-    content: "";
-    width: 6px;
-    height: 6px;
-    background: var(--clay);
-  }
-
-  .hero__title {
-    font-size: clamp(2.7rem, 9vw, 6rem);
-    line-height: 0.9;
+  .hero__copy {
+    max-width: 36rem;
   }
 
   .hero__tagline {
-    margin-top: 1.25rem;
-  }
-
-  .hero__tagline span {
-    display: inline-block;
-    padding: 0.3rem 0.6rem;
-    background: var(--lime);
-    border: 2px solid var(--ink);
+    margin-top: 0.75rem;
     font-family: var(--font-display);
-    font-size: clamp(1.05rem, 2.4vw, 1.5rem);
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    text-transform: uppercase;
-    color: var(--ink);
+    font-size: clamp(1.4rem, 3.2vw, 2.1rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
   }
 
-  /* Hatched placeholder frame — reads as a reserved image slot, not a card. */
+  .hero__trust {
+    justify-content: flex-start;
+    margin-top: 2rem;
+  }
+
+  /* --- Media side --- */
+
   .hero__media {
     position: relative;
-    display: grid;
-    place-items: center;
-    min-height: clamp(16rem, 32vw, 23rem);
-    padding: 1.5rem;
-    border: var(--line);
-    background: repeating-linear-gradient(
-        45deg,
-        rgba(19, 21, 20, 0.07) 0 2px,
-        transparent 2px 9px
-      ),
-      var(--surface);
-    box-shadow: var(--hard);
-  }
-
-  .hero__media-tag {
-    position: absolute;
-    top: -1px;
-    left: -1px;
-    padding: 0.3rem 0.6rem;
-    background: var(--ink);
-    color: var(--lime);
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .hero__media-plate {
-    padding: 1.4rem 1.6rem;
+    padding: clamp(0.6rem, 1.2vw, 0.9rem);
     background: var(--surface);
-    border: var(--line);
-    text-align: center;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), var(--shadow-lg);
   }
 
-  .hero__media-icon {
-    display: block;
-    font-size: 2.5rem;
+  .hero__frame {
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 0.15rem;
+    min-height: clamp(15rem, 32vw, 21rem);
+    padding: 1.75rem;
+    text-align: center;
+    background: var(--grad-soft);
+    border: 1px dashed rgba(255, 255, 255, 0.16);
+    border-radius: calc(var(--radius-lg) - 8px);
+  }
+
+  .hero__frame-icon {
+    font-size: 2.6rem;
     line-height: 1;
     margin-bottom: 0.6rem;
   }
 
-  .hero__media-text {
+  .hero__frame-title {
+    color: var(--text);
     font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 800;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: var(--ink);
+    font-size: 1.05rem;
+    font-weight: 600;
   }
 
-  .hero__media-hint {
-    margin-top: 0.4rem;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: var(--muted);
+  .hero__frame-hint {
+    max-width: 20rem;
+    color: var(--text-faint);
+    font-size: 0.85rem;
   }
 
-  /* Fact strip: hairline-divided mono pairs closing the hero. */
-  .hero__facts {
-    display: grid;
-    gap: 1px;
-    margin-top: clamp(2.5rem, 5vw, 4rem);
-    background: var(--ink);
-    border-top: var(--line);
-    border-bottom: var(--line);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  /* Floating glass chip overlapping the frame — the depth cue of the layout. */
+  .hero__badge {
+    position: absolute;
+    right: clamp(-0.5rem, -1vw, -1.25rem);
+    bottom: clamp(-1rem, -2vw, -1.5rem);
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.85rem 1.1rem;
+    background: rgba(14, 20, 29, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
   }
 
-  .hero__facts > div {
-    padding: 0.9rem 0 0.9rem 0.9rem;
-    background: var(--paper);
-  }
-
-  .hero__facts dt {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--clay-ink);
-  }
-
-  .hero__facts dd {
-    margin: 0.25rem 0 0;
+  .hero__badge-value {
     font-family: var(--font-display);
-    font-size: 0.95rem;
+    font-size: 1.9rem;
     font-weight: 700;
-    letter-spacing: -0.01em;
-    text-transform: uppercase;
-    color: var(--ink);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .hero__badge-label {
+    color: var(--text-dim);
+    font-size: 0.76rem;
+    line-height: 1.25;
+  }
+
+  @media (max-width: 30rem) {
+    .hero__badge {
+      right: 0.5rem;
+      bottom: -0.75rem;
+    }
   }
 </style>

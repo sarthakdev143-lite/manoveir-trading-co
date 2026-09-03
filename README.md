@@ -86,30 +86,33 @@ See `public/images/README.md`.
 
 ## Design system
 
-Theme is **"Market Index" — editorial ink-on-stone with chartreuse and clay accents**. All colors,
-lines and offsets are CSS custom properties at the top of
-[`src/styles/global.css`](src/styles/global.css) — change them there and the whole site follows.
-Typography is Archivo (display + body) with Space Mono for labels, indices and buttons, from
-Google Fonts.
+Theme is **modern dark premium** — a deep slate ground, a violet→cyan gradient accent,
+translucent "glass" surfaces, soft glows and large rounded radii. All colours, radii and shadows
+are CSS custom properties at the top of [`src/styles/global.css`](src/styles/global.css) — change
+them there and the whole site follows. Typography is Sora (headings) + Inter (body) from Google
+Fonts, set in sentence case.
 
 The visual language is deliberate and worth keeping consistent:
 
-- **Nothing is rounded and nothing blurs.** Structure comes from 1px ink hairlines and hard offset
-  shadows (`--hard`), not border radii or soft drop shadows.
-- **Grid matrices, not floating cards.** `.matrix` + `.cell` render a grid whose cells butt together
-  and draw their own hairline as a 1px spread `box-shadow`, so neighbours share one line. Column
-  counts are set explicitly per breakpoint (not `auto-fit`) so the content counts divide evenly —
-  a trailing empty slot would otherwise read as a hole in the grid.
-- **Cells invert on hover** (to ink, or to lime on ink grounds) rather than lifting, so the
-  interaction behaves identically under `prefers-reduced-motion`.
-- **Mono for metadata.** Eyebrows, indices, buttons, labels and fact rows are Space Mono uppercase;
-  headings are Archivo 800/900 uppercase with negative tracking.
-- `--clay` is decorative only (large numerals, marks). Small clay-coloured text uses `--clay-ink`,
-  which clears WCAG AA against the paper ground.
+- **One gradient.** `--grad` (violet → blue → cyan) is the single accent: buttons, the logo tile,
+  bullet dots, stat values and gradient headline text via `.grad-text`. Resist adding a second.
+- **Surfaces are translucent white over the dark ground** (`--surface`), with a 1px `--line`
+  border and an `inset 0 1px 0` highlight along the top edge — that highlight is what reads as
+  glass. `backdrop-filter` is used only on the sticky header, the mobile nav panel and the hero
+  badge, which genuinely sit over scrolling content; cards skip it because at these opacities it
+  costs paint time for no visible difference.
+- **Depth comes from glow, not hard edges.** Sections can carry a soft radial accent glow
+  (`.section--glow`), and cards lift 4px on hover with a violet-tinted shadow. Every lift is
+  disabled under `prefers-reduced-motion`.
+- **Accent text uses the lighter tints.** `--violet` / `--cyan` are for fills, gradients and
+  glows; whenever the accent carries words, use `--violet-text` / `--cyan-text`, which clear
+  WCAG AA on the dark ground.
+- **Grounds alternate** between `--bg`, `--bg-2` (`.section--alt`) and `--bg-3` (footer) so long
+  pages keep a rhythm without any hard dividers.
 
-Global utility classes (`.container`, `.section`, `.masthead`, `.matrix--3`, `.cell`, `.btn`,
-`.panel`, `.meta`, `.eyebrow`, `.ticker`, `.todo`) live in `global.css`; anything
-component-specific goes in that component's scoped `<style>` block.
+Global utility classes (`.container`, `.section`, `.masthead`, `.grid--3`, `.card`, `.btn`,
+`.panel`, `.facts`, `.trust`, `.stat`, `.field`, `.eyebrow`, `.grad-text`, `.todo`) live in
+`global.css`; anything component-specific goes in that component's scoped `<style>` block.
 
 ## Notes
 

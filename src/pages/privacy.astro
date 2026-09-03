@@ -18,7 +18,7 @@ import { site, isPlaceholder, displayValue } from "../config/site";
         </p>
       </div>
 
-      <dl class="meta">
+      <dl class="facts">
         <div>
           <dt>Last updated</dt>
           <dd>2 Sep 2026</dd>
@@ -37,22 +37,22 @@ import { site, isPlaceholder, displayValue } from "../config/site";
 
   <section class="section">
     <div class="container">
-      <div class="prose-legal">
-        <h2>No tracking, no cookies</h2>
+      <div class="panel prose-legal">
+        <h2>1. No tracking, no cookies</h2>
         <p>
-          This website does not use analytics cookies, advertising trackers, or third-party scripts. Your visit
-          is not profiled. The only external resources loaded are Google Fonts (for typography) and, if enabled,
-          a Google Maps embed on the <a href="/contact">Contact page</a>. Those services are subject to Google's
-          own privacy policy.
+          This website does not use analytics cookies, advertising trackers, or third-party scripts. Your
+          visit is not profiled. The only external resources loaded are Google Fonts (for typography) and, if
+          enabled, a Google Maps embed on the <a href="/contact">Contact page</a>. Those services are subject
+          to Google's own privacy policy.
         </p>
 
-        <h2>Information you share when you contact us</h2>
+        <h2>2. Information you share when you contact us</h2>
         <p>
-          The enquiry form on <a href="/contact">/contact</a> does not send data through this website or store it
-          on a server. Submitting it opens your own email application with a pre-filled message addressed to us
-          (<code>{displayValue(site.contact.email)}</code>
-          {isPlaceholder(site.contact.email) ? " — placeholder until a real inbox is set" : ""}). What you choose
-          to include — name, phone, message — is sent only via your email provider.
+          The enquiry form on <a href="/contact">/contact</a> does not send data through this website or store
+          it on a server. Submitting it opens your own email application with a pre-filled message addressed
+          to us (<code>{displayValue(site.contact.email)}</code>
+          {isPlaceholder(site.contact.email) ? " — placeholder until a real inbox is set" : ""}). What you
+          choose to include — name, phone, message — is sent only via your email provider.
         </p>
         <p>
           If you
@@ -61,11 +61,11 @@ import { site, isPlaceholder, displayValue } from "../config/site";
           ) : (
             <a href={`tel:${site.contact.phone.replace(/[^+\d]/g, "")}`}>call us</a>
           )}{" "}
-          or visit in person, information is handled the same way as any normal shop enquiry: to answer you, not
-          to build a marketing database.
+          or visit in person, information is handled the same way as any normal shop enquiry: to answer you,
+          not to build a marketing database.
         </p>
 
-        <h2>What we do not do</h2>
+        <h2>3. What we do not do</h2>
         <ul>
           <li>We do not sell or share personal data.</li>
           <li>We do not run a newsletter or automated marketing.</li>
@@ -73,30 +73,32 @@ import { site, isPlaceholder, displayValue } from "../config/site";
           <li>We do not use fingerprinting, session replay, or cross-site tracking.</li>
         </ul>
 
-        <h2>External links &amp; maps</h2>
+        <h2>4. External links &amp; maps</h2>
         <p>
-          Clicking “Open in Google Maps” or loading the embedded map sends a request to Google. That is optional
-          — the map only loads after you navigate to <a href="/contact">/contact</a> and, if a map URL has been
-          configured, your browser fetches tiles from <code>google.com</code> / <code>maps.google.com</code>. See
-          our Content Security Policy in <code>public/_headers</code> for the exact allow-list.
+          Clicking “Open in Google Maps” or loading the embedded map sends a request to Google. That is
+          optional — the map only loads after you navigate to <a href="/contact">/contact</a> and, if a map
+          URL has been configured, your browser fetches tiles from <code>google.com</code> /
+          <code>maps.google.com</code>. See our Content Security Policy in <code>public/_headers</code> for
+          the exact allow-list.
         </p>
 
-        <h2>Your rights</h2>
+        <h2>5. Your rights</h2>
         <p>
           If you have shared information with us by email or phone and would like it deleted or corrected,
-          contact us via the details on <a href="/contact">/contact</a> and we will handle your request promptly.
+          contact us via the details on <a href="/contact">/contact</a> and we will handle your request
+          promptly.
         </p>
 
-        <h2>Changes to this policy</h2>
+        <h2>6. Changes to this policy</h2>
         <p>
           If we ever add analytics (for example, privacy-friendly, cookie-less visit counts) or a real
-          contact-form handler, this page will be updated to describe what is collected and why before that code
-          goes live.
+          contact-form handler, this page will be updated to describe what is collected and why before that
+          code goes live.
         </p>
 
         <div class="legal-cta">
           <a class="btn btn--primary" href="/contact">Contact us</a>
-          <a class="btn btn--outline" href="/">Back to home</a>
+          <a class="btn btn--glass" href="/">Back to home</a>
         </div>
       </div>
     </div>
@@ -106,41 +108,23 @@ import { site, isPlaceholder, displayValue } from "../config/site";
 <style>
   .prose-legal {
     max-width: 48rem;
-    /* Clause numbers come from a counter so the markup stays plain prose. */
-    counter-reset: clause;
+    margin-inline: auto;
   }
 
   .prose-legal h2 {
-    display: flex;
-    gap: 0.9rem;
-    margin-top: 2.5rem;
-    padding-top: 1.25rem;
-    border-top: var(--line);
-    font-size: clamp(1.15rem, 2vw, 1.4rem);
+    margin-top: 2.25rem;
+    margin-bottom: 0.7rem;
+    font-size: clamp(1.1rem, 1.8vw, 1.28rem);
     letter-spacing: -0.02em;
-  }
-
-  .prose-legal h2::before {
-    counter-increment: clause;
-    content: counter(clause, decimal-leading-zero);
-    flex-shrink: 0;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--clay-ink);
-    padding-top: 0.2rem;
   }
 
   .prose-legal h2:first-child {
     margin-top: 0;
-    padding-top: 0;
-    border-top: 0;
   }
 
   .prose-legal p,
   .prose-legal li {
-    color: var(--muted);
+    color: var(--text-dim);
     font-size: 0.98rem;
     line-height: 1.75;
   }
@@ -149,38 +133,37 @@ import { site, isPlaceholder, displayValue } from "../config/site";
     margin-top: 1rem;
   }
 
-  .prose-legal h2 + p {
-    margin-top: 0.9rem;
-  }
-
   .prose-legal ul {
     list-style: none;
     padding: 0;
-    margin-top: 1rem;
+    margin-top: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
   .prose-legal li {
-    padding: 0.55rem 0 0.55rem 1.4rem;
-    border-bottom: var(--line-soft);
     position: relative;
+    padding-left: 1.3rem;
   }
 
   .prose-legal li::before {
     content: "";
     position: absolute;
     left: 0;
-    top: 1.05em;
-    width: 7px;
-    height: 7px;
-    background: var(--clay);
+    top: 0.7em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--grad);
   }
 
   .legal-cta {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.9rem 1.25rem;
+    gap: 0.85rem 1rem;
     margin-top: 2.5rem;
     padding-top: 1.75rem;
-    border-top: var(--line);
+    border-top: 1px solid var(--line);
   }
 </style>

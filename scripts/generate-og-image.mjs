@@ -8,7 +8,7 @@
  * Astro already depends on — no extra tooling.
  *
  * Once a real shopfront photograph exists, prefer compositing that behind the
- * text instead of the flat ink background.
+ * text instead of the flat dark background.
  */
 
 import { readFileSync, mkdirSync } from "node:fs";
@@ -28,61 +28,76 @@ const read = (key) => {
   return match[1];
 };
 
-const name = read("name").toUpperCase();
-const tagline = read("tagline").toUpperCase();
+const name = read("name");
+const tagline = read("tagline");
 
 // Brand tokens — keep in sync with src/styles/global.css.
-const INK = "#131514";
-const PAPER = "#edeee9";
-const LIME = "#cbf24c";
-const CLAY = "#e24e1b";
+const BG = "#080b11";
+const TEXT = "#e9edf4";
+const DIM = "#a2aebf";
+const VIOLET = "#7c5cff";
+const BLUE = "#4f8cff";
+const CYAN = "#22d3ee";
 
-// Heavy grotesque with fallbacks, mirroring the site's Archivo 900 display face.
-const DISPLAY = "'Arial Black', 'Archivo', Arial, Helvetica, sans-serif";
-const MONO = "'Consolas', 'DejaVu Sans Mono', 'Courier New', monospace";
+// Sora is not installed locally, so the rasteriser falls back to Segoe UI —
+// close enough in weight and proportion for a share card.
+const DISPLAY = "'Segoe UI Semibold', 'Segoe UI', 'Sora', Arial, Helvetica, sans-serif";
+const BODY = "'Segoe UI', 'Inter', Arial, Helvetica, sans-serif";
 
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-const categories = "GROCERIES / HOUSEHOLD / PERSONAL CARE / BEVERAGES / STATIONERY / FESTIVE";
-
-// The same 12-column stripe pattern the hero and mastheads expose on screen.
-const columns = Array.from({ length: 11 }, (_, i) => {
-  const x = Math.round((1200 / 12) * (i + 1));
-  return `<line x1="${x}" y1="0" x2="${x}" y2="630" stroke="${PAPER}" stroke-opacity="0.07" stroke-width="1"/>`;
-}).join("\n  ");
+const categories = "Groceries · Household · Personal care · Beverages · Stationery · Festive";
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="${INK}"/>
-  ${columns}
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="${VIOLET}"/>
+      <stop offset="48%" stop-color="${BLUE}"/>
+      <stop offset="100%" stop-color="${CYAN}"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="${VIOLET}" stop-opacity="0.42"/>
+      <stop offset="100%" stop-color="${VIOLET}" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="${CYAN}" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="${CYAN}" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
 
-  <!-- hairline frame -->
-  <rect x="28" y="28" width="1144" height="574" fill="none" stroke="${PAPER}" stroke-opacity="0.35" stroke-width="1"/>
+  <rect width="1200" height="630" fill="${BG}"/>
+  <ellipse cx="180" cy="30" rx="620" ry="430" fill="url(#glowA)"/>
+  <ellipse cx="1120" cy="60" rx="520" ry="380" fill="url(#glowB)"/>
+
+  <!-- glass frame -->
+  <rect x="28" y="28" width="1144" height="574" rx="34"
+        fill="#ffffff" fill-opacity="0.03" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1"/>
 
   <!-- brand mark -->
-  <rect x="72" y="72" width="96" height="96" fill="${LIME}"/>
-  <text x="120" y="146" text-anchor="middle" fill="${INK}"
-        font-family="${DISPLAY}" font-size="66" font-weight="900">M</text>
+  <rect x="80" y="78" width="88" height="88" rx="22" fill="url(#grad)"/>
+  <text x="124" y="140" text-anchor="middle" fill="#ffffff"
+        font-family="${DISPLAY}" font-size="53" font-weight="700">M</text>
 
-  <!-- kicker -->
-  <text x="192" y="118" fill="${LIME}"
-        font-family="${MONO}" font-size="21" font-weight="700" letter-spacing="3.4">LOCAL RETAIL</text>
-  <text x="192" y="150" fill="${PAPER}" fill-opacity="0.6"
-        font-family="${MONO}" font-size="21" font-weight="700" letter-spacing="3.4">WALK-IN SHOP</text>
+  <!-- eyebrow -->
+  <text x="188" y="118" fill="${DIM}"
+        font-family="${BODY}" font-size="22" letter-spacing="2.6">LOCAL RETAIL</text>
+  <text x="188" y="150" fill="${DIM}" fill-opacity="0.75"
+        font-family="${BODY}" font-size="22" letter-spacing="2.6">WALK-IN SHOP</text>
 
   <!-- name -->
-  <text x="72" y="330" fill="${PAPER}"
-        font-family="${DISPLAY}" font-size="76" font-weight="900" letter-spacing="-2.5">${esc(name)}</text>
+  <text x="80" y="342" fill="${TEXT}"
+        font-family="${DISPLAY}" font-size="78" font-weight="700" letter-spacing="-2.4">${esc(name)}</text>
 
-  <!-- tagline on a lime bar. The bar is sized from an average cap advance of
-       ~0.72em at 30px, since SVG cannot measure text before rasterising. -->
-  <rect x="72" y="372" width="${Math.min(1056, Math.round(tagline.length * 21.5) + 40)}" height="60" fill="${LIME}"/>
-  <text x="92" y="413" fill="${INK}"
-        font-family="${DISPLAY}" font-size="30" font-weight="900" letter-spacing="-0.5">${esc(tagline)}</text>
+  <!-- tagline in the brand gradient -->
+  <text x="80" y="414" fill="url(#grad)"
+        font-family="${DISPLAY}" font-size="40" font-weight="700" letter-spacing="-1">${esc(tagline)}</text>
 
-  <!-- clay marker + categories -->
-  <rect x="72" y="496" width="14" height="14" fill="${CLAY}"/>
-  <text x="72" y="556" fill="${PAPER}" fill-opacity="0.72"
-        font-family="${MONO}" font-size="20" letter-spacing="1.2">${esc(categories)}</text>
+  <!-- gradient rule -->
+  <rect x="80" y="462" width="150" height="4" rx="2" fill="url(#grad)"/>
+
+  <!-- categories -->
+  <text x="80" y="536" fill="${DIM}"
+        font-family="${BODY}" font-size="24">${esc(categories)}</text>
 </svg>`;
 
 mkdirSync(dirname(OUT), { recursive: true });

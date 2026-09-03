@@ -27,7 +27,7 @@ business details — see §11.
 | **Pages / Sections** | **ALL selected:** Home/Hero, About Us, Products/Categories, Why Choose Us, Contact + Location, Testimonials |
 | **Site structure** | **Multi-page** (not single-page anchors). Separate routes, shared layout/nav/footer. |
 | **Contact details** | **Use clearly-marked placeholders** in a single central config file. Do not invent fake addresses. Use `TODO:` markers. |
-| **Color theme** | **Superseded by the "Market Index" redesign** (see §5). Originally *deep navy + warm gold on cream*; the user later asked for a complete visual redesign, so the site now runs on ink/stone with chartreuse + clay. |
+| **Color theme** | **Modern dark premium** (see §5) — deep slate ground, violet→cyan gradient accent, glass surfaces, soft glows, large radii. Two earlier themes were rejected: the original *navy + gold on cream*, then an editorial *ink + chartreuse* one. Do not re-pitch either. |
 | **Product categories** | **All 6 selected:** Groceries & Staples, Household Essentials, Personal Care, Beverages & Snacks, Stationery & Sundries, Seasonal & Festive Goods |
 
 ---
@@ -50,7 +50,7 @@ Astro project scaffolded and fully implemented. Actual tree:
 ├── scripts/
 │   └── generate-og-image.mjs # `npm run og` → public/og-image.png via sharp
 ├── public/
-│   ├── favicon.svg           # ink tile, lime "M" (PNG set: npm run icons)
+│   ├── favicon.svg           # gradient tile, white "M" (PNG set: npm run icons)
 │   ├── og-image.png          # 1200x630 branded share card (committed)
 │   ├── _headers              # CSP + security headers + cache rules
 │   └── images/README.md      # where to drop the shopfront photo
@@ -147,43 +147,50 @@ export const site = {
 
 ---
 
-## 5. Design System — "Market Index" (editorial ink + chartreuse)
+## 5. Design System — modern dark premium
 
-Replaced the original navy/gold/cream theme in a full redesign. Live tokens are at the top of
+Third and current theme. The original navy/gold/cream was replaced by an editorial ink +
+chartreuse "Market Index" theme, which the user rejected outright ("this ui is bad"); they then
+chose **modern dark premium** from a set of previewed options. Live tokens are at the top of
 `src/styles/global.css`:
 
 ```css
 :root {
-  --ink: #131514;      /* headings, hairlines, ink grounds */
-  --ink-70: #3a3d3b;   /* body text */
-  --muted: #5f6663;    /* secondary text */
-  --paper: #edeee9;    /* page bg — light stone */
-  --paper-2: #e4e6df;  /* recessed bands */
-  --surface: #ffffff;  /* matrix cells, panels */
-  --lime: #cbf24c;     /* primary accent — CTAs, on-ink highlights */
-  --clay: #e24e1b;     /* decorative marks and large numerals only */
-  --clay-ink: #b33c10; /* clay for small text — clears WCAG AA on paper */
-  --line: 1px solid var(--ink);
-  --hard: 4px 4px 0 var(--ink); /* hard offset shadow, no blur */
+  color-scheme: dark;
+  --bg: #080b11;       /* page ground */
+  --bg-2: #0b1017;     /* .section--alt band */
+  --bg-3: #0e141d;     /* footer / raised band */
+  --surface: rgba(255,255,255,.045); /* glass cards and panels */
+  --line: rgba(255,255,255,.09);
+  --text: #e9edf4;
+  --text-dim: #a2aebf;
+  --text-faint: #6f7c8f;
+  --violet: #7c5cff;   /* fills, gradients, glows */
+  --cyan: #22d3ee;
+  --violet-text: #bcaaff; /* accent as small text — clears WCAG AA on dark */
+  --cyan-text: #7fe3f5;
+  --grad: linear-gradient(135deg, #7c5cff 0%, #4f8cff 48%, #22d3ee 100%);
+  --radius: 20px;      /* --radius-sm 14px, --radius-lg 28px */
+  --glow: 0 24px 70px -28px rgba(124,92,255,.65);
 }
 ```
 
-- Typography: `Archivo` (400/500/700/800/900) for display **and** body, `Space Mono` (400/700) for
-  eyebrows, indices, labels, fact rows and buttons. Two families, loaded from Google Fonts.
-- Shape: **zero border radius, no blurred shadows anywhere.** Structure is 1px ink hairlines plus
-  hard offset shadows.
-- Layout: max-width 1240px, flush-left composition, `--gutter` clamp(1.15rem, 4vw, 2.5rem).
-  Hero and mastheads expose the underlying 12-column grid as faint vertical stripes.
-- Header: sticky paper bar on a hairline; square ink brand block with a lime "M"; mono nav where
-  the active item is a filled ink chip. Mobile menu stays a CSS-only checkbox toggle.
-- Cells (`.matrix` + `.cell`): square, hairline-shared, **invert to ink on hover** instead of
-  lifting — so reduced-motion users get the same affordance. Column counts are explicit per
-  breakpoint so content counts (6 categories, 4 features, 3 values) divide evenly.
-- Sections: alternating paper / paper-2 / ink bands, each separated by a hairline.
-- Home page carries a `.ticker` marquee of the trust list; it falls back to a static centred row
-  under `prefers-reduced-motion`.
-- Footer: ink ground with an oversized Archivo wordmark, lime mono labels, hairline columns.
-- Brand marks: `public/favicon.svg` (ink tile, lime "M"), PNG icon set via `npm run icons`,
+- Typography: `Sora` (400/600/700) for headings, `Inter` (400/500/600) for body, both from Google
+  Fonts. **Sentence case** — the previous all-caps treatment was part of what the user rejected.
+- Shape: large radii everywhere (pills for buttons), no square corners.
+- Surfaces: translucent white over the dark ground plus a 1px border and an `inset 0 1px 0`
+  top-edge highlight — that highlight is what reads as glass. `backdrop-filter` is reserved for
+  the sticky header, mobile nav panel and hero badge; cards omit it deliberately (no visible
+  difference at these opacities, meaningful paint cost).
+- Accent discipline: one gradient (`--grad`) for buttons, logo tile, bullet dots, stat values and
+  `.grad-text` headline text. Accent *text* uses the `-text` tints.
+- Depth: `.section--glow` paints a soft radial accent glow; cards lift 4px with a violet-tinted
+  shadow on hover. All lifts are disabled under `prefers-reduced-motion`.
+- Layout: max-width 1200px, `--gutter` clamp(1.1rem, 4vw, 2rem), centred section heads.
+- Header: sticky blurred bar; gradient rounded logo tile; nav pills in a glass track with the
+  active item gradient-tinted. Mobile menu stays a CSS-only checkbox toggle.
+- Footer: `--bg-3` ground under a gradient hairline, gradient logo tile, stacked fact rows.
+- Brand marks: `public/favicon.svg` (gradient tile, white "M"), PNG icon set via `npm run icons`,
   share image via `npm run og`.
 
 ---

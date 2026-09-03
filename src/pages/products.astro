@@ -34,7 +34,7 @@ const notes = [
         </p>
       </div>
 
-      <dl class="meta">
+      <dl class="facts">
         <div>
           <dt>Categories</dt>
           <dd>{site.categories.length}</dd>
@@ -51,33 +51,28 @@ const notes = [
     </div>
   </section>
 
-  <!-- Full category matrix -->
+  <!-- Full category list -->
   <section class="section">
     <div class="container">
-      <div class="matrix matrix--3">
-        {site.categories.map((category, i) => <CategoryCard {...category} index={i + 1} />)}
+      <div class="grid grid--3">
+        {site.categories.map((category) => <CategoryCard {...category} />)}
       </div>
     </div>
   </section>
 
-  <!-- Stock note -->
-  <section class="section section--paper2">
+  <!-- Stock notes -->
+  <section class="section section--alt">
     <div class="container">
-      <div class="section-head section-head--split">
-        <div>
-          <span class="eyebrow">Good to know</span>
-          <h2>How we handle stock</h2>
-        </div>
-        <p class="lead">
-          What is on the shelf changes week to week. Here is how we keep it moving.
-        </p>
+      <div class="section-head section-head--center">
+        <span class="eyebrow">Good to know</span>
+        <h2>How we handle stock</h2>
+        <p class="lead">What is on the shelf changes week to week. Here is how we keep it moving.</p>
       </div>
 
-      <div class="matrix matrix--3">
+      <div class="grid grid--3">
         {
-          notes.map((note, i) => (
-            <article class="cell">
-              <span class="cell__index">{String(i + 1).padStart(2, "0")}</span>
+          notes.map((note) => (
+            <article class="card">
               <h3>{note.title}</h3>
               <p>{note.desc}</p>
             </article>
@@ -88,20 +83,14 @@ const notes = [
   </section>
 
   <!-- CTA -->
-  <section class="section">
-    <div class="container cta">
+  <section class="section section--glow">
+    <div class="container section-head section-head--center" style="margin-bottom:0">
       <h2>Looking for something specific?</h2>
       <p class="lead">Visit us or get in touch — the fastest way to check availability is to ask.</p>
-      <div class="actions">
+      <div class="actions actions--center">
         <a class="btn btn--primary" href="/contact">Contact us</a>
-        <a class="btn btn--outline" href="/about">About our shop</a>
+        <a class="btn btn--glass" href="/about">About our shop</a>
       </div>
     </div>
   </section>
 </BaseLayout>
-
-<style>
-  .cta {
-    max-width: 44rem;
-  }
-</style>

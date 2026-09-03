@@ -5,89 +5,95 @@ interface Props {
   quote: string;
   name: string;
   detail: string;
-  /** 1-based position in the grid, rendered as a mono index like "03". */
-  index?: number;
 }
 
-const { quote, name, detail, index } = Astro.props;
+const { quote, name, detail } = Astro.props;
+
+// First letter of the (possibly placeholder) name, for the avatar disc.
+const initial = displayValue(name).trim().charAt(0).toUpperCase() || "•";
 ---
 
-<figure class="quote">
-  <div class="quote__top">
-    {index !== undefined && <span class="cell__index">{String(index).padStart(2, "0")}</span>}
-    <span class="quote__mark" aria-hidden="true">&rdquo;</span>
-  </div>
-
+<figure class="card testimonial">
+  <span class="testimonial__mark" aria-hidden="true">&ldquo;</span>
   <blockquote>{quote}</blockquote>
 
-  <figcaption>
-    <span class={`quote__name ${isPlaceholder(name) ? "todo" : ""}`.trim()}>
-      {displayValue(name)}
-    </span>
-    <span class={`quote__detail ${isPlaceholder(detail) ? "todo" : ""}`.trim()}>
-      {displayValue(detail)}
+  <figcaption class="testimonial__by">
+    <span class="testimonial__avatar" aria-hidden="true">{initial}</span>
+    <span class="testimonial__who">
+      <span class={`testimonial__name ${isPlaceholder(name) ? "todo" : ""}`.trim()}>
+        {displayValue(name)}
+      </span>
+      <span class={`testimonial__detail ${isPlaceholder(detail) ? "todo" : ""}`.trim()}>
+        {displayValue(detail)}
+      </span>
     </span>
   </figcaption>
 </figure>
 
 <style>
-  .quote {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: clamp(1.25rem, 2.2vw, 1.9rem);
+  .testimonial {
+    gap: 0.9rem;
   }
 
-  .quote__top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  .quote__mark {
+  .testimonial__mark {
     font-family: var(--font-display);
     font-size: 3.5rem;
-    font-weight: 900;
-    line-height: 0.5;
-    color: var(--clay);
+    font-weight: 700;
+    line-height: 0.75;
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
   }
 
-  .quote blockquote {
+  .testimonial blockquote {
     margin: 0;
-    font-family: var(--font-display);
-    font-size: clamp(1.02rem, 1.6vw, 1.18rem);
-    font-weight: 500;
-    line-height: 1.4;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-    text-wrap: pretty;
+    color: var(--text);
+    font-size: 1rem;
+    line-height: 1.65;
   }
 
-  .quote figcaption {
+  .testimonial__by {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .testimonial__avatar {
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    flex-shrink: 0;
+    background: var(--grad-soft);
+    border: 1px solid rgba(124, 92, 255, 0.35);
+    border-radius: 50%;
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .testimonial__who {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.3rem;
-    margin-top: auto;
-    padding-top: 0.9rem;
-    border-top: var(--line);
+    gap: 0.2rem;
+    min-width: 0;
   }
 
-  .quote__name {
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink);
+  .testimonial__name {
+    color: var(--text);
+    font-size: 0.92rem;
+    font-weight: 500;
   }
 
-  .quote__detail {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--muted);
+  .testimonial__detail {
+    color: var(--text-faint);
+    font-size: 0.82rem;
   }
 </style>

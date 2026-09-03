@@ -9,38 +9,23 @@ import { site } from "../config/site";
   indexable={false}
 >
   <section class="notfound">
-    <div class="container notfound__grid">
-      <span class="notfound__code numeral" aria-hidden="true">404</span>
+    <div class="container notfound__inner">
+      <span class="notfound__code grad-text" aria-hidden="true">404</span>
+      <h1>We could not find that page</h1>
+      <p class="lead">
+        The link may be out of date, or the address might have a typo. Everything on the site is one click
+        away below.
+      </p>
 
-      <div class="notfound__copy">
-        <span class="eyebrow">Error / Not found</span>
-        <h1>We could not find that page</h1>
-        <p class="lead">
-          The link may be out of date, or the address might have a typo. Everything on the site is one click
-          away below.
-        </p>
-
-        <div class="actions">
-          <a class="btn btn--primary" href="/">Back to home</a>
-          <a class="btn btn--outline" href="/contact">Contact us</a>
-        </div>
+      <div class="actions actions--center">
+        <a class="btn btn--primary" href="/">Back to home</a>
+        <a class="btn btn--glass" href="/contact">Contact us</a>
       </div>
-    </div>
 
-    <div class="container">
       <nav class="notfound__links" aria-label="All pages">
         <h2 class="notfound__links-title">All pages</h2>
         <ul>
-          {
-            site.nav.map((item, i) => (
-              <li>
-                <a href={item.href}>
-                  <span class="notfound__num" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
-                  {item.label}
-                </a>
-              </li>
-            ))
-          }
+          {site.nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
         </ul>
       </nav>
     </div>
@@ -49,88 +34,85 @@ import { site } from "../config/site";
 
 <style>
   .notfound {
-    padding-block: clamp(2.5rem, 7vw, 5rem);
-    background:
-      repeating-linear-gradient(
-        90deg,
-        transparent 0 calc(100% / 12 - 1px),
-        rgba(19, 21, 20, 0.07) calc(100% / 12 - 1px) calc(100% / 12)
-      ),
-      var(--paper);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(3rem, 9vw, 6.5rem);
   }
 
-  .notfound__grid {
-    display: grid;
-    gap: clamp(1.5rem, 4vw, 3rem);
-    align-items: start;
+  .notfound::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: -18rem;
+    left: 50%;
+    translate: -50% 0;
+    width: 44rem;
+    height: 44rem;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124, 92, 255, 0.26), transparent 62%);
+    pointer-events: none;
   }
 
-  @media (min-width: 52rem) {
-    .notfound__grid {
-      grid-template-columns: auto 1fr;
-    }
+  .notfound__inner {
+    max-width: 40rem;
+    margin-inline: auto;
+    text-align: center;
   }
 
   .notfound__code {
-    font-size: clamp(5rem, 18vw, 12rem);
-    color: var(--lime);
-    /* Ink outline keeps the lime numeral legible against the stone ground. */
-    -webkit-text-stroke: 2px var(--ink);
-    text-stroke: 2px var(--ink);
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(4.5rem, 14vw, 8rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    margin-bottom: 0.75rem;
   }
 
-  .notfound__copy {
-    max-width: 36rem;
+  .notfound .lead {
+    margin-inline: auto;
   }
 
   .notfound__links {
-    margin-top: clamp(2.5rem, 5vw, 3.5rem);
-    padding-top: 1.5rem;
-    border-top: var(--line);
+    margin-top: 3rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line);
   }
 
   .notfound__links-title {
     margin-bottom: 1rem;
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    color: var(--clay-ink);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-faint);
   }
 
   .notfound__links ul {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 0.75rem;
+    justify-content: center;
+    gap: 0.6rem;
     list-style: none;
     padding: 0;
   }
 
   .notfound__links a {
-    display: flex;
-    align-items: baseline;
-    gap: 0.45rem;
-    padding: 0.5rem 0.8rem;
-    border: 2px solid var(--ink);
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink);
-  }
-
-  .notfound__num {
-    font-size: 0.66rem;
-    color: var(--clay-ink);
+    display: inline-block;
+    padding: 0.5rem 1.1rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--text-dim);
+    font-size: 0.92rem;
+    transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
   }
 
   .notfound__links a:hover {
-    background: var(--ink);
-    color: var(--paper);
-  }
-
-  .notfound__links a:hover .notfound__num {
-    color: var(--lime);
+    background: var(--surface-hover);
+    border-color: var(--line-strong);
+    color: var(--text);
   }
 </style>

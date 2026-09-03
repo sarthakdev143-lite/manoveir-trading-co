@@ -1,12 +1,11 @@
 /**
- * Generates the favicon / app-icon PNG set in public/ from the same "M" mark
- * used by public/favicon.svg.
+ * Generates the favicon / app-icon PNG set in public/ from the same gradient
+ * "M" mark used by public/favicon.svg.
  *
  * Run with:  npm run icons
  *
  * The PNGs are committed to the repo, so this only needs re-running when the
- * brand mark or its colours change. The inner keyline is dropped below 48px,
- * where it would read as noise rather than structure.
+ * brand mark or its colours change.
  */
 
 import { mkdirSync } from "node:fs";
@@ -18,34 +17,42 @@ const here = dirname(fileURLToPath(import.meta.url));
 const publicDir = resolve(here, "../public");
 
 // Brand tokens — keep in sync with src/styles/global.css.
-const INK = "#131514";
-const LIME = "#cbf24c";
-const DISPLAY = "'Arial Black', 'Archivo', Arial, Helvetica, sans-serif";
+const BG = "#080b11";
+const STOPS = ["#7c5cff", "#4f8cff", "#22d3ee"];
+const DISPLAY = "'Segoe UI Semibold', 'Segoe UI', 'Sora', Arial, Helvetica, sans-serif";
 
-/** Square ink tile with a lime "M", sized for a given pixel box. */
-const mark = (size, { keyline = size >= 48, pad = 0 } = {}) => {
-  const inset = Math.round(size * 0.0625) + pad;
-  const fontSize = Math.round(size * (pad ? 0.56 : 0.64));
-  // Nudge the baseline so the cap-height block sits optically centred.
-  const baseline = Math.round(size / 2 + fontSize * 0.36);
+/**
+ * Gradient tile with a white "M".
+ * `pad` insets the tile inside a solid ground — used for the Apple icon, which
+ * is composited onto a rounded square and should not bleed to the edge.
+ */
+const mark = (size, { pad = 0, radiusRatio = 0.234 } = {}) => {
+  const box = size - pad * 2;
+  const radius = Math.round(box * radiusRatio);
+  const fontSize = Math.round(box * 0.6);
+  // Nudge the baseline so the cap-height sits optically centred.
+  const baseline = Math.round(pad + box / 2 + fontSize * 0.35);
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <rect width="${size}" height="${size}" fill="${INK}"/>
-  ${
-    keyline
-      ? `<rect x="${inset}" y="${inset}" width="${size - inset * 2}" height="${size - inset * 2}" fill="none" stroke="${LIME}" stroke-width="${Math.max(1, Math.round(size * 0.031))}"/>`
-      : ""
-  }
-  <text x="${size / 2}" y="${baseline}" text-anchor="middle" fill="${LIME}"
-        font-family="${DISPLAY}" font-size="${fontSize}" font-weight="900">M</text>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="${STOPS[0]}"/>
+      <stop offset="48%" stop-color="${STOPS[1]}"/>
+      <stop offset="100%" stop-color="${STOPS[2]}"/>
+    </linearGradient>
+  </defs>
+  ${pad ? `<rect width="${size}" height="${size}" fill="${BG}"/>` : ""}
+  <rect x="${pad}" y="${pad}" width="${box}" height="${box}" rx="${radius}" fill="url(#g)"/>
+  <text x="${size / 2}" y="${baseline}" text-anchor="middle" fill="#ffffff"
+        font-family="${DISPLAY}" font-size="${fontSize}" font-weight="700">M</text>
 </svg>`;
 };
 
 const targets = [
-  { file: "favicon-16x16.png", size: 16, opts: { keyline: false } },
-  { file: "favicon-32x32.png", size: 32, opts: { keyline: false } },
-  // Apple crops to a rounded square, so the mark is padded away from the edge.
-  { file: "apple-touch-icon.png", size: 180, opts: { pad: 14 } },
+  // Tiny sizes read better as a full-bleed square than a rounded tile.
+  { file: "favicon-16x16.png", size: 16, opts: { radiusRatio: 0.12 } },
+  { file: "favicon-32x32.png", size: 32, opts: { radiusRatio: 0.16 } },
+  { file: "apple-touch-icon.png", size: 180, opts: { pad: 12 } },
   { file: "android-chrome-192x192.png", size: 192, opts: {} },
   { file: "android-chrome-512x512.png", size: 512, opts: {} },
 ];

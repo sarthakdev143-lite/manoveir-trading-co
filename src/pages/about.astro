@@ -20,11 +20,7 @@ import { site } from "../config/site";
         </p>
       </div>
 
-      <dl class="meta">
-        <div>
-          <dt>Section</dt>
-          <dd>About</dd>
-        </div>
+      <dl class="facts">
         <div>
           <dt>Format</dt>
           <dd>Walk-in retail</dd>
@@ -32,6 +28,10 @@ import { site } from "../config/site";
         <div>
           <dt>Categories</dt>
           <dd>{site.categories.length}</dd>
+        </div>
+        <div>
+          <dt>Serving</dt>
+          <dd>Local households</dd>
         </div>
       </dl>
     </div>
@@ -41,7 +41,7 @@ import { site } from "../config/site";
   <section class="section">
     <div class="container story">
       <div class="story__copy prose">
-        <span class="eyebrow">01 / Our story</span>
+        <span class="eyebrow">Our story</span>
         <h2>Built around what our neighbours actually need</h2>
         <p>
           {site.name} is a retail business engaged in the purchase and sale of various consumer goods and
@@ -60,9 +60,9 @@ import { site } from "../config/site";
         </p>
       </div>
 
-      <aside class="panel panel--lime story__aside">
+      <aside class="panel story__aside">
         <h2 class="story__aside-title">At a glance</h2>
-        <dl class="meta meta--stacked">
+        <dl class="facts facts--stacked">
           <div>
             <dt>Business type</dt>
             <dd>Local shop-based retail — walk-in customers</dd>
@@ -80,49 +80,42 @@ import { site } from "../config/site";
             <dd>{site.categories.length} broad ranges under one roof</dd>
           </div>
         </dl>
-        <a class="btn btn--ink story__aside-cta" href="/products">Browse our categories</a>
+        <a class="btn btn--glass story__aside-cta" href="/products">Browse our categories</a>
       </aside>
     </div>
   </section>
 
   <!-- Values -->
-  <section class="section section--paper2">
+  <section class="section section--alt">
     <div class="container">
-      <div class="section-head section-head--split">
-        <div>
-          <span class="eyebrow">02 / Our promise</span>
-          <h2>Three things we will not compromise on</h2>
-        </div>
+      <div class="section-head section-head--center">
+        <span class="eyebrow">Our promise</span>
+        <h2>Three things we will not compromise on</h2>
         <p class="lead">
           The shop runs on repeat custom, so every decision behind the counter is made with the next visit in
           mind.
         </p>
       </div>
-      <div class="matrix matrix--3">
-        {site.values.map((value, i) => <FeatureCard {...value} index={i + 1} />)}
+      <div class="grid grid--3">
+        {site.values.map((value) => <FeatureCard {...value} />)}
       </div>
     </div>
   </section>
 
   <!-- Stats -->
-  <section class="section section--ink">
+  <section class="section section--glow">
     <div class="container">
-      <div class="section-head section-head--split stats-head">
-        <div>
-          <span class="eyebrow">03 / By the numbers</span>
-          <h2>The shape of our shop</h2>
-        </div>
+      <div class="section-head section-head--center">
+        <span class="eyebrow">By the numbers</span>
+        <h2>The shape of our shop</h2>
       </div>
 
-      <dl class="matrix matrix--4">
+      <dl class="grid grid--4">
         {
-          site.stats.map((stat, i) => (
+          site.stats.map((stat) => (
             <div class="stat">
-              <dt class="stat__label">
-                <span class="cell__index">{String(i + 1).padStart(2, "0")}</span>
-                {stat.label}
-              </dt>
-              <dd class="stat__value numeral">{stat.value}</dd>
+              <dt class="stat__value grad-text">{stat.value}</dt>
+              <dd class="stat__label">{stat.label}</dd>
             </div>
           ))
         }
@@ -131,15 +124,15 @@ import { site } from "../config/site";
   </section>
 
   <!-- CTA -->
-  <section class="section">
-    <div class="container cta">
+  <section class="section section--alt">
+    <div class="container section-head section-head--center" style="margin-bottom:0">
       <h2>Come in and have a look</h2>
       <p class="lead">
         The quickest way to know what we carry is to visit. We are happy to point you to what you need.
       </p>
-      <div class="actions">
+      <div class="actions actions--center">
         <a class="btn btn--primary" href="/contact">Get in touch</a>
-        <a class="btn btn--outline" href="/products">See products</a>
+        <a class="btn btn--glass" href="/products">See products</a>
       </div>
     </div>
   </section>
@@ -148,8 +141,13 @@ import { site } from "../config/site";
 <style>
   .story {
     display: grid;
-    gap: clamp(2rem, 4vw, 3.5rem);
+    gap: clamp(2rem, 4vw, 3rem);
     align-items: start;
+  }
+
+  /* See the `min-width: 0` note in global.css — long words must not widen the column. */
+  .story > * {
+    min-width: 0;
   }
 
   @media (min-width: 58rem) {
@@ -162,10 +160,6 @@ import { site } from "../config/site";
     margin-bottom: 1.25rem;
   }
 
-  .story__copy p {
-    color: var(--muted);
-  }
-
   .story__aside {
     position: sticky;
     top: 6rem;
@@ -173,60 +167,16 @@ import { site } from "../config/site";
 
   .story__aside-title {
     margin-bottom: 1.1rem;
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-  }
-
-  /* On the lime panel, `--muted` labels sit too close to the ground colour. */
-  .story__aside .meta {
-    border-top-color: var(--ink);
-  }
-
-  .story__aside .meta > div {
-    border-bottom-color: rgba(19, 21, 20, 0.3);
-  }
-
-  .story__aside .meta dt {
-    color: var(--ink-70);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-faint);
   }
 
   .story__aside-cta {
+    width: 100%;
     margin-top: 1.5rem;
-  }
-
-  .stats-head {
-    border-bottom-color: rgba(237, 238, 233, 0.5);
-  }
-
-  .stat {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: clamp(1.25rem, 2.2vw, 1.75rem);
-  }
-
-  .stat__label {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(237, 238, 233, 0.7);
-  }
-
-  .stat__value {
-    margin: auto 0 0;
-    text-transform: uppercase;
-    font-size: clamp(2.5rem, 6vw, 3.75rem);
-    color: var(--lime);
-  }
-
-  .cta {
-    max-width: 44rem;
   }
 </style>

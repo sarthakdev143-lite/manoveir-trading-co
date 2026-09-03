@@ -9,7 +9,7 @@
   Name: Manoveir Trading CO
   Description: Local shop-based retail — walk-in customers
   Standards: HTML5, CSS3, Astro (static)
-  Components: Archivo + Space Mono (Google Fonts)
+  Components: Sora + Inter (Google Fonts)
   Language: en-IN
   Doctype: HTML5
   IDE: VS Code
