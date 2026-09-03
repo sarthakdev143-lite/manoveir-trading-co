@@ -1,14 +1,22 @@
 ---
 import { site } from "../config/site";
+
+const kickers = ["Local retail", "Walk-in shop", `${site.categories.length} categories`];
 ---
 
 <section class="hero">
-  <div class="container hero__inner">
+  <div class="container hero__grid">
     <div class="hero__copy">
-      <span class="eyebrow">Local Retail · Trusted Since Day One</span>
-      <h1>{site.name}</h1>
-      <p class="hero__tagline">{site.tagline}</p>
+      <p class="hero__kicker">
+        {kickers.map((k) => <span>{k}</span>)}
+      </p>
+
+      <h1 class="hero__title">{site.name}</h1>
+
+      <p class="hero__tagline"><span>{site.tagline}</span></p>
+
       <p class="lead">{site.description}</p>
+
       <div class="actions">
         <a class="btn btn--primary" href="/products">Explore Products</a>
         <a class="btn btn--outline" href="/contact">Find Us</a>
@@ -17,91 +25,212 @@ import { site } from "../config/site";
 
     <!-- Image placeholder: drop a shopfront photo at /public/images/shopfront.jpg
          and swap this block for an <img> tag. -->
-    <div class="hero__media" role="img" aria-label="Placeholder for a photograph of the Manoveir Trading CO shopfront">
-      <div class="hero__media-inner">
+    <div
+      class="hero__media"
+      role="img"
+      aria-label="Placeholder for a photograph of the Manoveir Trading CO shopfront"
+    >
+      <span class="hero__media-tag">Fig. 01</span>
+      <div class="hero__media-plate">
         <span class="hero__media-icon" aria-hidden="true">🏪</span>
-        <p class="hero__media-text">Shopfront photo placeholder</p>
+        <p class="hero__media-text">Shopfront photo</p>
         <p class="hero__media-hint">Add an image at <code>/public/images/shopfront.jpg</code></p>
       </div>
     </div>
+  </div>
+
+  <div class="container">
+    <dl class="hero__facts">
+      <div>
+        <dt>Format</dt>
+        <dd>Shop-based retail</dd>
+      </div>
+      <div>
+        <dt>Ordering</dt>
+        <dd>Walk-in only</dd>
+      </div>
+      <div>
+        <dt>Range</dt>
+        <dd>{site.categories.length} categories</dd>
+      </div>
+      <div>
+        <dt>Served</dt>
+        <dd>Local households</dd>
+      </div>
+    </dl>
   </div>
 </section>
 
 <style>
   .hero {
     position: relative;
+    padding-top: clamp(2.5rem, 6vw, 5rem);
+    padding-bottom: clamp(2rem, 4vw, 3rem);
+    /* The faint vertical stripes expose the 12-column grid the layout sits on. */
     background:
-      radial-gradient(1000px 420px at 12% -10%, rgba(196, 154, 60, 0.16), transparent 62%),
-      linear-gradient(180deg, var(--cream-100), var(--cream-50));
-    padding-block: clamp(3rem, 7vw, 5.5rem);
+      repeating-linear-gradient(
+        90deg,
+        transparent 0 calc(100% / 12 - 1px),
+        rgba(19, 21, 20, 0.07) calc(100% / 12 - 1px) calc(100% / 12)
+      ),
+      var(--paper);
     overflow: hidden;
   }
 
-  .hero__inner {
+  .hero__grid {
     display: grid;
     gap: clamp(2rem, 4vw, 3.5rem);
-    grid-template-columns: 1fr;
-    align-items: center;
+    align-items: start;
   }
 
-  @media (min-width: 60rem) {
-    .hero__inner {
-      grid-template-columns: 1.05fr 0.95fr;
+  @media (min-width: 62rem) {
+    .hero__grid {
+      grid-template-columns: 1.15fr 0.85fr;
     }
   }
 
-  .hero__copy {
-    max-width: 34rem;
+  .hero__kicker {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.1rem;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
   }
 
-  .hero h1 {
-    margin-bottom: 0.5rem;
+  .hero__kicker span {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+  }
+
+  .hero__kicker span:not(:last-child)::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: var(--clay);
+  }
+
+  .hero__title {
+    font-size: clamp(2.7rem, 9vw, 6rem);
+    line-height: 0.9;
   }
 
   .hero__tagline {
-    font-family: var(--font-display);
-    font-size: clamp(1.2rem, 2.4vw, 1.5rem);
-    color: var(--gold-500);
-    font-weight: 600;
+    margin-top: 1.25rem;
   }
 
+  .hero__tagline span {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    background: var(--lime);
+    border: 2px solid var(--ink);
+    font-family: var(--font-display);
+    font-size: clamp(1.05rem, 2.4vw, 1.5rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  /* Hatched placeholder frame — reads as a reserved image slot, not a card. */
   .hero__media {
+    position: relative;
     display: grid;
     place-items: center;
-    min-height: clamp(15rem, 34vw, 21rem);
-    background: #fff;
-    border: 2px dashed rgba(196, 154, 60, 0.55);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    min-height: clamp(16rem, 32vw, 23rem);
     padding: 1.5rem;
+    border: var(--line);
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(19, 21, 20, 0.07) 0 2px,
+        transparent 2px 9px
+      ),
+      var(--surface);
+    box-shadow: var(--hard);
   }
 
-  .hero__media-inner {
+  .hero__media-tag {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    padding: 0.3rem 0.6rem;
+    background: var(--ink);
+    color: var(--lime);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .hero__media-plate {
+    padding: 1.4rem 1.6rem;
+    background: var(--surface);
+    border: var(--line);
     text-align: center;
   }
 
   .hero__media-icon {
     display: block;
-    font-size: 3.25rem;
+    font-size: 2.5rem;
     line-height: 1;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.6rem;
   }
 
   .hero__media-text {
-    font-weight: 600;
-    color: var(--navy-700);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--ink);
   }
 
   .hero__media-hint {
-    margin-top: 0.3rem;
-    font-size: 0.85rem;
-    color: var(--slate-600);
+    margin-top: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
   }
 
-  .hero__media-hint code {
-    background: var(--cream-100);
-    padding: 0.1em 0.35em;
-    border-radius: 4px;
-    font-size: 0.95em;
+  /* Fact strip: hairline-divided mono pairs closing the hero. */
+  .hero__facts {
+    display: grid;
+    gap: 1px;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    background: var(--ink);
+    border-top: var(--line);
+    border-bottom: var(--line);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  }
+
+  .hero__facts > div {
+    padding: 0.9rem 0 0.9rem 0.9rem;
+    background: var(--paper);
+  }
+
+  .hero__facts dt {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--clay-ink);
+  }
+
+  .hero__facts dd {
+    margin: 0.25rem 0 0;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--ink);
   }
 </style>

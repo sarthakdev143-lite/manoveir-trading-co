@@ -8,7 +8,7 @@
  * Astro already depends on — no extra tooling.
  *
  * Once a real shopfront photograph exists, prefer compositing that behind the
- * text instead of the flat navy background.
+ * text instead of the flat ink background.
  */
 
 import { readFileSync, mkdirSync } from "node:fs";
@@ -28,72 +28,65 @@ const read = (key) => {
   return match[1];
 };
 
-const name = read("name");
-const tagline = read("tagline");
+const name = read("name").toUpperCase();
+const tagline = read("tagline").toUpperCase();
 
 // Brand tokens — keep in sync with src/styles/global.css.
-const NAVY = "#0f2040";
-const NAVY_LIGHT = "#1a335c";
-const GOLD = "#c49a3c";
-const GOLD_LIGHT = "#d4a84b";
-const CREAM = "#fdfbf7";
+const INK = "#131514";
+const PAPER = "#edeee9";
+const LIME = "#cbf24c";
+const CLAY = "#e24e1b";
+
+// Heavy grotesque with fallbacks, mirroring the site's Archivo 900 display face.
+const DISPLAY = "'Arial Black', 'Archivo', Arial, Helvetica, sans-serif";
+const MONO = "'Consolas', 'DejaVu Sans Mono', 'Courier New', monospace";
 
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-const categories = "Groceries · Household · Personal Care · Beverages · Stationery · Festive";
+const categories = "GROCERIES / HOUSEHOLD / PERSONAL CARE / BEVERAGES / STATIONERY / FESTIVE";
+
+// The same 12-column stripe pattern the hero and mastheads expose on screen.
+const columns = Array.from({ length: 11 }, (_, i) => {
+  const x = Math.round((1200 / 12) * (i + 1));
+  return `<line x1="${x}" y1="0" x2="${x}" y2="630" stroke="${PAPER}" stroke-opacity="0.07" stroke-width="1"/>`;
+}).join("\n  ");
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="${NAVY_LIGHT}"/>
-      <stop offset="55%" stop-color="${NAVY}"/>
-      <stop offset="100%" stop-color="#0a1730"/>
-    </linearGradient>
-    <radialGradient id="glow" cx="0.12" cy="0.08" r="0.75">
-      <stop offset="0%" stop-color="${GOLD}" stop-opacity="0.30"/>
-      <stop offset="100%" stop-color="${GOLD}" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
+  <rect width="1200" height="630" fill="${INK}"/>
+  ${columns}
 
-  <rect width="1200" height="630" fill="url(#bg)"/>
-  <rect width="1200" height="630" fill="url(#glow)"/>
-
-  <!-- gold frame -->
-  <rect x="24" y="24" width="1152" height="582" rx="20"
-        fill="none" stroke="${GOLD}" stroke-opacity="0.42" stroke-width="2"/>
+  <!-- hairline frame -->
+  <rect x="28" y="28" width="1144" height="574" fill="none" stroke="${PAPER}" stroke-opacity="0.35" stroke-width="1"/>
 
   <!-- brand mark -->
-  <rect x="88" y="96" width="96" height="96" rx="20" fill="${GOLD}"/>
-  <text x="136" y="163" text-anchor="middle" fill="${NAVY}"
-        font-family="Georgia, 'Times New Roman', serif" font-size="62" font-weight="700">M</text>
+  <rect x="72" y="72" width="96" height="96" fill="${LIME}"/>
+  <text x="120" y="146" text-anchor="middle" fill="${INK}"
+        font-family="${DISPLAY}" font-size="66" font-weight="900">M</text>
 
-  <!-- eyebrow -->
-  <text x="88" y="258" fill="${GOLD_LIGHT}"
-        font-family="'Segoe UI', Arial, Helvetica, sans-serif"
-        font-size="23" font-weight="700" letter-spacing="4.4">LOCAL RETAIL SHOP</text>
+  <!-- kicker -->
+  <text x="192" y="118" fill="${LIME}"
+        font-family="${MONO}" font-size="21" font-weight="700" letter-spacing="3.4">LOCAL RETAIL</text>
+  <text x="192" y="150" fill="${PAPER}" fill-opacity="0.6"
+        font-family="${MONO}" font-size="21" font-weight="700" letter-spacing="3.4">WALK-IN SHOP</text>
 
   <!-- name -->
-  <text x="88" y="352" fill="${CREAM}"
-        font-family="Georgia, 'Times New Roman', serif"
-        font-size="82" font-weight="700">${esc(name)}</text>
+  <text x="72" y="330" fill="${PAPER}"
+        font-family="${DISPLAY}" font-size="76" font-weight="900" letter-spacing="-2.5">${esc(name)}</text>
 
-  <!-- tagline -->
-  <text x="88" y="424" fill="${GOLD_LIGHT}"
-        font-family="Georgia, 'Times New Roman', serif"
-        font-size="41" font-weight="600">${esc(tagline)}</text>
+  <!-- tagline on a lime bar. The bar is sized from an average cap advance of
+       ~0.72em at 30px, since SVG cannot measure text before rasterising. -->
+  <rect x="72" y="372" width="${Math.min(1056, Math.round(tagline.length * 21.5) + 40)}" height="60" fill="${LIME}"/>
+  <text x="92" y="413" fill="${INK}"
+        font-family="${DISPLAY}" font-size="30" font-weight="900" letter-spacing="-0.5">${esc(tagline)}</text>
 
-  <!-- rule -->
-  <rect x="88" y="470" width="132" height="4" rx="2" fill="${GOLD}"/>
-
-  <!-- categories -->
-  <text x="88" y="536" fill="${CREAM}" fill-opacity="0.72"
-        font-family="'Segoe UI', Arial, Helvetica, sans-serif" font-size="25">${esc(categories)}</text>
+  <!-- clay marker + categories -->
+  <rect x="72" y="496" width="14" height="14" fill="${CLAY}"/>
+  <text x="72" y="556" fill="${PAPER}" fill-opacity="0.72"
+        font-family="${MONO}" font-size="20" letter-spacing="1.2">${esc(categories)}</text>
 </svg>`;
 
 mkdirSync(dirname(OUT), { recursive: true });
 
-const info = await sharp(Buffer.from(svg))
-  .png({ compressionLevel: 9 })
-  .toFile(OUT);
+const info = await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(OUT);
 
 console.log(`Wrote public/og-image.png — ${info.width}x${info.height}, ${(info.size / 1024).toFixed(1)} KB`);

@@ -3,13 +3,28 @@ interface Props {
   title: string;
   desc: string;
   icon: string;
+  /** 1-based position in the grid, rendered as a mono index like "03". */
+  index?: number;
 }
 
-const { title, desc, icon } = Astro.props;
+const { title, desc, icon, index } = Astro.props;
 ---
 
-<article class="card">
-  <span class="card__icon" aria-hidden="true">{icon}</span>
+<article class="cell feature">
+  <div class="feature__top">
+    {index !== undefined && <span class="cell__index">{String(index).padStart(2, "0")}</span>}
+    <span class="cell__icon" aria-hidden="true">{icon}</span>
+  </div>
   <h3>{title}</h3>
   <p>{desc}</p>
 </article>
+
+<style>
+  .feature__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.2rem;
+  }
+</style>

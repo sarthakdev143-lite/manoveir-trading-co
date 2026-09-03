@@ -9,14 +9,31 @@ import { site } from "../config/site";
   description={`Learn about ${site.name} — a local retail shop stocking everyday consumer goods for neighbourhood families.`}
 >
   <!-- Page header -->
-  <section class="page-head">
-    <div class="container">
-      <span class="eyebrow">About Us</span>
-      <h1>A neighbourhood shop, run the old-fashioned way</h1>
-      <p class="lead">
-        {site.name} exists to make everyday shopping simple: a dependable shelf, an honest price and someone
-        behind the counter who knows what you came in for.
-      </p>
+  <section class="masthead">
+    <div class="container masthead__inner">
+      <div>
+        <span class="eyebrow">About us</span>
+        <h1>A neighbourhood shop, run the old-fashioned way</h1>
+        <p class="lead">
+          {site.name} exists to make everyday shopping simple: a dependable shelf, an honest price and someone
+          behind the counter who knows what you came in for.
+        </p>
+      </div>
+
+      <dl class="meta">
+        <div>
+          <dt>Section</dt>
+          <dd>About</dd>
+        </div>
+        <div>
+          <dt>Format</dt>
+          <dd>Walk-in retail</dd>
+        </div>
+        <div>
+          <dt>Categories</dt>
+          <dd>{site.categories.length}</dd>
+        </div>
+      </dl>
     </div>
   </section>
 
@@ -24,7 +41,7 @@ import { site } from "../config/site";
   <section class="section">
     <div class="container story">
       <div class="story__copy prose">
-        <span class="eyebrow">Our Story</span>
+        <span class="eyebrow">01 / Our story</span>
         <h2>Built around what our neighbours actually need</h2>
         <p>
           {site.name} is a retail business engaged in the purchase and sale of various consumer goods and
@@ -43,9 +60,9 @@ import { site } from "../config/site";
         </p>
       </div>
 
-      <aside class="story__aside">
+      <aside class="panel panel--lime story__aside">
         <h2 class="story__aside-title">At a glance</h2>
-        <dl>
+        <dl class="meta meta--stacked">
           <div>
             <dt>Business type</dt>
             <dd>Local shop-based retail — walk-in customers</dd>
@@ -63,37 +80,49 @@ import { site } from "../config/site";
             <dd>{site.categories.length} broad ranges under one roof</dd>
           </div>
         </dl>
-        <a class="btn btn--outline" href="/products">Browse our categories</a>
+        <a class="btn btn--ink story__aside-cta" href="/products">Browse our categories</a>
       </aside>
     </div>
   </section>
 
   <!-- Values -->
-  <section class="section section--cream">
+  <section class="section section--paper2">
     <div class="container">
-      <div class="section-head section-head--center">
-        <span class="eyebrow">Our Promise</span>
-        <h2>Three things we will not compromise on</h2>
+      <div class="section-head section-head--split">
+        <div>
+          <span class="eyebrow">02 / Our promise</span>
+          <h2>Three things we will not compromise on</h2>
+        </div>
+        <p class="lead">
+          The shop runs on repeat custom, so every decision behind the counter is made with the next visit in
+          mind.
+        </p>
       </div>
-      <div class="grid grid--3">
-        {site.values.map((value) => <FeatureCard {...value} />)}
+      <div class="matrix matrix--3">
+        {site.values.map((value, i) => <FeatureCard {...value} index={i + 1} />)}
       </div>
     </div>
   </section>
 
   <!-- Stats -->
-  <section class="section section--navy">
+  <section class="section section--ink">
     <div class="container">
-      <div class="section-head section-head--center">
-        <span class="eyebrow">By the Numbers</span>
-        <h2>The shape of our shop</h2>
+      <div class="section-head section-head--split stats-head">
+        <div>
+          <span class="eyebrow">03 / By the numbers</span>
+          <h2>The shape of our shop</h2>
+        </div>
       </div>
-      <dl class="stats">
+
+      <dl class="matrix matrix--4">
         {
-          site.stats.map((stat) => (
-            <div class="stats__item">
-              <dt class="stats__value">{stat.value}</dt>
-              <dd class="stats__label">{stat.label}</dd>
+          site.stats.map((stat, i) => (
+            <div class="stat">
+              <dt class="stat__label">
+                <span class="cell__index">{String(i + 1).padStart(2, "0")}</span>
+                {stat.label}
+              </dt>
+              <dd class="stat__value numeral">{stat.value}</dd>
             </div>
           ))
         }
@@ -103,33 +132,23 @@ import { site } from "../config/site";
 
   <!-- CTA -->
   <section class="section">
-    <div class="container section-head section-head--center" style="margin-bottom:0">
+    <div class="container cta">
       <h2>Come in and have a look</h2>
       <p class="lead">
         The quickest way to know what we carry is to visit. We are happy to point you to what you need.
       </p>
-      <div class="actions actions--center">
-        <a class="btn btn--primary" href="/contact">Get in Touch</a>
-        <a class="btn btn--outline" href="/products">See Products</a>
+      <div class="actions">
+        <a class="btn btn--primary" href="/contact">Get in touch</a>
+        <a class="btn btn--outline" href="/products">See products</a>
       </div>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .page-head {
-    background: linear-gradient(180deg, var(--cream-100), var(--cream-50));
-    padding-block: clamp(2.75rem, 6vw, 4.25rem);
-    border-bottom: var(--border);
-  }
-
-  .page-head .lead {
-    max-width: 44rem;
-  }
-
   .story {
     display: grid;
-    gap: clamp(2rem, 4vw, 3rem);
+    gap: clamp(2rem, 4vw, 3.5rem);
     align-items: start;
   }
 
@@ -140,89 +159,74 @@ import { site } from "../config/site";
   }
 
   .story__copy h2 {
-    margin-bottom: 1.1rem;
+    margin-bottom: 1.25rem;
   }
 
   .story__copy p {
-    color: var(--slate-600);
+    color: var(--muted);
   }
 
   .story__aside {
-    padding: 1.75rem;
-    background: var(--gold-100);
-    border: 1px solid rgba(196, 154, 60, 0.3);
-    border-radius: var(--radius);
     position: sticky;
     top: 6rem;
   }
 
   .story__aside-title {
-    font-family: var(--font-body);
-    font-size: 0.79rem;
-    font-weight: 700;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-    color: var(--gold-500);
     margin-bottom: 1.1rem;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
   }
 
-  .story__aside dl {
+  /* On the lime panel, `--muted` labels sit too close to the ground colour. */
+  .story__aside .meta {
+    border-top-color: var(--ink);
+  }
+
+  .story__aside .meta > div {
+    border-bottom-color: rgba(19, 21, 20, 0.3);
+  }
+
+  .story__aside .meta dt {
+    color: var(--ink-70);
+  }
+
+  .story__aside-cta {
+    margin-top: 1.5rem;
+  }
+
+  .stats-head {
+    border-bottom-color: rgba(237, 238, 233, 0.5);
+  }
+
+  .stat {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 0.75rem;
+    padding: clamp(1.25rem, 2.2vw, 1.75rem);
   }
 
-  .story__aside dt {
-    font-size: 0.78rem;
+  .stat__label {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--slate-600);
-    margin-bottom: 0.15rem;
+    color: rgba(237, 238, 233, 0.7);
   }
 
-  .story__aside dd {
-    margin: 0;
-    color: var(--navy-900);
-    font-weight: 500;
+  .stat__value {
+    margin: auto 0 0;
+    text-transform: uppercase;
+    font-size: clamp(2.5rem, 6vw, 3.75rem);
+    color: var(--lime);
   }
 
-  .stats {
-    display: grid;
-    gap: 1.25rem;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
-  }
-
-  .stats__item {
-    padding: 1.5rem 1.25rem;
-    background: rgba(253, 251, 247, 0.06);
-    border: 1px solid rgba(253, 251, 247, 0.16);
-    border-radius: var(--radius);
-    text-align: center;
-  }
-
-  .stats__value {
-    font-family: var(--font-display);
-    font-size: clamp(1.9rem, 4vw, 2.5rem);
-    font-weight: 700;
-    color: var(--gold-400);
-    line-height: 1.1;
-  }
-
-  .stats__label {
-    margin: 0.35rem 0 0;
-    font-size: 0.88rem;
-    color: rgba(253, 251, 247, 0.78);
-  }
-
-  .actions--center {
-    justify-content: center;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .story__aside {
-      position: static;
-    }
+  .cta {
+    max-width: 44rem;
   }
 </style>

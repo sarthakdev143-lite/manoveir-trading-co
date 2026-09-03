@@ -4,13 +4,18 @@ interface Props {
   desc: string;
   icon: string;
   examples?: string[];
+  /** 1-based position in the grid, rendered as a mono index like "03". */
+  index?: number;
 }
 
-const { title, desc, icon, examples = [] } = Astro.props;
+const { title, desc, icon, examples = [], index } = Astro.props;
 ---
 
-<article class="card category">
-  <span class="card__icon" aria-hidden="true">{icon}</span>
+<article class="cell category">
+  <div class="category__top">
+    {index !== undefined && <span class="cell__index">{String(index).padStart(2, "0")}</span>}
+    <span class="cell__icon" aria-hidden="true">{icon}</span>
+  </div>
   <h3>{title}</h3>
   <p>{desc}</p>
   {
@@ -23,30 +28,31 @@ const { title, desc, icon, examples = [] } = Astro.props;
 </article>
 
 <style>
-  .category__list {
-    margin-top: 0.35rem;
-    padding: 0;
-    list-style: none;
+  .category__top {
     display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    font-size: 0.9rem;
-    color: var(--slate-600);
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .category__list {
+    margin-top: auto;
+    padding: 0.4rem 0 0;
+    list-style: none;
   }
 
   .category__list li {
-    position: relative;
-    padding-left: 1.1rem;
+    padding-block: 0.45rem;
+    border-top: var(--line-soft);
+    font-family: var(--font-mono);
+    font-size: 0.73rem;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    transition: color 0.18s ease, border-color 0.18s ease;
   }
 
-  .category__list li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.55em;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--gold-500);
+  .cell:hover .category__list li {
+    border-top-color: rgba(237, 238, 233, 0.22);
+    color: rgba(237, 238, 233, 0.7);
   }
 </style>

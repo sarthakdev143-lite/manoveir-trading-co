@@ -86,12 +86,30 @@ See `public/images/README.md`.
 
 ## Design system
 
-Theme is **deep navy + warm gold on cream**. All colors, radii and shadows are CSS custom
-properties at the top of [`src/styles/global.css`](src/styles/global.css) — change them there and
-the whole site follows. Typography is Inter (body) + Playfair Display (headings) from Google Fonts.
+Theme is **"Market Index" — editorial ink-on-stone with chartreuse and clay accents**. All colors,
+lines and offsets are CSS custom properties at the top of
+[`src/styles/global.css`](src/styles/global.css) — change them there and the whole site follows.
+Typography is Archivo (display + body) with Space Mono for labels, indices and buttons, from
+Google Fonts.
 
-Global utility classes (`.container`, `.section`, `.grid--3`, `.btn`, `.card`, `.eyebrow`, `.todo`)
-live in `global.css`; anything component-specific goes in that component's scoped `<style>` block.
+The visual language is deliberate and worth keeping consistent:
+
+- **Nothing is rounded and nothing blurs.** Structure comes from 1px ink hairlines and hard offset
+  shadows (`--hard`), not border radii or soft drop shadows.
+- **Grid matrices, not floating cards.** `.matrix` + `.cell` render a grid whose cells butt together
+  and draw their own hairline as a 1px spread `box-shadow`, so neighbours share one line. Column
+  counts are set explicitly per breakpoint (not `auto-fit`) so the content counts divide evenly —
+  a trailing empty slot would otherwise read as a hole in the grid.
+- **Cells invert on hover** (to ink, or to lime on ink grounds) rather than lifting, so the
+  interaction behaves identically under `prefers-reduced-motion`.
+- **Mono for metadata.** Eyebrows, indices, buttons, labels and fact rows are Space Mono uppercase;
+  headings are Archivo 800/900 uppercase with negative tracking.
+- `--clay` is decorative only (large numerals, marks). Small clay-coloured text uses `--clay-ink`,
+  which clears WCAG AA against the paper ground.
+
+Global utility classes (`.container`, `.section`, `.masthead`, `.matrix--3`, `.cell`, `.btn`,
+`.panel`, `.meta`, `.eyebrow`, `.ticker`, `.todo`) live in `global.css`; anything
+component-specific goes in that component's scoped `<style>` block.
 
 ## Notes
 

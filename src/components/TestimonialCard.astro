@@ -5,61 +5,89 @@ interface Props {
   quote: string;
   name: string;
   detail: string;
+  /** 1-based position in the grid, rendered as a mono index like "03". */
+  index?: number;
 }
 
-const { quote, name, detail } = Astro.props;
+const { quote, name, detail, index } = Astro.props;
 ---
 
-<figure class="card testimonial">
-  <span class="testimonial__mark" aria-hidden="true">&ldquo;</span>
+<figure class="quote">
+  <div class="quote__top">
+    {index !== undefined && <span class="cell__index">{String(index).padStart(2, "0")}</span>}
+    <span class="quote__mark" aria-hidden="true">&rdquo;</span>
+  </div>
+
   <blockquote>{quote}</blockquote>
+
   <figcaption>
-    <span class={`testimonial__name ${isPlaceholder(name) ? "todo" : ""}`.trim()}>
+    <span class={`quote__name ${isPlaceholder(name) ? "todo" : ""}`.trim()}>
       {displayValue(name)}
     </span>
-    <span class={`testimonial__detail ${isPlaceholder(detail) ? "todo" : ""}`.trim()}>
+    <span class={`quote__detail ${isPlaceholder(detail) ? "todo" : ""}`.trim()}>
       {displayValue(detail)}
     </span>
   </figcaption>
 </figure>
 
 <style>
-  .testimonial {
-    gap: 0.9rem;
-  }
-
-  .testimonial__mark {
-    font-family: var(--font-display);
-    font-size: 3rem;
-    line-height: 0.6;
-    color: var(--gold-500);
-  }
-
-  .testimonial blockquote {
-    margin: 0;
-    color: var(--slate-800);
-    font-size: 0.98rem;
-    line-height: 1.7;
-  }
-
-  .testimonial figcaption {
+  .quote {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    gap: 1rem;
+    padding: clamp(1.25rem, 2.2vw, 1.9rem);
+  }
+
+  .quote__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .quote__mark {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 0.5;
+    color: var(--clay);
+  }
+
+  .quote blockquote {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.02rem, 1.6vw, 1.18rem);
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+
+  .quote figcaption {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
     margin-top: auto;
-    padding-top: 0.5rem;
-    border-top: var(--border);
+    padding-top: 0.9rem;
+    border-top: var(--line);
   }
 
-  .testimonial__name {
-    font-weight: 600;
-    color: var(--navy-900);
-    align-self: flex-start;
+  .quote__name {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);
   }
 
-  .testimonial__detail {
-    font-size: 0.85rem;
-    color: var(--slate-600);
-    align-self: flex-start;
+  .quote__detail {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 </style>

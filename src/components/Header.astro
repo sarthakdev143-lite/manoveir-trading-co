@@ -17,6 +17,7 @@ const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWit
 
     <input class="nav-toggle" type="checkbox" id="nav-toggle" aria-label="Toggle navigation menu" />
     <label class="nav-toggle__label" for="nav-toggle" aria-controls="site-nav">
+      <span class="nav-toggle__word" aria-hidden="true">Menu</span>
       <span class="visually-hidden">Toggle navigation menu</span>
       <span class="nav-toggle__bars" aria-hidden="true"></span>
     </label>
@@ -24,9 +25,10 @@ const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWit
     <nav id="site-nav" class="site-nav" aria-label="Main navigation">
       <ul class="site-nav__list">
         {
-          site.nav.map((item) => (
+          site.nav.map((item, i) => (
             <li>
               <a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
+                <span class="site-nav__num" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
                 {item.label}
               </a>
             </li>
@@ -43,9 +45,8 @@ const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWit
     position: sticky;
     top: 0;
     z-index: 50;
-    background: rgba(253, 251, 247, 0.94);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(15, 32, 64, 0.09);
+    background: var(--paper);
+    border-bottom: var(--line);
   }
 
   .site-header__inner {
@@ -53,94 +54,112 @@ const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWit
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    min-height: 4.5rem;
+    min-height: 4.25rem;
     flex-wrap: wrap;
   }
 
   .brand {
     display: flex;
     align-items: center;
-    gap: 0.7rem;
-    text-decoration: none;
+    gap: 0.75rem;
+    border-bottom: 0;
+    padding-bottom: 0;
     color: inherit;
+  }
+
+  .brand:hover {
+    background: transparent;
   }
 
   .brand__mark {
     display: grid;
     place-items: center;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.4rem;
+    height: 2.4rem;
     flex-shrink: 0;
-    background: var(--navy-900);
-    color: var(--gold-400);
-    border-radius: 10px;
+    background: var(--ink);
+    color: var(--lime);
     font-family: var(--font-display);
-    font-size: 1.35rem;
-    font-weight: 700;
+    font-size: 1.4rem;
+    font-weight: 900;
+    line-height: 1;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .brand:hover .brand__mark {
+    background: var(--lime);
+    color: var(--ink);
   }
 
   .brand__text {
     display: flex;
     flex-direction: column;
-    line-height: 1.2;
+    gap: 0.15rem;
   }
 
   .brand__name {
     font-family: var(--font-display);
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--navy-900);
+    font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--ink);
   }
 
   .brand__tagline {
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    line-height: 1;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--gold-500);
+    color: var(--muted);
   }
 
   .site-nav {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.75rem;
   }
 
   .site-nav__list {
     display: flex;
     align-items: center;
-    gap: 1.6rem;
+    gap: 0.25rem;
     list-style: none;
     padding: 0;
   }
 
   .site-nav__list a {
-    position: relative;
-    padding-block: 0.35rem;
-    color: var(--navy-700);
-    font-size: 0.95rem;
-    font-weight: 500;
-    text-decoration: none;
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    padding: 0.45rem 0.7rem;
+    border-bottom: 0;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
   }
 
-  .site-nav__list a::after {
-    content: "";
-    position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    height: 2px;
-    background: var(--gold-500);
-    transform: scaleX(0);
-    transition: transform 0.2s ease;
+  .site-nav__num {
+    font-size: 0.62rem;
+    color: var(--clay-ink);
   }
 
-  .site-nav__list a:hover::after,
-  .site-nav__list a[aria-current="page"]::after {
-    transform: scaleX(1);
+  .site-nav__list a:hover {
+    background: var(--lime);
   }
 
   .site-nav__list a[aria-current="page"] {
-    color: var(--navy-900);
-    font-weight: 600;
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .site-nav__list a[aria-current="page"] .site-nav__num {
+    color: var(--lime);
   }
 
   /* CSS-only mobile menu: hidden checkbox drives the panel, zero client JS.
@@ -161,16 +180,24 @@ const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWit
     display: none;
   }
 
-  @media (max-width: 52rem) {
+  @media (max-width: 56rem) {
     .nav-toggle__label {
-      display: grid;
-      place-items: center;
-      width: 2.75rem;
-      height: 2.75rem;
-      border: var(--border);
-      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.5rem 0.75rem;
+      border: 2px solid var(--ink);
+      background: var(--surface);
       cursor: pointer;
-      background: #fff;
+    }
+
+    .nav-toggle__word {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
     }
 
     .nav-toggle__bars,
@@ -178,10 +205,9 @@ const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWit
     .nav-toggle__bars::after {
       content: "";
       display: block;
-      width: 1.15rem;
+      width: 1.05rem;
       height: 2px;
-      background: var(--navy-900);
-      border-radius: 2px;
+      background: var(--ink);
     }
 
     .nav-toggle__bars::before {
@@ -192,9 +218,13 @@ const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWit
       transform: translateY(4px);
     }
 
-    .nav-toggle:focus-visible + .nav-toggle__label {
-      outline: 3px solid var(--gold-500);
-      outline-offset: 3px;
+    .nav-toggle:checked ~ .nav-toggle__label {
+      background: var(--lime);
+    }
+
+    .nav-toggle:focus-visible ~ .nav-toggle__label {
+      outline: 3px solid var(--clay);
+      outline-offset: 2px;
     }
 
     .site-nav {
@@ -202,8 +232,10 @@ const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWit
       flex-basis: 100%;
       flex-direction: column;
       align-items: stretch;
-      gap: 1rem;
+      gap: 0;
+      margin-inline: calc(var(--gutter) * -1);
       padding-bottom: 1.25rem;
+      border-top: var(--line);
     }
 
     .nav-toggle:checked ~ .site-nav {
@@ -216,17 +248,25 @@ const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWit
       gap: 0;
     }
 
-    .site-nav__list li + li {
-      border-top: var(--border);
+    .site-nav__list li {
+      border-bottom: var(--line-soft);
     }
 
     .site-nav__list a {
-      display: block;
-      padding: 0.85rem 0.25rem;
+      padding: 1rem var(--gutter);
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
     }
 
-    .site-nav__list a::after {
-      display: none;
+    .site-nav__num {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+    }
+
+    .site-nav__cta {
+      margin: 1.25rem var(--gutter) 0;
     }
   }
 </style>
