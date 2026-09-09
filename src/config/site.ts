@@ -27,6 +27,7 @@ export const site = {
     { label: "Home", href: "/" },
     { label: "About", href: "/about" },
     { label: "Products", href: "/products" },
+    { label: "IT Services", href: "/it-services" },
     { label: "Contact", href: "/contact" },
   ],
 
@@ -148,6 +149,61 @@ export const site = {
     { value: "Local", label: "Families served" },
   ],
   trustBar: ["Serving local customers", "Quality goods", "Fair prices"],
+
+  /**
+   * A second business line alongside the retail shop: an IT services practice
+   * that places technology staff with client teams and takes on focused
+   * software, consulting and support engagements. Kept separate from the
+   * retail `categories`/`whyChooseUs` data above since it is a distinct part
+   * of the business with its own page at /it-services.
+   */
+  itServices: {
+    eyebrow: "IT services · Staff augmentation",
+    heading: "A second line of business: technology teams, on demand",
+    tagline: "Beyond the shop counter",
+    description:
+      "Alongside our retail counter, Manoveir Trading Co runs an IT services practice. We place skilled technology professionals with client teams and take on focused software, consulting and support engagements.",
+    services: [
+      {
+        title: "Staff Augmentation",
+        desc: "Experienced developers, testers and IT professionals embedded directly into your team, for as long as the engagement needs them.",
+        icon: "people",
+      },
+      {
+        title: "Software Development",
+        desc: "Web and internal tooling built to a brief, from a first prototype through to a maintained production release.",
+        icon: "code",
+      },
+      {
+        title: "IT Consulting & Advisory",
+        desc: "Independent advice on tooling, architecture and hiring decisions from people who have shipped the alternative approaches.",
+        icon: "briefcase",
+      },
+      {
+        title: "Managed IT Support",
+        desc: "Ongoing maintenance, monitoring and support for systems already in production, so problems get caught before they reach your users.",
+        icon: "shield",
+      },
+    ],
+    process: [
+      {
+        title: "Scope the need",
+        desc: "A short conversation about the role, the stack and the timeline, so we know exactly who to look for.",
+      },
+      {
+        title: "Match the right people",
+        desc: "We put forward people who match the brief, not the first available profile.",
+      },
+      {
+        title: "Deploy & onboard",
+        desc: "Engineers join your team, your tools and your process — augmentation, not a separate silo.",
+      },
+      {
+        title: "Support the engagement",
+        desc: "We stay involved for the life of the engagement, handling anything from scheduling to scope changes.",
+      },
+    ],
+  },
 };
 
 /** True when a config string is still an unfilled placeholder. */

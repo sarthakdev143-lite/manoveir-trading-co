@@ -1,0 +1,228 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import TechDesk from "../components/illustrations/TechDesk.astro";
+import { site } from "../config/site";
+
+const { itServices } = site;
+---
+
+<BaseLayout
+  title="IT Services"
+  description={`${itServices.description} Staff augmentation, software development, IT consulting and managed support from ${site.name}.`}
+>
+  <div class="it-vertical">
+    <!-- Page header -->
+    <section class="masthead">
+      <div class="container masthead__inner masthead__inner--split">
+        <div>
+          <span class="eyebrow">{itServices.eyebrow}</span>
+          <h1>{itServices.heading}</h1>
+          <p class="lead">{itServices.description}</p>
+
+          <div class="actions">
+            <a class="btn btn--primary" href="/contact">
+              Talk to us about a role
+              <Icon name="arrowRight" />
+            </a>
+            <a class="btn btn--outline" href="#offerings">See what we offer</a>
+          </div>
+        </div>
+
+        <figure class="masthead__figure">
+          <TechDesk />
+        </figure>
+      </div>
+    </section>
+
+    <!-- What we offer -->
+    <section id="offerings" class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">What we offer</span>
+          <h2>Four ways we work with client teams</h2>
+          <p class="lead">
+            Staff augmentation is the core of it, but the engagements around it are just as real.
+          </p>
+        </div>
+
+        <div class="grid grid--4">
+          {
+            itServices.services.map((service) => (
+              <article class="card">
+                <span class="icon-tile">
+                  <Icon name={service.icon as any} />
+                </span>
+                <h3>{service.title}</h3>
+                <p>{service.desc}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- How engagements work -->
+    <section class="section section--alt">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">How it works</span>
+          <h2>From first conversation to a working engagement</h2>
+        </div>
+
+        <div class="it-process">
+          {
+            itServices.process.map((step, i) => (
+              <div class="it-process__step">
+                <span class="it-process__index">{i + 1}</span>
+                <h3>{step.title}</h3>
+                <p>{step.desc}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section">
+      <div class="container section-head" style="margin-bottom:0">
+        <h2>Looking to bring in IT staff or a small dev team?</h2>
+        <p class="lead">
+          Send us a note with the role, skills and rough timeline, and we will come back with people who fit.
+        </p>
+        <div class="actions">
+          <a class="btn btn--primary" href="/contact">
+            Contact us
+            <Icon name="arrowRight" />
+          </a>
+          <a class="btn btn--outline" href="/about">About Manoveir Trading Co</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  /* Scoped to this page only: redefines the shared accent tokens from the
+     shop's amber to an indigo/cyan pair, and gives cards a glass treatment,
+     so this second business line reads distinctly without changing the
+     retail site's theme anywhere else. */
+  .it-vertical {
+    --amber: #7c6cff;
+    --amber-light: #9c8dff;
+    --amber-deep: #5b48e0;
+    --amber-soft: rgba(124, 108, 255, 0.14);
+    --amber-edge: rgba(124, 108, 255, 0.36);
+    --sage: #22d3ee;
+    --clay: #ec4899;
+  }
+
+  .it-vertical .card,
+  .it-vertical .panel {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(14px);
+  }
+
+  .it-vertical .card:hover {
+    border-color: var(--amber-edge);
+    box-shadow: 0 18px 40px -20px rgba(124, 108, 255, 0.5);
+  }
+
+  .it-vertical .icon-tile {
+    color: #f5f7fb;
+    background: linear-gradient(135deg, var(--amber), var(--sage));
+    border: none;
+    box-shadow: 0 10px 22px -10px rgba(124, 108, 255, 0.55);
+  }
+
+  .it-vertical .masthead {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .it-vertical .masthead::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: radial-gradient(38rem 22rem at 8% -18%, rgba(124, 108, 255, 0.2), transparent 65%),
+      radial-gradient(30rem 20rem at 104% 8%, rgba(34, 211, 238, 0.14), transparent 65%);
+  }
+
+  .it-vertical .masthead__figure {
+    margin: 0;
+    padding: clamp(0.75rem, 1.5vw, 1.15rem);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(16px);
+  }
+
+  .it-vertical .masthead__figure .techdesk {
+    border-radius: var(--radius);
+  }
+
+  .it-vertical .it-process {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .it-vertical .it-process > * {
+    min-width: 0;
+  }
+
+  @media (min-width: 58rem) {
+    .it-vertical .it-process {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .it-vertical .it-process__step {
+    position: relative;
+    padding: clamp(1.4rem, 2vw, 1.75rem) clamp(1.25rem, 2vw, 1.5rem);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius);
+    backdrop-filter: blur(14px);
+  }
+
+  .it-vertical .it-process__index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, rgba(124, 108, 255, 0.18), rgba(34, 211, 238, 0.12));
+    border: 1px solid var(--amber-edge);
+    border-radius: 999px;
+    color: var(--amber-light);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .it-vertical .it-process__step h3 {
+    margin-bottom: 0.4rem;
+  }
+
+  .it-vertical .it-process__step p {
+    color: var(--text-dim);
+    font-size: 0.92rem;
+  }
+
+  @media (min-width: 58rem) {
+    .it-vertical .it-process__step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 2.65rem;
+      left: 100%;
+      width: 1.5rem;
+      height: 1px;
+      background: linear-gradient(90deg, var(--amber-edge), transparent);
+    }
+  }
+</style>

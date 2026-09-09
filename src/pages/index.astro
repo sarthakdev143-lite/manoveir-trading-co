@@ -8,6 +8,7 @@ import ShelfRack from "../components/illustrations/ShelfRack.astro";
 import { site } from "../config/site";
 
 const featured = site.categories.slice(0, 4);
+const { itServices } = site;
 ---
 
 <BaseLayout title={site.name}>
@@ -53,6 +54,36 @@ const featured = site.categories.slice(0, 4);
       <div class="grid grid--4">
         {site.whyChooseUs.map((feature) => <FeatureCard {...feature} />)}
       </div>
+    </div>
+  </section>
+
+  <!-- Second business line: IT services teaser -->
+  <section class="section it-teaser">
+    <div class="container it-teaser__inner">
+      <div class="it-teaser__copy">
+        <span class="eyebrow">{itServices.eyebrow}</span>
+        <h2>{itServices.heading}</h2>
+        <p class="lead">{itServices.tagline} — {itServices.description}</p>
+        <div class="actions">
+          <a class="btn btn--primary" href="/it-services">
+            Explore IT services
+            <Icon name="arrowRight" />
+          </a>
+        </div>
+      </div>
+
+      <ul class="it-teaser__list">
+        {
+          itServices.services.map((service) => (
+            <li>
+              <span class="icon-tile">
+                <Icon name={service.icon as any} />
+              </span>
+              <span>{service.title}</span>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </section>
 
@@ -111,5 +142,71 @@ const featured = site.categories.slice(0, 4);
   .visit__figure :global(.shelfrack) {
     border-radius: var(--radius);
     background: var(--bg);
+  }
+
+  /* Second business line teaser — indigo/cyan accents locally, so this one
+     section reads as a distinct line of business without touching the
+     retail site's shared amber theme anywhere else. */
+  .it-teaser {
+    --amber: #7c6cff;
+    --amber-light: #9c8dff;
+    --amber-deep: #5b48e0;
+    --amber-soft: rgba(124, 108, 255, 0.14);
+    --amber-edge: rgba(124, 108, 255, 0.36);
+    --sage: #22d3ee;
+    --clay: #ec4899;
+  }
+
+  .it-teaser__inner {
+    display: grid;
+    gap: clamp(1.75rem, 3.5vw, 3rem);
+    align-items: center;
+  }
+
+  .it-teaser__inner > * {
+    min-width: 0;
+  }
+
+  @media (min-width: 58rem) {
+    .it-teaser__inner {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+  }
+
+  .it-teaser__list {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    list-style: none;
+    padding: 0;
+  }
+
+  .it-teaser__list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius);
+    backdrop-filter: blur(12px);
+    color: var(--text);
+    font-size: 0.92rem;
+    font-weight: 500;
+  }
+
+  .it-teaser__list .icon-tile {
+    width: 2.15rem;
+    height: 2.15rem;
+    margin-bottom: 0;
+    color: #f5f7fb;
+    background: linear-gradient(135deg, var(--amber), var(--sage));
+    border: none;
+    flex-shrink: 0;
+  }
+
+  .it-teaser__list .icon-tile .icon {
+    width: 1.15rem;
+    height: 1.15rem;
   }
 </style>
