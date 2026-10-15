@@ -25,10 +25,10 @@ const canonical = abs(normalisedPath);
 const ogImage = abs("/og-image.png");
 const pageTitle = title === site.name ? `${site.name} — ${site.tagline}` : `${title} | ${site.name}`;
 
-const { phone, email } = site.contact;
+const { email } = site.contact;
 
-// Structured data for local search. The shop publishes no address or opening
-// hours yet, so this describes the business and its contact points only —
+// Structured data for local search. We publish no address or opening hours
+// yet, so this describes the business and its contact points only —
 // placeholder values are omitted rather than published as machine-readable
 // facts, and the whole block is dropped until at least one is real.
 const businessSchema: Record<string, unknown> = {
@@ -42,7 +42,6 @@ const businessSchema: Record<string, unknown> = {
   priceRange: "$$",
 };
 
-if (!isPlaceholder(phone)) businessSchema.telephone = phone;
 if (!isPlaceholder(email)) businessSchema.email = email;
 
 const hasRealContactDetail = Boolean(businessSchema.telephone || businessSchema.email);

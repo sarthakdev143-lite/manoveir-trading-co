@@ -2,28 +2,27 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import FeatureCard from "../components/FeatureCard.astro";
 import Icon from "../components/Icon.astro";
-import Counter from "../components/illustrations/Counter.astro";
+import TechDesk from "../components/illustrations/TechDesk.astro";
 import { site } from "../config/site";
 ---
-
 <BaseLayout
   title="About Us"
-  description={`Learn about ${site.name} — a local retail shop stocking everyday consumer goods for neighbourhood families.`}
+  description={`${site.name} — an IT services firm providing staffing, delivery, consulting and managed support.`}
 >
   <!-- Page header -->
   <section class="masthead">
     <div class="container masthead__inner masthead__inner--split">
       <div>
         <span class="eyebrow">About us</span>
-        <h1>A neighbourhood shop, run the old-fashioned way</h1>
+        <h1>A small IT services practice, run directly</h1>
         <p class="lead">
-          {site.name} exists to make everyday shopping simple: a dependable shelf, an honest price and someone
-          behind the counter who knows what you came in for.
+          {site.name} exists to make engineering capacity straightforward to add: the right people, on the right
+          terms, integrated into your own team.
         </p>
       </div>
 
       <figure class="masthead__figure">
-        <Counter />
+        <TechDesk />
       </figure>
     </div>
   </section>
@@ -33,21 +32,20 @@ import { site } from "../config/site";
     <div class="container story">
       <div class="story__copy prose">
         <span class="eyebrow">Our story</span>
-        <h2>Built around what our neighbours actually need</h2>
+        <h2>Built around what client teams actually need</h2>
         <p>
-          {site.name} is a retail business engaged in the purchase and sale of various consumer goods and
-          products. We buy carefully, stock deliberately and sell directly to the customers who walk through
-          our door — no middlemen, no online cart, no delivery slots to wait on.
+          {site.name} is an IT services practice. We place skilled technology professionals with client teams
+          and take on focused software, consulting and support engagements. The goal is simple: augment your
+          delivery capacity without adding a separate silo.
         </p>
         <p>
-          Everything on our shelves is chosen the same way: by watching what local families come in asking for.
-          Kitchen staples that run out weekly. Cleaning supplies nobody wants to make a special trip for.
-          Stationery before the school term. Gifts and decorations when the festive season comes around. If
-          enough people ask for something, it earns a place on the shelf.
+          Everything we take on is scoped the same way — by understanding the role, the stack, the timeline and
+          the way your team actually works. From there we put forward people who match the brief, not the
+          first available profile, and stay involved for the life of the engagement.
         </p>
         <p>
-          That is the whole idea — a single, reliable stop for the ordinary things, run by people you can
-          actually talk to.
+          We work with a practical range of clients, from single roles to small dev teams that need to be
+          stood up quickly. Where there is a fit on stack and expectations, we make it work.
         </p>
       </div>
 
@@ -56,23 +54,23 @@ import { site } from "../config/site";
         <dl class="facts facts--stacked">
           <div>
             <dt>Business type</dt>
-            <dd>Local shop-based retail — walk-in customers</dd>
+            <dd>IT services — staff augmentation and delivery</dd>
           </div>
           <div>
             <dt>What we do</dt>
-            <dd>Purchase and sale of consumer goods and products</dd>
+            <dd>Staff augmentation, software delivery, consulting and managed support</dd>
           </div>
           <div>
             <dt>Who we serve</dt>
-            <dd>Local households and neighbourhood families</dd>
+            <dd>Client product, engineering and operations teams</dd>
           </div>
           <div>
-            <dt>Categories</dt>
-            <dd>{site.categories.length} broad ranges under one roof</dd>
+            <dt>Services</dt>
+            <dd>{site.itServices.services.length} core service lines</dd>
           </div>
         </dl>
-        <a class="btn btn--outline story__aside-cta" href="/products">
-          Browse our categories
+        <a class="btn btn--outline story__aside-cta" href="/it-services">
+          See our services
           <Icon name="arrowRight" />
         </a>
       </aside>
@@ -86,8 +84,7 @@ import { site } from "../config/site";
         <span class="eyebrow">Our promise</span>
         <h2>Three things we will not compromise on</h2>
         <p class="lead">
-          The shop runs on repeat custom, so every decision behind the counter is made with the next visit in
-          mind.
+          Engagements run on repeat trust, so every decision is made with the next one in mind.
         </p>
       </div>
       <div class="grid grid--3">
@@ -100,8 +97,8 @@ import { site } from "../config/site";
   <section class="section">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">The shape of our shop</span>
-        <h2>How we work, in short</h2>
+        <span class="eyebrow">How we work</span>
+        <h2>In short</h2>
       </div>
 
       <dl class="grid grid--4">
@@ -120,16 +117,16 @@ import { site } from "../config/site";
   <!-- CTA -->
   <section class="section section--alt">
     <div class="container section-head" style="margin-bottom:0">
-      <h2>Come in and have a look</h2>
+      <h2>Talk to us about a role or a team</h2>
       <p class="lead">
-        The quickest way to know what we carry is to visit. We are happy to point you to what you need.
+        Send a short brief and we will come back with people who fit.
       </p>
       <div class="actions">
         <a class="btn btn--primary" href="/contact">
           Get in touch
           <Icon name="arrowRight" />
         </a>
-        <a class="btn btn--outline" href="/products">See products</a>
+        <a class="btn btn--outline" href="/it-services">See services</a>
       </div>
     </div>
   </section>
@@ -144,7 +141,7 @@ import { site } from "../config/site";
     border-radius: var(--radius-lg);
   }
 
-  .masthead__figure :global(.counter) {
+  .masthead__figure :global(.techdesk) {
     border-radius: var(--radius);
     background: var(--bg);
   }

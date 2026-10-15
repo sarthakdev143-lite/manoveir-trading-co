@@ -2,35 +2,12 @@
 import Icon from "./Icon.astro";
 import { site, isPlaceholder, displayValue } from "../config/site";
 
-const { phone, phoneDisplay, email } = site.contact;
+const { email } = site.contact;
 
-const hasPhone = !isPlaceholder(phone);
 const hasEmail = !isPlaceholder(email);
-const telHref = hasPhone ? `tel:${phone.replace(/[^+\d]/g, "")}` : null;
 ---
 
 <ul class="details">
-  <li>
-    <span class="icon-tile icon-tile--lg">
-      <Icon name="phone" />
-    </span>
-    <div class="details__body">
-      <h3>Phone</h3>
-      {
-        telHref ? (
-          <p><a class="details__link" href={telHref}>{displayValue(phoneDisplay)}</a></p>
-        ) : (
-          <p class="todo">{displayValue(phoneDisplay)}</p>
-        )
-      }
-      <p class="details__note">
-        {hasPhone
-          ? "Call us for stock enquiries or bulk orders."
-          : "Our published number is being finalised — please drop by the shop in the meantime."}
-      </p>
-    </div>
-  </li>
-
   <li>
     <span class="icon-tile icon-tile--lg">
       <Icon name="mail" />

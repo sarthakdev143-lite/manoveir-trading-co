@@ -3,7 +3,7 @@ import Icon from "./Icon.astro";
 import { site, isPlaceholder, displayValue } from "../config/site";
 
 const year = new Date().getFullYear();
-const { phone, phoneDisplay, email } = site.contact;
+const { email } = site.contact;
 ---
 
 <footer class="site-footer">
@@ -11,7 +11,7 @@ const { phone, phoneDisplay, email } = site.contact;
     <div class="site-footer__brand">
       <a class="site-footer__logo" href="/">
         <span class="site-footer__mark" aria-hidden="true">
-          <Icon name="storefront" />
+          <Icon name="code" />
         </span>
         <span class="site-footer__name">{site.name}</span>
       </a>
@@ -27,26 +27,16 @@ const { phone, phoneDisplay, email } = site.contact;
     </nav>
 
     <div class="site-footer__col">
-      <h2 class="site-footer__heading">Categories</h2>
+      <h2 class="site-footer__heading">Services</h2>
       <ul>
-        {site.categories.slice(0, 4).map((c) => <li><a href="/products">{c.title}</a></li>)}
-        <li><a href="/products">All categories</a></li>
+        {site.itServices.services.slice(0, 4).map((s) => <li><a href="/it-services">{s.title}</a></li>)}
+        <li><a href="/it-services">All services</a></li>
       </ul>
     </div>
 
     <div class="site-footer__col">
       <h2 class="site-footer__heading">Get in touch</h2>
       <ul class="site-footer__contact">
-        <li>
-          <Icon name="phone" />
-          {
-            isPlaceholder(phone) ? (
-              <span class="todo">{displayValue(phoneDisplay)}</span>
-            ) : (
-              <a href={`tel:${phone.replace(/[^+\d]/g, "")}`}>{displayValue(phoneDisplay)}</a>
-            )
-          }
-        </li>
         <li>
           <Icon name="mail" />
           {
@@ -58,8 +48,8 @@ const { phone, phoneDisplay, email } = site.contact;
           }
         </li>
         <li>
-          <Icon name="storefront" />
-          <span>Walk-in counter service</span>
+          <Icon name="code" />
+          <span>Remote-first delivery</span>
         </li>
       </ul>
     </div>

@@ -1,33 +1,29 @@
 /**
  * SINGLE SOURCE OF TRUTH for all site content and real-world details.
  *
- * Only two values are still placeholders: `contact.phone` and `contact.email`.
- * They are prefixed with `TODO:` — replace them here and every page, the
- * enquiry form and the structured data pick up the change. Nothing else in the
- * site is provisional, and no other file hardcodes a contact detail.
+ * Only one value is still a placeholder: `contact.email`.
+ * It is prefixed with `TODO:` — replace it here and every page, the
+ * enquiry form and the structured data pick up the change. Nothing else in
+ * the site is provisional, and no other file hardcodes a contact detail.
  *
- * Deliberately NOT modelled here: a street address, opening hours, a map embed
- * and customer testimonials. Publishing invented or placeholder versions of
- * those made the site read as unfinished, so they are simply absent until real
- * ones exist. See README "Adding your address, hours or a map" for how to
- * reintroduce them.
+ * Deliberately NOT modelled here: a phone number, a street address, opening
+ * hours, a map embed and customer testimonials. Publishing invented or
+ * placeholder versions of those made the site read as unfinished, so they are
+ * simply absent until real ones exist.
  */
 
 export const site = {
   name: "Manoveir Trading CO",
-  tagline: "Your Trusted Local Retail Partner",
+  tagline: "IT services and staff augmentation",
   description:
-    "A retail business engaged in the purchase and sale of various consumer goods and products, serving local customers through direct shop-based sales.",
+    "Manoveir Trading Co delivers IT services for client teams: staff augmentation, software development, consulting and managed support.",
   contact: {
-    phone: "TODO: +91-XXXXXXXXXX",
-    phoneDisplay: "TODO: +91 9XXXX XXXXX",
     email: "TODO: contact@manoveirtrading.example",
   },
   nav: [
     { label: "Home", href: "/" },
+    { label: "Services", href: "/it-services" },
     { label: "About", href: "/about" },
-    { label: "Products", href: "/products" },
-    { label: "IT Services", href: "/it-services" },
     { label: "Contact", href: "/contact" },
   ],
 
@@ -35,134 +31,64 @@ export const site = {
    * `icon` values are names in src/components/Icon.astro — not emoji. Add the
    * icon there first if you introduce a new category.
    */
-  categories: [
-    {
-      title: "Groceries & Staples",
-      desc: "Rice, flour, pulses, oils, spices, packaged food",
-      icon: "grain",
-      examples: [
-        "Rice, atta & pulses",
-        "Cooking oils & ghee",
-        "Whole and ground spices",
-        "Packaged & ready-to-cook food",
-      ],
-    },
-    {
-      title: "Household Essentials",
-      desc: "Cleaning supplies, detergents, kitchenware, storage",
-      icon: "spray",
-      examples: [
-        "Detergents & floor cleaners",
-        "Brooms, mops & brushes",
-        "Everyday kitchenware",
-        "Storage boxes & containers",
-      ],
-    },
-    {
-      title: "Personal Care",
-      desc: "Soaps, shampoos, skincare, oral care, grooming",
-      icon: "care",
-      examples: [
-        "Bathing soaps & handwash",
-        "Shampoos & hair oils",
-        "Toothpaste & oral care",
-        "Shaving & grooming basics",
-      ],
-    },
-    {
-      title: "Beverages & Snacks",
-      desc: "Soft drinks, juices, tea, coffee, biscuits, confectionery",
-      icon: "cup",
-      examples: [
-        "Tea, coffee & health drinks",
-        "Soft drinks & packaged juices",
-        "Biscuits, namkeen & chips",
-        "Chocolates & confectionery",
-      ],
-    },
-    {
-      title: "Stationery & Sundries",
-      desc: "Notebooks, pens, batteries, small daily-use items",
-      icon: "pencil",
-      examples: [
-        "Notebooks & registers",
-        "Pens, pencils & geometry",
-        "Batteries & bulbs",
-        "Tape, glue & small hardware",
-      ],
-    },
-    {
-      title: "Seasonal & Festive Goods",
-      desc: "Gift items, decorations, festival-specific products",
-      icon: "gift",
-      examples: [
-        "Festive gift packs",
-        "Diyas, lights & decorations",
-        "Rangoli & puja essentials",
-        "Season-specific specials",
-      ],
-    },
-  ],
+  trustBar: ["Staff augmentation", "Software delivery", "IT consulting", "Managed support"],
+
   whyChooseUs: [
     {
-      title: "Wide Selection",
-      desc: "Six broad categories under one roof, so a single trip covers the whole list instead of three separate stops.",
-      icon: "basket",
-    },
-    {
-      title: "Quality Assured",
-      desc: "We check stock on arrival and rotate it regularly, so what reaches your basket is fresh and in date.",
+      title: "Right fit, not first available",
+      desc: "Every profile we put forward is matched to the role, stack and timeline rather than the first person on our bench.",
       icon: "verified",
     },
     {
-      title: "Fair & Transparent Pricing",
-      desc: "Clear prices on the shelf and at the counter. No surprises, no haggling required.",
+      title: "Fast turnaround",
+      desc: "Shortlists within days, with people who can join your sprint, your tools and your process quickly.",
       icon: "tag",
     },
     {
-      title: "Friendly Local Service",
-      desc: "We know our regulars by name, and we are happy to source something specific if you ask for it.",
+      title: "Retention-minded",
+      desc: "We stay close to both sides during the engagement, which keeps placements stable long after onboarding.",
       icon: "people",
+    },
+    {
+      title: "Flexible engagement terms",
+      desc: "Scale the team up or stand it down as the work changes; no fixed commitment beyond what the role needs.",
+      icon: "basket",
     },
   ],
   values: [
     {
       title: "Quality",
-      desc: "We stock brands and goods we would happily use at home, and we would rather leave a shelf empty than fill it with something we cannot stand behind.",
+      desc: "We represent people we would happily hire into our own teams, and we would rather leave a role open than fill it badly.",
       icon: "star",
     },
     {
       title: "Honesty",
-      desc: "Straight prices, honest weights and clear answers about what we do and do not have in stock today.",
+      desc: "Clear about skills, limits and timelines — in the shortlist, in the interview and throughout the engagement.",
       icon: "scales",
     },
     {
-      title: "Community",
-      desc: "We are a neighbourhood shop first. The people who walk through the door are neighbours, not transactions.",
+      title: "Partnership",
+      desc: "We work alongside your delivery leads, not outside them; your process and goals stay yours.",
       icon: "neighbourhood",
     },
   ],
   stats: [
-    { value: "6", label: "Product categories" },
-    { value: "Daily", label: "Stock rotation" },
-    { value: "Direct", label: "Counter service" },
-    { value: "Local", label: "Families served" },
+    { value: "4", label: "Service lines" },
+    { value: "Days", label: "Typical shortlist" },
+    { value: "Direct", label: "Line to our team" },
+    { value: "Flexible", label: "Engagement terms" },
   ],
-  trustBar: ["Serving local customers", "Quality goods", "Fair prices"],
 
   /**
-   * A second business line alongside the retail shop: an IT services practice
-   * that places technology staff with client teams and takes on focused
-   * software, consulting and support engagements. Kept separate from the
-   * retail `categories`/`whyChooseUs` data above since it is a distinct part
-   * of the business with its own page at /it-services.
+   * The IT services practice — now the primary business line of the company.
+   * Own page at /it-services.
    */
   itServices: {
     eyebrow: "IT services · Staff augmentation",
-    heading: "A second line of business: technology teams, on demand",
-    tagline: "Beyond the shop counter",
+    heading: "Technology teams, on demand",
+    tagline: "Flexible engineering capacity",
     description:
-      "Alongside our retail counter, Manoveir Trading Co runs an IT services practice. We place skilled technology professionals with client teams and take on focused software, consulting and support engagements.",
+      "We place skilled technology professionals with client teams and take on focused software, consulting and support engagements.",
     services: [
       {
         title: "Staff Augmentation",

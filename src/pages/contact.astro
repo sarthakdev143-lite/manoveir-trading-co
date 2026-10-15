@@ -2,26 +2,25 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ContactBlock from "../components/ContactBlock.astro";
 import Icon from "../components/Icon.astro";
-import { site, isPlaceholder, displayValue } from "../config/site";
+import { site, isPlaceholder } from "../config/site";
 
-const { email, phone, phoneDisplay } = site.contact;
+const { email } = site.contact;
 
 const hasEmail = !isPlaceholder(email);
-const hasPhone = !isPlaceholder(phone);
 ---
 
 <BaseLayout
   title="Contact"
-  description={`Get in touch with ${site.name} — phone, email and enquiries about stock, prices or bulk orders.`}
+  description={`Get in touch with ${site.name} — email enquiries about staffing, delivery and engagements.`}
 >
   <section class="masthead">
     <div class="container masthead__inner">
       <div>
         <span class="eyebrow">Contact</span>
-        <h1>Call us, write to us, or drop by</h1>
+        <h1>Get in touch</h1>
         <p class="lead">
-          We are a walk-in shop, so the best way to reach us is in person or over the phone. For anything that
-          needs a written reply — bulk orders, stock checks — send an enquiry and we will come back to you.
+          Send a short brief — role, stack, timeline — and we will come back with people who fit. The form
+          opens your own email app, so nothing is submitted through this website.
         </p>
       </div>
     </div>
@@ -37,20 +36,10 @@ const hasPhone = !isPlaceholder(phone);
 
       <div class="panel contact__form-panel">
         <span class="eyebrow">Send an enquiry</span>
-        <h2 class="contact__title">Ask about stock, prices or bulk orders</h2>
+        <h2 class="contact__title">Ask about a role, a team, or an engagement</h2>
         <p class="contact__intro">
           This form opens your own email app with the message ready to send — nothing is submitted through
           this website.
-          {
-            hasPhone && (
-              <>
-                {" "}Prefer to talk?{" "}
-                <a class="contact__tel" href={`tel:${phone.replace(/[^+\d]/g, "")}`}>
-                  Call {displayValue(phoneDisplay)}
-                </a>.
-              </>
-            )
-          }
         </p>
 
         <form
@@ -78,7 +67,7 @@ const hasPhone = !isPlaceholder(phone);
               rows="5"
               required
               disabled={!hasEmail}
-              placeholder="Tell us what you are looking for — item, quantity, or a question about stock."
+              placeholder="Tell us about the role, stack, timeline or scope you have in mind."
             ></textarea>
           </div>
 
@@ -90,8 +79,8 @@ const hasPhone = !isPlaceholder(phone);
           {
             !hasEmail && (
               <p class="form__note">
-                Our enquiry inbox is being set up. Until it is live, please visit the shop and we will help you
-                at the counter.
+                Our enquiry inbox is being set up. Until it is live, please reach out once it is available and we
+                will respond.
               </p>
             )
           }

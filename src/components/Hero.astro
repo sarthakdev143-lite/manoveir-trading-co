@@ -1,21 +1,21 @@
 ---
 import Icon from "./Icon.astro";
-import Shopfront from "./illustrations/Shopfront.astro";
+import TechDesk from "./illustrations/TechDesk.astro";
 import { site } from "../config/site";
 ---
 
 <section class="hero">
   <div class="container hero__grid">
     <div class="hero__copy">
-      <span class="eyebrow">Local retail · Walk-in shop</span>
+      <span class="eyebrow">IT services · Staff augmentation</span>
 
       <h1>{site.name}</h1>
       <p class="hero__tagline">{site.tagline}</p>
       <p class="lead">{site.description}</p>
 
       <div class="actions">
-        <a class="btn btn--primary" href="/products">
-          Explore products
+        <a class="btn btn--primary" href="/it-services">
+          Explore services
           <Icon name="arrowRight" />
         </a>
         <a class="btn btn--outline" href="/contact">Get in touch</a>
@@ -34,10 +34,10 @@ import { site } from "../config/site";
     </div>
 
     <figure class="hero__figure">
-      <Shopfront />
+      <TechDesk />
       <figcaption>
-        <Icon name="storefront" />
-        Six categories of everyday essentials, over one counter
+        <Icon name="code" />
+        Engineering capacity, matched to your stack and timeline
       </figcaption>
     </figure>
   </div>
@@ -92,7 +92,7 @@ import { site } from "../config/site";
     box-shadow: var(--shadow);
   }
 
-  .hero__figure :global(.shopfront) {
+  .hero__figure :global(.techdesk) {
     border-radius: var(--radius);
     background: var(--bg-2);
   }
