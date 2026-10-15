@@ -1,10 +1,10 @@
 /**
  * SINGLE SOURCE OF TRUTH for all site content and real-world details.
  *
- * Only one value is still a placeholder: `contact.email`.
- * It is prefixed with `TODO:` — replace it here and every page, the
- * enquiry form and the structured data pick up the change. Nothing else in
- * the site is provisional, and no other file hardcodes a contact detail.
+ * No placeholders remain: every value below is final. The placeholder
+ * machinery is retained — prefix a value with `TODO:` here and every page,
+ * the enquiry form and the structured data treat it as unfilled. No other
+ * file hardcodes a contact detail.
  *
  * Deliberately NOT modelled here: a phone number, a street address, opening
  * hours, a map embed and customer testimonials. Publishing invented or
@@ -18,7 +18,7 @@ export const site = {
   description:
     "Manoveir Trading Co delivers IT services for client teams: staff augmentation, software development, consulting and managed support.",
   contact: {
-    email: "TODO: contact@manoveirtrading.example",
+    email: "hr@manoveirtrading.com",
   },
   nav: [
     { label: "Home", href: "/" },

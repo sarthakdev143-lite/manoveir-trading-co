@@ -4,12 +4,12 @@
  * Run with:  npm run og
  *
  * The PNG is committed to the repo, so this only needs re-running when the
- * business name, tagline or brand colours change. Rasterised with sharp, which
- * Astro already depends on — no extra tooling.
+ * business name, tagline, service list or brand colours change. Rasterised
+ * with sharp, which Astro already depends on — no extra tooling.
  *
- * The shopfront on the right is a condensed version of the hero illustration in
- * src/components/illustrations/Shopfront.astro — keep the two in step if the
- * artwork changes.
+ * The desk scene on the right is a condensed rendition of the hero
+ * illustration in src/components/illustrations/TechDesk.astro — keep the two
+ * in step if the artwork changes.
  */
 
 import { readFileSync, mkdirSync } from "node:fs";
@@ -21,16 +21,23 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "..");
 const OUT = resolve(root, "public/og-image.png");
 
-// Pull the name and tagline straight from the config so this cannot drift.
+// Pull the name, tagline and service list straight from the config so this
+// cannot drift.
 const siteTs = readFileSync(resolve(root, "src/config/site.ts"), "utf8");
 const read = (key) => {
   const match = siteTs.match(new RegExp(`^\\s*${key}:\\s*"([^"]+)"`, "m"));
   if (!match) throw new Error(`Could not read "${key}" from src/config/site.ts`);
   return match[1];
 };
+const readList = (key) => {
+  const match = siteTs.match(new RegExp(`^\\s*${key}:\\s*\\[([^\\]]+)\\]`, "m"));
+  if (!match) throw new Error(`Could not read "${key}" from src/config/site.ts`);
+  return match[1].split(",").map((s) => s.trim().replace(/^"|"$/g, ""));
+};
 
 const name = read("name");
 const tagline = read("tagline");
+const services = readList("trustBar");
 
 /**
  * Breaks the name across two lines at the word boundary nearest its midpoint.
@@ -55,19 +62,26 @@ const splitName = (value) => {
 
 const [nameLine1, nameLine2] = splitName(name);
 
-// Brand tokens — keep in sync with src/styles/global.css.
+// Split the service list across two lines, e.g. 4 entries -> 2 + 2.
+const mid = Math.ceil(services.length / 2);
+const serviceLine1 = services.slice(0, mid).join(" · ");
+const serviceLine2 = services.slice(mid).join(" · ");
+
+// Brand tokens — keep in sync with src/styles/global.css and TechDesk.astro.
 const BG = "#100e0c";
 const BG_2 = "#15120e";
-const WALL = "#241f19";
-const WALL_DARK = "#1c1813";
-const FRAME = "#3c332a";
-const GLASS = "#33291d";
+const INK = "#0c0e18";
+const INK_DARK = "#080a12";
+const FRAME = "#2a2f45";
+const SCREEN = "#12162a";
+const CREAM = "#f3efe7";
+const INDIGO = "#7c6cff";
+const INDIGO_DEEP = "#5b48e0";
+const CYAN = "#22d3ee";
+const PINK = "#ec4899";
 const AMBER = "#e8a33d";
-const AMBER_DEEP = "#c8842a";
 const TEXT = "#f3efe7";
 const DIM = "#b5aca0";
-const SAGE = "#7fa88a";
-const CLAY = "#c96f4a";
 
 // Fraunces and Inter are not installed locally, so the rasteriser falls back to
 // Georgia and Segoe UI — the same serif/sans pairing in spirit.
@@ -76,85 +90,62 @@ const BODY = "'Segoe UI', Arial, Helvetica, sans-serif";
 
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-// Nine 30px scallops close the awning's bottom edge, right to left.
-const scallops = Array.from({ length: 9 }, () => "a15 15 0 0 1 -30 0").join(" ");
-const awning = `M60 96 H330 V122 ${scallops} Z`;
-const stripeXs = [60, 120, 180, 240, 300];
-
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <defs>
-    <clipPath id="og-awning"><path d="${awning}"/></clipPath>
-    <clipPath id="og-window"><rect x="82" y="152" width="126" height="104" rx="3"/></clipPath>
-  </defs>
-
   <rect width="1200" height="630" fill="${BG}"/>
   <rect x="648" y="0" width="552" height="630" fill="${BG_2}"/>
 
   <!-- left column: type -->
   <rect x="80" y="196" width="54" height="3" rx="1.5" fill="${AMBER}"/>
-  <text x="152" y="203" fill="${AMBER}" font-family="${BODY}" font-size="21" letter-spacing="3.4">LOCAL RETAIL · WALK-IN SHOP</text>
+  <text x="152" y="203" fill="${AMBER}" font-family="${BODY}" font-size="20" letter-spacing="3">IT SERVICES · STAFF AUGMENTATION</text>
 
   <text x="80" y="282" fill="${TEXT}" font-family="${DISPLAY}" font-size="66" font-weight="600">${esc(nameLine1)}</text>
   <text x="80" y="352" fill="${TEXT}" font-family="${DISPLAY}" font-size="66" font-weight="600">${esc(nameLine2)}</text>
   <text x="80" y="414" fill="${AMBER}" font-family="${DISPLAY}" font-size="30" font-weight="600">${esc(tagline)}</text>
 
-  <text x="80" y="474" fill="${DIM}" font-family="${BODY}" font-size="21">Groceries · Household · Personal care</text>
-  <text x="80" y="504" fill="${DIM}" font-family="${BODY}" font-size="21">Beverages · Stationery · Festive goods</text>
+  <text x="80" y="474" fill="${DIM}" font-family="${BODY}" font-size="21">${esc(serviceLine1)}</text>
+  <text x="80" y="504" fill="${DIM}" font-family="${BODY}" font-size="21">${esc(serviceLine2)}</text>
 
-  <!-- right column: shopfront, drawn on a 390x330 grid and placed -->
-  <g transform="translate(700 168) scale(1.2)">
-    <rect x="0" y="250" width="390" height="16" fill="${WALL_DARK}"/>
-    <path d="M84 250h122l12 16H72Z" fill="${AMBER}" opacity="0.08"/>
+  <!-- right column: desk scene, drawn on a 400x300 grid and placed -->
+  <g transform="translate(684 135) scale(1.2)">
+    <!-- desk -->
+    <rect x="0" y="244" width="400" height="10" fill="${FRAME}"/>
+    <rect x="0" y="254" width="400" height="46" fill="${INK_DARK}"/>
 
-    <rect x="60" y="56" width="270" height="194" fill="${WALL}"/>
-    <rect x="60" y="56" width="270" height="34" fill="${WALL_DARK}"/>
+    <!-- laptop base -->
+    <path d="M96 244h208l14 20a6 6 0 0 1-6 8H88a6 6 0 0 1-6-8Z" fill="${FRAME}"/>
+    <rect x="150" y="248" width="100" height="5" rx="2.5" fill="${INK_DARK}"/>
 
-    <rect x="112" y="62" width="166" height="22" rx="3" fill="${WALL_DARK}" stroke="${FRAME}" stroke-width="1.2"/>
-    <text x="195" y="77" text-anchor="middle" fill="${TEXT}" font-family="${BODY}" font-size="12" font-weight="600" letter-spacing="3">MANOVEIR</text>
+    <!-- laptop screen -->
+    <rect x="110" y="96" width="180" height="148" rx="8" fill="${INK}" stroke="${FRAME}" stroke-width="3"/>
+    <rect x="122" y="108" width="156" height="112" rx="3" fill="${SCREEN}"/>
 
-    <path d="${awning}" fill="${AMBER}"/>
-    <g clip-path="url(#og-awning)">
-      ${stripeXs.map((x) => `<rect x="${x}" y="96" width="30" height="42" fill="${TEXT}"/>`).join("\n      ")}
-    </g>
-    <path d="${awning}" fill="none" stroke="${AMBER_DEEP}" stroke-width="1.2"/>
-    <rect x="60" y="93" width="270" height="5" rx="2.5" fill="${AMBER_DEEP}"/>
+    <!-- dashboard: heading bar + bars + trend line -->
+    <rect x="132" y="118" width="60" height="6" rx="3" fill="${CREAM}" opacity="0.7"/>
+    <rect x="132" y="150" width="16" height="52" rx="2" fill="${INDIGO}"/>
+    <rect x="154" y="166" width="16" height="36" rx="2" fill="${CYAN}"/>
+    <rect x="176" y="140" width="16" height="62" rx="2" fill="${INDIGO_DEEP}"/>
+    <rect x="198" y="176" width="16" height="26" rx="2" fill="${PINK}" opacity="0.85"/>
+    <path d="M228 196l10-24 12 14 14-30" fill="none" stroke="${CYAN}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="264" cy="156" r="3" fill="${CYAN}"/>
 
-    <rect x="80" y="150" width="130" height="108" rx="3" fill="${GLASS}" stroke="${FRAME}" stroke-width="3"/>
-    <g clip-path="url(#og-window)">
-      <rect x="90" y="164" width="15" height="22" rx="2" fill="${AMBER}"/>
-      <rect x="110" y="170" width="12" height="16" rx="2" fill="${TEXT}" opacity="0.85"/>
-      <rect x="127" y="162" width="13" height="24" rx="2" fill="${SAGE}"/>
-      <rect x="145" y="170" width="16" height="16" rx="2" fill="${CLAY}"/>
-      <rect x="166" y="164" width="12" height="22" rx="2" fill="${TEXT}" opacity="0.7"/>
-      <rect x="184" y="170" width="16" height="16" rx="2" fill="${AMBER}" opacity="0.7"/>
-      <rect x="86" y="186" width="120" height="3" fill="${FRAME}"/>
-      <rect x="92" y="198" width="22" height="18" rx="2" fill="${TEXT}" opacity="0.75"/>
-      <rect x="120" y="196" width="17" height="20" rx="2" fill="${CLAY}" opacity="0.8"/>
-      <rect x="143" y="202" width="20" height="14" rx="2" fill="${SAGE}" opacity="0.8"/>
-      <rect x="169" y="197" width="15" height="19" rx="2" fill="${AMBER}" opacity="0.75"/>
-      <rect x="86" y="216" width="120" height="3" fill="${FRAME}"/>
-      <path d="M94 248c0-10 3.5-15 10-15s10 5 10 15Z" fill="${AMBER}" opacity="0.8"/>
-      <path d="M120 248c0-9 3.5-13.5 9-13.5s9 4.5 9 13.5Z" fill="${SAGE}" opacity="0.7"/>
-      <path d="M144 248c0-10 3.5-15 10-15s10 5 10 15Z" fill="${CLAY}" opacity="0.7"/>
-      <path d="M170 248c0-9 3.5-13.5 9-13.5s9 4.5 9 13.5Z" fill="${TEXT}" opacity="0.5"/>
-    </g>
-    <path d="M145 150v108" stroke="${FRAME}" stroke-width="2.4"/>
+    <!-- keyboard deck -->
+    <path d="M104 244l6-8h180l6 8Z" fill="${INK_DARK}"/>
 
-    <rect x="226" y="154" width="60" height="96" rx="2.5" fill="${WALL_DARK}" stroke="${FRAME}" stroke-width="2.4"/>
-    <rect x="236" y="164" width="40" height="42" rx="2" fill="${GLASS}"/>
-    <rect x="242" y="174" width="28" height="14" rx="2" fill="${AMBER}"/>
-    <text x="256" y="185" text-anchor="middle" fill="${WALL_DARK}" font-family="${BODY}" font-size="8" font-weight="700">OPEN</text>
-    <rect x="271" y="212" width="5" height="15" rx="2.5" fill="${AMBER}"/>
+    <!-- floating code-window chip -->
+    <rect x="292" y="150" width="92" height="70" rx="8" fill="${INK}" stroke="${FRAME}" stroke-width="2.5"/>
+    <rect x="292" y="150" width="92" height="18" rx="8" fill="${SCREEN}"/>
+    <circle cx="303" cy="159" r="2.6" fill="${PINK}" opacity="0.8"/>
+    <circle cx="312" cy="159" r="2.6" fill="${INDIGO}" opacity="0.8"/>
+    <circle cx="321" cy="159" r="2.6" fill="${CYAN}" opacity="0.8"/>
+    <rect x="302" y="176" width="46" height="5" rx="2.5" fill="${INDIGO}"/>
+    <rect x="302" y="188" width="64" height="5" rx="2.5" fill="${CREAM}" opacity="0.55"/>
+    <rect x="302" y="200" width="34" height="5" rx="2.5" fill="${CYAN}" opacity="0.85"/>
 
-    <path d="M256 96v14" stroke="${FRAME}" stroke-width="1.6"/>
-    <path d="M248 122c0-5.5 3.6-9.6 8-9.6s8 4.1 8 9.6Z" fill="${AMBER_DEEP}"/>
-    <ellipse cx="256" cy="123" rx="7.5" ry="2" fill="${AMBER}"/>
-
-    <rect x="300" y="216" width="46" height="34" rx="2.5" fill="${WALL_DARK}" stroke="${FRAME}" stroke-width="1.6"/>
-    <path d="M300 228h46" stroke="${FRAME}" stroke-width="1.2"/>
-    <circle cx="311" cy="211" r="7" fill="${CLAY}"/>
-    <circle cx="325" cy="209" r="8" fill="${AMBER}"/>
-    <circle cx="338" cy="212" r="6.5" fill="${CLAY}" opacity="0.85"/>
+    <!-- desk plant -->
+    <path d="M70 244v-24" stroke="${FRAME}" stroke-width="3" stroke-linecap="round"/>
+    <path d="M70 220c-3-14-14-20-24-19 2 13 12 21 24 19Z" fill="${CYAN}" opacity="0.75"/>
+    <path d="M70 224c3-16 15-23 26-21-2 15-13 24-26 21Z" fill="${INDIGO}" opacity="0.75"/>
+    <path d="M56 244h28l-4-14h-20Z" fill="${FRAME}"/>
   </g>
 </svg>`;
 

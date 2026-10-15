@@ -1,7 +1,7 @@
 # Manoveir Trading CO — Website
 
-Static informational site for **Manoveir Trading CO**, a local shop-based retail business
-dealing in the purchase and sale of consumer goods.
+Static informational site for **Manoveir Trading CO**, an IT services practice — staff
+augmentation, software delivery, IT consulting and managed support for client teams.
 
 Built with [Astro](https://astro.build) (`output: "static"`), plain CSS, and **zero client-side
 JavaScript**. There is no backend, database or API — the site is a folder of HTML/CSS you can host
@@ -31,10 +31,10 @@ npm run og       # regenerate public/og-image.png (only after a name/tagline/bra
 
 | Route       | File                       | Contents                                                        |
 |-------------|----------------------------|-----------------------------------------------------------------|
-| `/`         | `src/pages/index.astro`    | Hero + shopfront illustration, featured categories, why choose us, visit strip |
+| `/`         | `src/pages/index.astro`    | Hero + desk illustration, services, why choose us, process steps |
 | `/about`    | `src/pages/about.astro`    | Our story, at-a-glance facts, values, stats                     |
-| `/products` | `src/pages/products.astro` | All 6 category cards with examples, stock notes                 |
-| `/contact`  | `src/pages/contact.astro`  | Phone, email and the `mailto:` enquiry form                      |
+| `/it-services` | `src/pages/it-services.astro` | All four service lines, how engagements work             |
+| `/contact`  | `src/pages/contact.astro`  | Email and the `mailto:` enquiry form                             |
 | `/404`      | `src/pages/404.astro`      | Not-found page (`noindex`), links to every route                |
 | `/robots.txt` | `src/pages/robots.txt.ts` | Generated so the `Sitemap:` line always matches the real domain |
 
@@ -44,23 +44,22 @@ These are real separate routes with a shared `BaseLayout`, not anchors on one pa
 ## Editing content — start here
 
 **[`src/config/site.ts`](src/config/site.ts) is the single source of truth.** Business name,
-tagline, contact details, navigation, all six product categories, values and stats live there. No
-page hardcodes a phone number or email address.
+tagline, contact details, navigation, the four service lines, why-choose-us points, values and
+stats live there. No page hardcodes a phone number or email address.
 
-Category and feature `icon` values are **names in [`src/components/Icon.astro`](src/components/Icon.astro)**,
-not emoji — add the glyph there first if you introduce a new category.
+Feature and service `icon` values are **names in [`src/components/Icon.astro`](src/components/Icon.astro)**,
+not emoji — add the glyph there first if you introduce a new service or feature.
 
-### The only two placeholders
+### Contact details
 
-Just two values are still provisional, both prefixed with `TODO:` in `site.ts`:
+No placeholders remain. `contact.email` in `site.ts` is **`hr@manoveirtrading.com`** — the footer,
+the contact block, the `/contact` enquiry form (`mailto:`) and the structured data all use it.
 
-- `contact.phone` / `contact.phoneDisplay` — dialable number + the formatted version shown to visitors
-- `contact.email` — a real inbox. **The enquiry form on `/contact` stays disabled until this is set**, since it submits via `mailto:`.
-
-Until they are filled in, each renders as quiet dotted-underline text with a short user-facing note
-("Our published number is being finalised…"), and the literal `TODO:` prefix is stripped from the
-output (see `displayValue()` in `site.ts`). Deliberately quiet: an earlier version shouted them in
-amber dashed boxes, which made the whole site read as unfinished.
+The `TODO:` machinery is still in place for any future provisional value: prefix one in `site.ts`
+and every page treats it as unfilled — it renders as quiet dotted-underline text with a short
+user-facing note, the literal prefix is stripped from the output (see `displayValue()`), and the
+enquiry form stays disabled while the email is pending. Deliberately quiet: an earlier version
+shouted them in amber dashed boxes, which made the whole site read as unfinished.
 
 ### Adding your address, hours or a map
 
@@ -80,25 +79,24 @@ rather than faked. To reintroduce any of them:
 
 ### Images
 
-The artwork is **hand-built SVG** in [`src/components/illustrations/`](src/components/illustrations/) —
-`Shopfront.astro` (home hero), `ShelfRack.astro` (products header, home visit strip) and
-`Counter.astro` (about header). They ship as real drawings rather than "photo goes here" boxes,
-scale to any width and cost nothing to load.
+The artwork is **hand-built SVG** — [`TechDesk.astro`](src/components/illustrations/TechDesk.astro)
+in [`src/components/illustrations/`](src/components/illustrations/), used in the home hero, `/about`
+and `/it-services`. It ships as a real drawing rather than a "photo goes here" box, scales to any
+width and costs nothing to load.
 
-If you get a genuine photograph of the shop, drop it at `public/images/shopfront.jpg` and swap the
-`<Shopfront />` in [`src/components/Hero.astro`](src/components/Hero.astro) for an `<img>`.
+If you would rather use a genuine photograph, drop it at `public/images/tech-desk.jpg` and swap
+the `<TechDesk />` in [`src/components/Hero.astro`](src/components/Hero.astro) for an `<img>`.
 
 ## SEO & sharing
 
 - **Per-page** `<title>`, meta description, canonical URL, Open Graph and Twitter card tags.
 - **Share image** at `public/og-image.png` (1200×630), generated by
-  [`scripts/generate-og-image.mjs`](scripts/generate-og-image.mjs) from the name and tagline in
-  `site.ts`. Committed to the repo — rerun `npm run og` only if branding changes.
+  [`scripts/generate-og-image.mjs`](scripts/generate-og-image.mjs) from the name, tagline and
+  service list in `site.ts`. Committed to the repo — rerun `npm run og` only if branding changes.
 - **`Store` structured data** (schema.org JSON-LD) in `BaseLayout`, which is what feeds Google's
   local results panel. It is built from `site.ts` and **omits any field still holding a `TODO:`
-  placeholder**; while both the phone and email are placeholders the block is left out entirely,
-  rather than describing a shop nobody can reach. Adding an address and hours (see above) is what
-  will get the most out of it — then validate at
+  placeholder**. With the real email in place the block is now published with a reachable contact;
+  adding an address and hours (see above) is what will get the most out of it — then validate at
   [search.google.com/test/rich-results](https://search.google.com/test/rich-results).
 
 ## Design system
@@ -114,9 +112,10 @@ The visual language is deliberate and worth keeping consistent:
 - **No gradients, no glows, no blur, no glassmorphism.** Surfaces are solid (`--surface`) with a
   flat 1px `--line` border. An earlier version leaned on a violet→cyan gradient, translucent cards
   and radial glows; it read as generic and was scrapped, so please don't reintroduce that vocabulary.
+  (One scoped exception: `/it-services` re-themes its accent tokens to indigo/cyan and gives its
+  cards a glass treatment inside its own `is:global` block — nowhere else.)
 - **One accent, used sparingly.** Amber carries eyebrow labels, links, icons and the primary
-  button, and nothing else. It is the same amber as the awning and lamplight in the illustrations,
-  which is what ties interface and artwork together.
+  button, and nothing else; it is the single warm accent that ties the interface together.
 - **Icons are drawn, not emoji.** Every glyph lives in
   [`src/components/Icon.astro`](src/components/Icon.astro) on a 24×24 grid with a 1.6 stroke and
   round caps, inheriting `currentColor`. Keep new glyphs on that grid or they will sit at a
@@ -209,10 +208,10 @@ the browser will silently block the resource.
 ### Pre-launch checklist
 
 - [ ] `SITE_URL` set on the host to the real domain
-- [ ] `contact.phone` and `contact.email` replaced in `src/config/site.ts`
-- [ ] `npm run build` passes with 0 errors, and no dotted placeholder text remains on the site
-- [ ] Enquiry form on `/contact` confirmed working (it stays disabled until `contact.email` is real)
+- [x] `contact.email` set in `src/config/site.ts` (`hr@manoveirtrading.com`) — no `TODO:` placeholders remain
+- [x] `npm run build` passes with 0 errors, and no dotted placeholder text remains on the site
+- [x] Enquiry form on `/contact` enabled now that `contact.email` is real
 - [ ] Structured data validated at [search.google.com/test/rich-results](https://search.google.com/test/rich-results)
 - [ ] `404` page confirmed working on the host
 - [ ] Submit `sitemap-index.xml` in Google Search Console
-- [ ] Create a Google Business Profile — for a walk-in shop this drives more local traffic than the site alone
+- [ ] Create a Google Business Profile — for a local business this drives more local traffic than the site alone

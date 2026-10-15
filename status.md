@@ -125,7 +125,7 @@ export const site = {
     // outright — see §7.
     phone: "TODO: +91-XXXXXXXXXX",
     phoneDisplay: "TODO: +91 9XXXX XXXXX",
-    email: "TODO: contact@manoveirtrading.example",
+    email: "hr@manoveirtrading.com",
   },
   nav: [
     { label: "Home", href: "/" },

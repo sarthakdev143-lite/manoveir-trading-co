@@ -2,12 +2,12 @@
 
 /* TEAM */
   Developer: KWTC (KW Tech Catalyser)
-  Contact: via site contact form (mailto) and Vercel deployment
+  Contact: hr@manoveirtrading.com
   From: India
 
 /* SITE */
   Name: Manoveir Trading CO
-  Description: Local shop-based retail — walk-in customers
+  Description: IT services for client teams — staff augmentation, software delivery, consulting, managed support
   Standards: HTML5, CSS3, Astro (static)
   Components: Fraunces + Inter (Google Fonts)
   Language: en-IN

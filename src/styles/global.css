@@ -615,8 +615,9 @@ code {
   border: 0;
 }
 
-/* Marks one of the two values still awaiting real data (phone, email).
-   Deliberately quiet — a loud badge made the page look unfinished. */
+/* Marks a config value whose `TODO:` placeholder is still unfilled (see
+   `isPlaceholder()` in site.ts). Deliberately quiet — a loud badge made the
+   page look unfinished. */
 .todo {
   color: var(--text-faint);
   border-bottom: 1px dotted var(--line-strong);
